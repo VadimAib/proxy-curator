@@ -1,0 +1,13 @@
+
+[project]
+name = "proxy-curator"
+version = "0.1.0"
+description = "Pipeline for collecting, filtering and testing free VPN nodes"
+requires-python = ">=3.12"
+
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[tool.pyright]
+extraPaths = ["."]

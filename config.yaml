@@ -1,0 +1,172 @@
+
+xray:
+  path: 'bin/xray.exe'
+  use_xhttp_name: false
+  enabled: true
+
+singbox:
+  path: 'bin/sing-box.exe'
+  enabled: true
+
+fetching:
+  sources_file: 'sources.txt'
+  max_links: 0
+  max_age_days: 7
+  workers: 32
+  timeout: 30
+
+  feed_cache_enabled: true
+  feed_cache_ttl_hours: 24
+
+tcping:
+  prefer_ipv4: true
+  max_addrs: 3
+
+  probe_retries: 2
+
+  retry_timeout: 1.5
+
+  timeout: 2.0
+  workers: 128
+
+udping:
+  timeout: 3.0
+  workers: 256
+  prefer_ipv4: true
+  max_addrs: 3
+  attempts: 2
+  probe_size: 1200
+
+  max_consecutive_timeouts: 0
+
+testing:
+  timeout: 6.0
+  critical_timeout: 12.0
+  connectivity_timeout: 6.0
+
+  connectivity_prefilter_timeout: 3.0
+  bypass_timeout: 8.0
+
+  diagnose_timeout: 2.0
+
+  diagnose_workers: 32
+
+  geoip_timeout: 3.0
+
+  ipv6_mode: auto
+
+  port_pool_size: 900
+
+  max_tcp_latency: 3000
+
+  max_tcp_latency_soft: 2000
+  workers: 24
+  max_e2e_latency_ms: 0
+  critical_mode: all
+
+  network_probe_interval: 3.0
+
+  connectivity_workers: 24
+  connectivity_batch_size: 15
+  batch_size: 15
+
+  batch_workers: 4
+
+  batch_stagger_ms: 200
+
+  recheck_pause_sec: 0
+
+  dead_nodes_cache_enabled: true
+  dead_nodes_ttl_hours: 24
+
+  trusted_nodes_enabled: true
+  trusted_nodes_ttl_hours: 1.0
+
+filters:
+  only_standard_ports: false
+
+  blacklist_domains: []
+
+  standard_ports: [443, 80, 8080, 8443, 2053, 2083, 2087, 2096, 8880, 22443, 35000]
+  name_blacklist: []
+
+  protocol_blacklist: [mtproto]
+
+  country_blacklist: []
+
+  country_paranoid: adaptive
+
+  country_adaptive_min_confidence: 0.8
+
+  geo_cache_enabled: true
+  geo_cache_ttl_hours: 168
+
+  strategy_dedup: true
+
+connectivity_urls:
+  - url: 'http://cp.cloudflare.com/generate_204'
+    ok_statuses: [204, 200]
+  - url: 'http://www.gstatic.com/generate_204'
+    ok_statuses: [204, 200]
+
+bypass_urls:
+  - url: 'https://telegram.org/'
+    ok_statuses: [200, 301, 302, 400, 403, 404, 429]
+  - url: 'https://www.instagram.com/'
+    ok_statuses: [200, 301, 302, 400, 403, 404, 429]
+  - url: 'https://www.facebook.com/'
+    ok_statuses: [200, 301, 302, 400, 403, 404, 429]
+
+critical_urls:
+- url: 'https://www.instagram.com/'
+  ok_statuses: [200, 301, 302]
+
+speedtest:
+  enabled: true
+  url: "https://speed.cloudflare.com/__down?bytes="
+
+  light:
+    bytes: 1000000
+    timeout: 5.0
+  full:
+
+    bytes: 3000000
+
+    timeout: 10
+  retries: 1
+
+  workers: 8
+
+  full_max_measure: 300
+
+  quick:
+    enabled: true
+    bytes: 250000
+    timeout: 3.0
+    workers: 10
+    retries: 1
+
+  quick_min_mbps: 0.0
+  quick_drop_failed: true
+
+  rescue_enabled: true
+  rescue_min_mbps: 5.0
+
+output:
+  working_nodes: 'output/working_nodes.txt'
+  summary: 'output/summary.json'
+  log_dir: 'logs'
+  cache_dir: 'cache'
+  max_nodes: 0
+  max_nodes_per_endpoint: 0
+  summary_max_nodes: 0
+
+  min_speed_mbps: 5.0
+  max_latency_ms: 3000
+
+  quality_gate_min_keep: 10
+
+  clip_to_clipboard: false
+
+ui:
+  port: 8765

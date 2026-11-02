@@ -1,0 +1,2708 @@
+{
+  "version": 1,
+  "categories": [
+    { "id": "start", "title": { "en": "Getting started", "ru": "Быстрый старт" } },
+    { "id": "run", "title": { "en": "Running a scan", "ru": "Прогон" } },
+    { "id": "results", "title": { "en": "Results", "ru": "Результаты" } },
+    { "id": "settings", "title": { "en": "Settings", "ru": "Настройки" } },
+    { "id": "share", "title": { "en": "Sharing", "ru": "Поделиться" } },
+    { "id": "fix", "title": { "en": "Troubleshooting", "ru": "Проблемы" } },
+    { "id": "config", "title": { "en": "config.yaml reference", "ru": "Справочник config.yaml" } },
+    { "id": "reference", "title": { "en": "Reference", "ru": "Справочник" } }
+  ],
+  "articles": [
+    {
+      "id": "quickstart",
+      "category": "start",
+      "title": { "en": "First run in 5 minutes", "ru": "Первый запуск за 5 минут" },
+      "summary": {
+        "en": "From launching the program to nodes on your phone — five steps.",
+        "ru": "От запуска программы до нод на телефоне — пять шагов."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "Proxy Curator downloads public proxy lists, checks every node it finds and writes the working ones into a subscription you can import into a client. Everything runs on your computer; the internet is only needed to fetch the lists and to measure the nodes.",
+            "ru": "Proxy Curator скачивает публичные списки прокси, проверяет каждую найденную ноду и записывает рабочие в подписку, которую можно импортировать в клиент. Всё работает на вашем компьютере: интернет нужен только чтобы скачать списки и измерить ноды."
+          }
+        },
+        {
+          "t": "ol",
+          "items": [
+            {
+              "en": "Double-click `run_curate.bat` in the program folder. A browser opens on `http://127.0.0.1:8765` — that is the web interface.",
+              "ru": "Запустите `run_curate.bat` в папке программы. Откроется браузер на `http://127.0.0.1:8765` — это веб-интерфейс."
+            },
+            {
+              "en": "Leave the speed profile on **Auto**: the program measures your channel by itself and picks the size of the measurement.",
+              "ru": "Оставьте профиль скорости на **Auto**: программа сама измерит ваш канал и выберет объём замера."
+            },
+            {
+              "en": "Press **Run**. The progress streams into the **Console** tab, the composition of the run — into **Last Scan**.",
+              "ru": "Нажмите **Запустить**. Ход прогона идёт во вкладке **Консоль**, состав прогона — во вкладке **Последний скан**."
+            },
+            {
+              "en": "The surviving nodes appear in the **Nodes** tab and in the files of the `output/` folder.",
+              "ru": "Уцелевшие ноды появляются во вкладке **Узлы** и в файлах папки `output/`."
+            },
+            {
+              "en": "Open the **Share** tab: raise the local share or publish the subscription to a gist — then scan the QR code with your phone.",
+              "ru": "Откройте вкладку **Поделиться**: поднимите локальную шару или опубликуйте подписку в gist — и отсканируйте QR-код на телефоне."
+            }
+          ]
+        },
+        {
+          "t": "ui",
+          "tab": "log",
+          "label": { "en": "Open the console of the run", "ru": "Открыть консоль прогона" }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "Turn the VPN off before the run — with it on, the result is distorted. See [Why a run needs the VPN off](no-vpn).",
+            "ru": "Перед прогоном выключите VPN — с ним результат искажается. Подробнее: [Почему прогон нужен без VPN](no-vpn)."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "connect-client", "text": { "en": "Connect the nodes on a phone or a PC", "ru": "Подключить ноды на телефоне и ПК" } },
+            { "id": "sharing", "text": { "en": "Share the nodes with a phone", "ru": "Как отдать ноды на телефон" } },
+            { "id": "no-vpn", "text": { "en": "Why a run needs the VPN off", "ru": "Почему прогон нужен без VPN" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connect-client",
+      "category": "start",
+      "title": { "en": "Connect the nodes on a phone or a PC", "ru": "Подключить ноды на телефоне и ПК" },
+      "summary": {
+        "en": "The same list in three formats — pick the one your client understands.",
+        "ru": "Один и тот же список в трёх форматах — выберите тот, который понимает ваш клиент."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The **Share** tab gives the same node list in three formats. The format depends on the client, not on the program.",
+            "ru": "Вкладка **Поделиться** отдаёт один и тот же список нод в трёх форматах. Формат зависит от клиента, а не от программы."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Client", "ru": "Клиент" },
+            { "en": "Format", "ru": "Формат" },
+            { "en": "What to press", "ru": "Что нажать" }
+          ],
+          "rows": [
+            [
+              { "en": "v2rayN (Windows), v2rayNG (Android)", "ru": "v2rayN (Windows), v2rayNG (Android)" },
+              { "en": "list of URIs", "ru": "список URI" },
+              { "en": "the “Nodes list (URI)” link", "ru": "ссылка «Список URI»" }
+            ],
+            [
+              { "en": "any client with subscription support", "ru": "любой клиент с подпиской" },
+              { "en": "base64 subscription", "ru": "base64-подписка" },
+              { "en": "the “base64 subscription” link", "ru": "ссылка «base64-подписка»" }
+            ],
+            [
+              { "en": "Clash, Mihomo, FlClash", "ru": "Clash, Mihomo, FlClash" },
+              { "en": "Clash YAML", "ru": "Clash YAML" },
+              { "en": "the “Clash / Mihomo YAML” link", "ru": "ссылка «Clash / Mihomo YAML»" }
+            ]
+          ]
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "A local share works only while it is switched on and your phone is on the same network. For a subscription that works from anywhere, publish it to a gist — see [Sharing the nodes with a phone](sharing).",
+            "ru": "Локальная шара работает, только пока она включена и телефон в той же сети. Для подписки, которая работает откуда угодно, опубликуйте её в gist — см. [Как отдать ноды на телефон](sharing)."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "share",
+          "label": { "en": "Open the Share tab", "ru": "Открыть вкладку «Поделиться»" }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "A secret gist is **not private**: it is not indexed by search engines, but anyone with the link can read it. The same is true for the local share link — do not send it to strangers.",
+            "ru": "Secret gist **не приватный**: поисковики его не индексируют, но читает любой, у кого есть ссылка. То же — со ссылкой локальной шары: не пересылайте её кому попало."
+          }
+        }
+      ]
+    },
+    {
+      "id": "exit-app",
+      "category": "start",
+      "title": { "en": "How to close the program", "ru": "Как закрыть программу" },
+      "summary": {
+        "en": "Closing the browser tab does not stop the program — here is what does.",
+        "ru": "Закрытие вкладки браузера программу не останавливает — вот что останавливает."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The program keeps running while its server is alive. Closing the browser tab **does not** stop it — the tab is only a client.",
+            "ru": "Программа работает, пока жив её сервер. Закрытие вкладки браузера **не** останавливает её — вкладка лишь клиент."
+          }
+        },
+        {
+          "t": "ul",
+          "items": [
+            {
+              "en": "The **Exit** button in the toolbar: stops the run, switches the local share off, stops the server. After that you can close the console window.",
+              "ru": "Кнопка **Exit** в панели: останавливает прогон, гасит локальную шару, останавливает сервер. После этого окно консоли можно закрыть."
+            },
+            {
+              "en": "Closing the console window: the whole process tree dies with it, including an active run.",
+              "ru": "Закрытие окна консоли: вместе с ним умирает всё дерево процессов, включая активный прогон."
+            },
+            {
+              "en": "Ctrl+C in the console window: the same thing.",
+              "ru": "Ctrl+C в окне консоли: то же самое."
+            }
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "The local share goes out together with the program — and that is correct: nobody outside should see your nodes.",
+            "ru": "Локальная шара гаснет вместе с программой — и это правильно: посторонние не должны видеть ваши ноды."
+          }
+        }
+      ]
+    },
+    {
+      "id": "profiles",
+      "category": "run",
+      "title": { "en": "Auto / Full / Light: how much traffic it costs", "ru": "Auto / Full / Light: сколько трафика уходит" },
+      "summary": {
+        "en": "The profile sets the size of the final speed measurement on every node.",
+        "ru": "Профиль задаёт объём финального замера скорости на каждой ноде."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The profile says how much data is downloaded from every node during the final speed measurement.",
+            "ru": "Профиль говорит, сколько данных скачивается с каждой ноды на финальном замере скорости."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Profile", "ru": "Профиль" },
+            { "en": "Per node", "ru": "На ноду" },
+            { "en": "When to take it", "ru": "Когда брать" }
+          ],
+          "rows": [
+            [
+              { "en": "**Auto** (default)", "ru": "**Auto** (по умолчанию)" },
+              { "en": "picked by the program (1 or 3 MB)", "ru": "подбирает программа (1 или 3 МБ)" },
+              { "en": "the usual choice: the program measures your channel first", "ru": "обычный выбор: программа сначала измеряет ваш канал" }
+            ],
+            [
+              { "en": "**Full**", "ru": "**Full**" },
+              { "en": "3 MB", "ru": "3 МБ" },
+              { "en": "fast and stable channel — more accurate numbers", "ru": "быстрый и стабильный канал — числа точнее" }
+            ],
+            [
+              { "en": "**Light**", "ru": "**Light**" },
+              { "en": "1 MB", "ru": "1 МБ" },
+              { "en": "mobile internet, limited traffic, weak channel", "ru": "мобильный интернет, ограниченный трафик, слабый канал" }
+            ]
+          ]
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The profile changes **only** the final measurement. All the checks before it are the same, so a cheap profile does not cut live nodes out — it just measures them less precisely.",
+            "ru": "Профиль меняет **только** финальный замер. Все проверки перед ним одинаковы, поэтому дешёвый профиль не отсекает живые ноды — он просто меряет их менее точно."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "A full run downloads the traffic **through other people's nodes**. On a mobile connection 3 MB × hundreds of nodes is tens of megabytes; take Light there.",
+            "ru": "Полный прогон качает трафик **через чужие ноды**. На мобильном интернете 3 МБ × сотни нод — это десятки мегабайт; там берите Light."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-speedtest", "text": { "en": "The speed measurement: speedtest", "ru": "Замер скорости: speedtest" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modes",
+      "category": "run",
+      "title": { "en": "Replace / Append / Keep: what happens to the list", "ru": "Replace / Append / Keep: что будет со списком нод" },
+      "summary": {
+        "en": "The mode decides what stays in the subscription after a successful run.",
+        "ru": "Режим решает, что останется в подписке после успешного прогона."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The mode is applied **after** a successful run and decides what the subscription contains.",
+            "ru": "Режим применяется **после** успешного прогона и решает, что останется в подписке."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Mode", "ru": "Режим" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to take it", "ru": "Когда брать" }
+          ],
+          "rows": [
+            [
+              { "en": "**Replace** (default)", "ru": "**Replace** (по умолчанию)" },
+              { "en": "keeps only the nodes of the fresh run", "ru": "оставляет только ноды свежего прогона" },
+              { "en": "the usual mode: old nodes may be dead already", "ru": "обычный режим: старые ноды могли уже умереть" }
+            ],
+            [
+              { "en": "**Append**", "ru": "**Append**" },
+              { "en": "adds the fresh nodes to the previous list", "ru": "добавляет свежие ноды к предыдущему списку" },
+              { "en": "you want to collect nodes from several runs", "ru": "хочется накопить ноды с разных прогонов" }
+            ],
+            [
+              { "en": "**Keep**", "ru": "**Keep**" },
+              { "en": "leaves the previous list as it is", "ru": "оставляет предыдущий список как есть" },
+              { "en": "the run failed, the list was checked by hand", "ru": "прогон не удался, список проверен вручную" }
+            ]
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "If the run failed or found no nodes at all, the mode is **not** applied — a working list never gets destroyed by a bad run.",
+            "ru": "Если прогон закончился ошибкой или нашёл 0 нод, режим **не применяется** — рабочий список не пострадает от неудачного прогона."
+          }
+        }
+      ]
+    },
+    {
+      "id": "phases",
+      "category": "run",
+      "title": { "en": "What a run does, step by step", "ru": "Что делает прогон по шагам" },
+      "summary": {
+        "en": "Eleven stages, each one working with what the previous one left.",
+        "ru": "Одиннадцать этапов, каждый работает с тем, что оставил предыдущий."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "A run consists of 11 stages. Every stage works only with what the previous one passed on — that is why the funnel in **Last Scan** shows exactly where nodes were lost.",
+            "ru": "Прогон состоит из 11 этапов. Каждый следующий работает только с тем, что оставил предыдущий — поэтому воронка во вкладке **Последний скан** показывает, где именно терялись ноды."
+          }
+        },
+        {
+          "t": "ol",
+          "items": [
+            { "en": "**Sources** — the addresses of the lists are read from `sources.txt`.", "ru": "**Источники** — адреса списков читаются из `sources.txt`." },
+            { "en": "**Freshness + Fetch** — the lists are downloaded and checked for freshness; stale ones are skipped.", "ru": "**Freshness + Fetch** — списки скачиваются и проверяются на свежесть; протухшие пропускаются." },
+            { "en": "**Parse + Policy** — links become nodes, the filters are applied (protocols, names, domains).", "ru": "**Parse + Policy** — ссылки превращаются в ноды, применяются фильтры (протоколы, имена, домены)." },
+            { "en": "**Ping** — a fast TCP/QUIC probe: hosts that do not answer at all are dropped.", "ru": "**Ping** — быстрый TCP/QUIC-проб: хосты, которые вообще не отвечают, отбрасываются." },
+            { "en": "**Connectivity pre-filter** — the node is raised and checked for an internet exit and access to blocked sites.", "ru": "**Connectivity pre-filter** — нода поднимается, проверяются выход в интернет и доступ к заблокированным сайтам." },
+            { "en": "**Diagnosis** — the reason of a failure is worked out: no TLS, wrong SNI, broken TLS.", "ru": "**Diagnosis** — разбирается причина отказа: нет TLS, не тот SNI, битый TLS." },
+            { "en": "**Speedtest quick** — a rough speed check, so that only promising nodes are measured further.", "ru": "**Speedtest quick** — грубая проверка скорости, чтобы дальше мерять только перспективных." },
+            { "en": "**Delay** — an exact latency measurement in several rounds; slow nodes are dropped.", "ru": "**Delay** — точный замер задержки в несколько раундов; медленные отбрасываются." },
+            { "en": "**Rescue** — nodes that did not pass the threshold are given another chance.", "ru": "**Rescue** — ноды, не прошедшие порог, пробуют ещё раз." },
+            { "en": "**Speedtest** — the final measurement with a real download (this is where Auto / Full / Light applies).", "ru": "**Speedtest** — финальный замер с настоящей загрузкой (вот здесь работает Auto / Full / Light)." },
+            { "en": "**Export** — the subscription and the summary of the run are written to disk.", "ru": "**Export** — подписка и сводка прогона записываются на диск." }
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "The numbers of every stage are in **Last Scan** — that is where to look when a run returned fewer nodes than expected.",
+            "ru": "Числа каждого этапа — во вкладке **Последний скан**; там и смотрят, когда прогон вернул меньше нод, чем ожидалось."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "log",
+          "label": { "en": "Open the console of the run", "ru": "Открыть консоль прогона" }
+        }
+      ]
+    },
+    {
+      "id": "no-vpn",
+      "category": "run",
+      "title": { "en": "Why a run needs the VPN off", "ru": "Почему прогон нужен без VPN" },
+      "summary": {
+        "en": "A TUN client replaces the DNS answers, and the program then checks hosts that do not exist.",
+        "ru": "TUN-клиент подменяет ответы DNS, и программа проверяет несуществующие хосты."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "A TUN client (Hiddify, Tailscale and the like) intercepts DNS and replaces the answers with service addresses from `198.18.0.0/15`. The program cannot tell such an address from a real one — so it checks a host that does not exist.",
+            "ru": "TUN-клиент (Hiddify, Tailscale и другие) перехватывает DNS и подменяет ответы служебными адресами из `198.18.0.0/15`. Программа не может отличить такой адрес от настоящего — и проверяет хост, которого не существует."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The result: few nodes, low speed, and a log full of “empty” addresses. Switch the VPN off **before every run**.",
+            "ru": "Результат: мало нод, низкая скорость и лог, полный «пустых» адресов. Выключайте VPN **перед каждым прогоном**."
+          }
+        },
+        {
+          "t": "code",
+          "text": "python -c \"import socket; print(socket.gethostbyname('api.github.com'))\""
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The command must print an ordinary address. If it prints `198.18.x.x`, the DNS is intercepted and the VPN is still on.",
+            "ru": "Команда должна вернуть обычный адрес. Если вернулся `198.18.x.x` — DNS перехвачен, VPN ещё включён."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "The local share and the check of already downloaded nodes do not suffer from the VPN — it is the download of the lists and the speed measurement that get distorted.",
+            "ru": "Локальная шара и проверка уже скачанных нод от VPN не страдают — искажаются скачивание списков и замер скорости."
+          }
+        }
+      ]
+    },
+    {
+      "id": "flags",
+      "category": "run",
+      "title": { "en": "Service modes of the launch", "ru": "Служебные режимы запуска" },
+      "summary": {
+        "en": "The program can do more than the web interface — these are the flags worth knowing.",
+        "ru": "Программа умеет больше, чем веб-интерфейс, — вот флаги, о которых стоит знать."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "Besides the web interface the program can be started from the command line. An ordinary user rarely needs these, but they save time.",
+            "ru": "Кроме веб-интерфейса программа запускается из командной строки. Обычному пользователю эти флаги нужны редко — но они экономят время."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Command", "ru": "Команда" },
+            { "en": "What it does", "ru": "Что делает" }
+          ],
+          "rows": [
+            [
+              { "en": "`run_curate.bat --report`", "ru": "`run_curate.bat --report`" },
+              { "en": "a full run in the console, without a browser. Run it by hand and with the VPN off", "ru": "полный прогон в консоли, без браузера. Запускать вручную и без VPN" }
+            ],
+            [
+              { "en": "`run_curate.bat --selftest`", "ru": "`run_curate.bat --selftest`" },
+              { "en": "checks that both cores are installed and working", "ru": "проверяет, что оба ядра установлены и работают" }
+            ],
+            [
+              { "en": "`run_curate.bat --ping-only`", "ru": "`run_curate.bat --ping-only`" },
+              { "en": "TCP/QUIC probes only: fast, no cores needed. Writes `output/working_nodes.ping.txt`", "ru": "только TCP/QUIC-пробы: быстро, ядра не нужны. Пишет `output/working_nodes.ping.txt`" }
+            ],
+            [
+              { "en": "`run_curate.bat --tcping-only`", "ru": "`run_curate.bat --tcping-only`" },
+              { "en": "PING + CONNECTIVITY + DIAGNOSIS: a quick rejection without the speed measurement. The main subscription is not touched", "ru": "PING + CONNECTIVITY + DIAGNOSIS: быстрый отсев без замера скорости. Основная подписка не трогается" }
+            ],
+            [
+              { "en": "`run_curate.bat --only vless,trojan`", "ru": "`run_curate.bat --only vless,trojan`" },
+              { "en": "a run over the listed protocols only", "ru": "прогон только по указанным протоколам" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "cli", "text": { "en": "Command line flags and exit codes", "ru": "Флаги командной строки и коды возврата" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "last-scan",
+      "category": "results",
+      "title": { "en": "How to read Last Scan (the funnel)", "ru": "Как читать Последний скан (воронка)" },
+      "summary": {
+        "en": "How many nodes survived every stage of the last run.",
+        "ru": "Сколько нод дошло до каждого этапа последнего прогона."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "**Last Scan** shows the summary of the last run: how many links were collected, how many nodes reached every stage and how many were written into the subscription.",
+            "ru": "**Последний скан** показывает сводку последнего прогона: сколько ссылок собрали, сколько нод дошло до каждого этапа и сколько записали в подписку."
+          }
+        },
+        {
+          "t": "ul",
+          "items": [
+            { "en": "**Links** — how many links came from the lists.", "ru": "**Links** — сколько ссылок пришло из списков." },
+            { "en": "**Policy** — how many passed the filters.", "ru": "**Policy** — сколько прошло отбор по фильтрам." },
+            { "en": "**TCP** — how many hosts answer at all.", "ru": "**TCP** — сколько хостов отвечает вообще." },
+            { "en": "**Connectivity** — how many nodes really reach the internet.", "ru": "**Connectivity** — сколько нод реально выходят в интернет." },
+            { "en": "**Delay** — how many passed the latency measurement.", "ru": "**Delay** — сколько прошло замер задержки." },
+            { "en": "**Written** — how many ended up in the subscription.", "ru": "**Written** — сколько попало в подписку." }
+          ]
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The numbers fall from left to right — that is normal. The task is not to squeeze out the maximum, but to keep the nodes that really work.",
+            "ru": "Числа убывают слева направо — это нормально. Задача не «выжать максимум», а оставить ноды, которые действительно работают."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "A big drop between **TCP** and **Connectivity** is normal for cheap lists: the host answers, but the proxy behind it does not work.",
+            "ru": "Большая потеря между **TCP** и **Connectivity** — норма для дешёвых списков: хост отвечает, но прокси за ним не работает."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "lastscan",
+          "label": { "en": "Open the Last Scan tab", "ru": "Открыть вкладку «Последний скан»" }
+        }
+      ]
+    },
+    {
+      "id": "nodes-and-files",
+      "category": "results",
+      "title": { "en": "The Nodes tab and the files in output/", "ru": "Вкладка Узлы и файлы в output/" },
+      "summary": {
+        "en": "Where the result of a run is shown and where it is stored.",
+        "ru": "Где показан результат прогона и где он хранится."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The **Nodes** tab shows the nodes that reached the subscription. The list can be filtered by host, protocol and name — handy when you need to find one specific node.",
+            "ru": "Вкладка **Узлы** показывает ноды, которые дошли до подписки. Список фильтруется по хосту, протоколу и имени — удобно, когда надо найти конкретную ноду."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "If something looks off, the **Test selected** button checks the chosen nodes right away: it starts a quick re-measure through the working cores, writes the fresh metrics into the list, and marks the nodes that failed as dead. The full **Run** button measures the whole feed; **Test selected** never touches it. Dead nodes can be removed with the **Delete selected** button — a retest never deletes anything by itself.",
+            "ru": "Если что-то выглядит не так, кнопка **Проверить выделенные** проверяет выбранные ноды сразу: запускает быстрый повторный замер через работающие ядра, записывает свежие метрики в список и помечает ноды, которые не прошли проверку, как мёртвые. Кнопка **Запустить** измеряет весь фид; **Проверить выделенные** она не трогает. Мёртвые ноды можно удалить кнопкой **Удалить выделенные** — сама перепроверка ничего не удаляет."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The same list lies in the `output/` folder as files:",
+            "ru": "Тот же список лежит в папке `output/` файлами:"
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "File", "ru": "Файл" },
+            { "en": "What is inside", "ru": "Что внутри" }
+          ],
+          "rows": [
+            [
+              { "en": "`output/working_nodes.txt`", "ru": "`output/working_nodes.txt`" },
+              { "en": "the ready list, one URI per line — this is what you import into a client", "ru": "готовый список, одна нода в строке — его и импортируют в клиент" }
+            ],
+            [
+              { "en": "`output/working_nodes_b64.txt`", "ru": "`output/working_nodes_b64.txt`" },
+              { "en": "the same list in base64 — the subscription format", "ru": "тот же список в base64 — формат подписки" }
+            ],
+            [
+              { "en": "`output/working_nodes.json`", "ru": "`output/working_nodes.json`" },
+              { "en": "the same list with the metrics: latency, speed, exit country", "ru": "тот же список с метриками: задержка, скорость, страна выхода" }
+            ],
+            [
+              { "en": "`output/summary.json`", "ru": "`output/summary.json`" },
+              { "en": "the summary of the run: the funnel, the composition, the statistics", "ru": "сводка прогона: воронка, состав, статистика" }
+            ]
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "The Clash/Mihomo file (`working_nodes.yaml`) appears when you switch the local share on or publish to a gist.",
+            "ru": "Clash-файл (`working_nodes.yaml`) появляется, когда вы включаете локальную шару или публикуете в gist."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "nodes",
+          "label": { "en": "Open the Nodes tab", "ru": "Открыть вкладку «Узлы»" }
+        }
+      ]
+    },
+    {
+      "id": "settings-overview",
+      "category": "settings",
+      "title": { "en": "Settings: what to change where", "ru": "Настройки: где что менять" },
+      "summary": {
+        "en": "Two levels of settings: the form for the common ones and config.yaml for everything else.",
+        "ru": "Два уровня настроек: форма для обычных и config.yaml для всего остального."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "There are two levels. The **Settings** tab holds the parameters you change often. The file `config.yaml` (the “Advanced settings” area) holds everything else, including the fine thresholds.",
+            "ru": "Уровней два. Вкладка **Настройки** — параметры, которые меняют часто. Файл `config.yaml` (область «Advanced settings») — всё остальное, включая тонкие пороги."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "Every change in **Settings** has to be confirmed with **Save** — until then the file on disk stays as it was.",
+            "ru": "Любое изменение в **Настройки** нужно подтвердить кнопкой **Сохранить** — до неё файл на диске не меняется."
+          }
+        },
+        {
+          "t": "h",
+          "id": "ui-port",
+          "text": { "en": "The port of the interface", "ru": "Порт интерфейса" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The port the web interface listens on (default `8765`). If it is busy, choose another one (from 1024 to 65535) or set the environment variable `UI_PORT`. After changing the port, restart the program — the port is read at start.",
+            "ru": "Порт, на котором слушает веб-интерфейс (по умолчанию `8765`). Если занят — поставьте другой (от 1024 до 65535) или задайте переменную окружения `UI_PORT`. После смены порта перезапустите программу: порт читается при старте."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "If a field in the settings is not obvious, press the “?” next to it: there is a short answer, and the “Details” link opens exactly this article.",
+            "ru": "Если поле в настройках непонятно, нажмите значок «?» рядом с ним: там короткий ответ, а ссылка «Подробнее» открывает именно эту статью."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "settings",
+          "label": { "en": "Open the settings", "ru": "Открыть настройки" }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-map", "text": { "en": "config.yaml: the map of the file", "ru": "config.yaml: карта разделов" } },
+            { "id": "config-output", "text": { "en": "Where the result is written: output and ui", "ru": "Куда пишется результат: output и ui" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "filters",
+      "category": "settings",
+      "title": { "en": "Filters: which nodes are taken at all", "ru": "Фильтры: какие ноды берутся вообще" },
+      "summary": {
+        "en": "Four blacklists decide what enters the run.",
+        "ru": "Четыре чёрных списка решают, что вообще попадёт в прогон."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The filters decide which nodes enter the run. All four are **blacklists**: an empty list switches the filter off completely.",
+            "ru": "Фильтры решают, какие ноды попадут в прогон. Все четыре — **чёрные списки**: пустой список отключает фильтр целиком."
+          }
+        },
+        {
+          "t": "h",
+          "id": "protocol-blacklist",
+          "text": { "en": "Exclude protocols", "ru": "Исключить протоколы" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The codes of the protocols that are not tested at all: `vless`, `vmess`, `trojan`, `ss`, `hysteria2`, `tuic`, `anytls`, `mtproto`, `wireguard`. A protocol on this list is dropped during the selection, before any check. It is the permanent version of the `--only` key — one setting instead of typing it every time.",
+            "ru": "Коды протоколов, которые не тестируются вообще: `vless`, `vmess`, `trojan`, `ss`, `hysteria2`, `tuic`, `anytls`, `mtproto`, `wireguard`. Протокол из этого списка отбрасывается на этапе отбора, до каких-либо проверок. Это постоянная версия ключа `--only` — настройка вместо набора каждый раз."
+          }
+        },
+        {
+          "t": "h",
+          "id": "standard-ports",
+          "text": { "en": "Standard ports only", "ru": "Только стандартные порты" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "Keeps the nodes on common ports (443, 80, 8080, 8443 and others). The list of ports next to it is editable: add your own and the nodes on it will pass. It helps when a list contains a lot of junk ports.",
+            "ru": "Оставляет ноды на распространённых портах (443, 80, 8080, 8443 и другие). Список портов рядом редактируется: добавьте свой — и ноды с ним пройдут. Помогает, когда в списке много «мусорных» портов."
+          }
+        },
+        {
+          "t": "h",
+          "id": "name-blacklist",
+          "text": { "en": "Node name blacklist", "ru": "Чёрный список имён" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "A substring of the node name. Words from channel names like `expired`, `free` or `traffic` cut out the nodes that warn about themselves.",
+            "ru": "Подстрока в имени ноды. Слова из названия канала вроде `expired`, `free` или `traffic` отсекают ноды, которые сами за себя предупреждают."
+          }
+        },
+        {
+          "t": "h",
+          "id": "domain-blacklist",
+          "text": { "en": "Domain blacklist", "ru": "Чёрный список доменов" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "A substring of the server domain. The comparison happens while the links are parsed, so the nodes with an unwanted domain are dropped before any check.",
+            "ru": "Подстрока в домене сервера. Сравнение идёт при разборе ссылок, поэтому ноды с нежелательным доменом отбрасываются ещё до проверок."
+          }
+        },
+        {
+          "t": "h",
+          "id": "country-blacklist",
+          "text": { "en": "Country blacklist", "ru": "Чёрный список стран" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The country codes to exclude, for example `ru`. The country is determined by the **external IP** of the node — through the tunnel of that very node, not by the label in its name. When the country cannot be determined, the node is **not** cut out (fail-open): a geography failure must not throw away working nodes.",
+            "ru": "Коды стран, которые нужно исключить, например `ru`. Страна определяется по **внешнему IP** ноды — через туннель самой ноды, а не по надписи в её названии. Если страну определить не удалось, нода **не отсекается** (fail-open): сбой географии не должен выбрасывать рабочие ноды."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "settings",
+          "field": "in-countries",
+          "label": { "en": "Go to the country filter in the settings", "ru": "Перейти к фильтру стран в настройках" }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-filters", "text": { "en": "Filters: the complete list of keys", "ru": "Фильтры: полный список ключей" } },
+            { "id": "protocols", "text": { "en": "Protocols, transports and encryption", "ru": "Протоколы, транспорты и шифрование" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fetch",
+      "category": "settings",
+      "title": { "en": "Collecting the links", "ru": "Сбор ссылок" },
+      "summary": {
+        "en": "How many links are taken and how long the program waits for an answer.",
+        "ru": "Сколько ссылок берётся и сколько программа ждёт ответа."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "These parameters decide how much is downloaded from the sources and how long to wait for them.",
+            "ru": "Эти параметры решают, сколько скачивается с источников и как долго ждать ответа."
+          }
+        },
+        {
+          "t": "h",
+          "id": "max-links",
+          "text": { "en": "Max links: how many links to take", "ru": "Max links: сколько ссылок брать" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The limit on the number of links taken from one source. `0` means no limit. Useful for a trial: limit it to 100 and the run takes a minute instead of half an hour.",
+            "ru": "Ограничение на число ссылок, взятых с одного источника. `0` — без ограничения. Полезно для проверки: ограничьте до 100, и прогон уложится в минуту вместо получаса."
+          }
+        },
+        {
+          "t": "h",
+          "id": "source-freshness",
+          "text": { "en": "Source freshness, days: how old a source may be", "ru": "Свежесть источников, дней: как старым может быть источник" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "A source whose last update is older than this many days is considered stale and skipped. The default is 7 days. An old list may still look fresh but hand out a subscription that is already weeks old — such nodes are usually dead.",
+            "ru": "Источник, чьё последнее обновление старше указанного числа дней, считается протухшим и пропускается. По умолчанию 7 дней. Старый список может выглядеть актуальным, но отдавать подписку, которой уже несколько недель, — такие ноды обычно мертвы."
+          }
+        },
+        {
+          "t": "h",
+          "id": "workers",
+          "text": { "en": "Parallel fetchers: how many at once", "ru": "Parallel fetchers: сколько одновременно" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "How many lists are downloaded at the same time. More is faster, but on a weak connection it brings timeouts. For a home connection the default (32) is usually enough.",
+            "ru": "Сколько списков скачивается одновременно. Больше — быстрее, но на слабом канале можно получить таймауты. Для домашнего интернета обычно хватает значения по умолчанию (32)."
+          }
+        },
+        {
+          "t": "h",
+          "id": "timeout",
+          "text": { "en": "Timeout, s: how long to wait", "ru": "Timeout, s: сколько ждать" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "How many seconds to wait for an answer from a source. A slow source with a short timeout simply drops out of the run, and you never see why it failed.",
+            "ru": "Сколько секунд ждать ответа источника. Медленный источник с коротким таймаутом просто выпадает из прогона, и вы не видите, почему он не ответил."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "settings",
+          "field": "in-max-links",
+          "label": { "en": "Go to the link collection settings", "ru": "Перейти к настройкам сбора ссылок" }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-fetching", "text": { "en": "Collecting the links: fetching", "ru": "Сбор ссылок: fetching" } },
+            { "id": "config-probes", "text": { "en": "The probes: tcping and udping", "ru": "Пробы: tcping и udping" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "category": "settings",
+      "title": { "en": "Writing the result", "ru": "Запись результата" },
+      "summary": {
+        "en": "How many nodes stay in the file.",
+        "ru": "Сколько нод остаётся в файле."
+      },
+      "blocks": [
+        {
+          "t": "h",
+          "id": "min-speed",
+          "text": { "en": "Minimum speed: the last quality gate", "ru": "Минимальная скорость: последний контроль качества" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "After the full speed test, before the export, any node measured below `output.min_speed_mbps` is dropped from the subscription. The speed is read from the full measurement; for nodes that have none, the quick measurement is used. A node with no measurement at all is kept. The gate does not work in the `--ping-only` and `--tcping-only` service modes.",
+            "ru": "После полного замера скорости, перед экспортом, узлы с замером ниже `output.min_speed_mbps` убираются из подписки. Скорость читается из полного замера; при отсутствии — из быстрого. Узел без обоих замеров остаётся. В служебных режимах `--ping-only` и `--tcping-only` контроль не работает."
+          }
+        },
+        {
+          "t": "h",
+          "id": "max-latency",
+          "text": { "en": "Maximum latency: the second limit", "ru": "Максимальная задержка: второй порог" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "`output.max_latency_ms` limits how slowly a node may answer the full check. If the two limits together remove every node, the fastest `output.quality_gate_min_keep` (10 by default) are kept and the summary records `relaxed: true`. The dropped nodes are not written to a separate file; the counts are in `summary.json -> quality_prefilter` and `quality_gate`.",
+            "ru": "`output.max_latency_ms` ограничивает, насколько медленно узел может отвечать на полную проверку. Если два порога вместе отсеяли все узлы, остаются самые быстрые в количестве `output.quality_gate_min_keep` (по умолчанию 10), а в сводке ставится `relaxed: true`. Отсеянные узлы не пишутся в отдельный файл: счётчики — в `summary.json -> quality_prefilter` и `quality_gate`."
+          }
+        },
+        {
+          "t": "h",
+          "id": "max-nodes",
+          "text": { "en": "Max nodes in file: how many nodes to keep", "ru": "Максимум нод в файле: сколько нод оставить" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The limit on the number of nodes in the subscription. `0` means no limit. When there are many nodes and the client struggles, set 50–100: the subscription becomes shorter, and the quality does not change — only checked nodes get there anyway.",
+            "ru": "Ограничение на число нод в подписке. `0` — без ограничения. Когда нод много и клиенту тяжело, поставьте 50–100: подписка станет короче, а качество не изменится — в неё и так попадают только проверенные ноды."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "The order in the subscription is by speed: the fastest nodes are on top.",
+            "ru": "Порядок в подписке — по скорости: самые быстрые ноды сверху."
+          }
+        },
+        {
+          "t": "h",
+          "id": "clipboard",
+          "text": { "en": "The clipboard after the export", "ru": "Буфер обмена после экспорта" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "`output.clip_to_clipboard: true` copies the list to the system clipboard right after the export — handy when the subscription is pasted into a client by hand. The default is off: the clipboard is the user's state, and the program takes it over only when asked.",
+            "ru": "`output.clip_to_clipboard: true` копирует список в системный буфер обмена сразу после экспорта — удобно, когда подписка вставляется в клиент вручную. По умолчанию выключено: буфер обмена — состояние пользователя, и программа занимает его только по просьбе."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "settings",
+          "field": "in-max-nodes",
+          "label": { "en": "Go to the output settings", "ru": "Перейти к настройкам записи результата" }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-output", "text": { "en": "Where the result is written: output and ui", "ru": "Куда пишется результат: output и ui" } },
+            { "id": "nodes-and-files", "text": { "en": "The Nodes tab and the files in output/", "ru": "Вкладка Узлы и файлы в output/" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "selfcheck",
+      "category": "settings",
+      "title": { "en": "Checking and tuning your computer", "ru": "Проверка и тюнинг компьютера" },
+      "summary": {
+        "en": "The self-check measures your machine and suggests values — it never changes anything by itself.",
+        "ru": "Самопроверка измеряет машину и предлагает значения — сама ничего не меняет."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The section **Check & tune for your computer** does not change anything on its own. **Performance test** runs three short tests — CPU, channel, disk — and reads your last run, then shows four cards and one list of suggestions. The test can be cancelled while it runs: **Cancel** stops it between samples, no result is saved and nothing is written. Values are written only after you press **Apply all**, and only the lines listed there change. If there is nothing to change, the list and the button are absent: the block says so in one line instead of offering a no-op.",
+            "ru": "Раздел **Проверка и подбор под ваш компьютер** ничего не меняет сам. **Тест производительности** прогоняет три коротких теста — процессор, канал, диск — и читает последний прогон, затем показывает четыре карточки и один список предложений. Тест можно отменить во время работы: **Отмена** останавливает его между образцами, результат не сохраняется и ничего не пишется. Значения записываются только после нажатия **Применить всё**, и меняются только перечисленные там строки. Если менять нечего, списка и кнопки нет: блок говорит об этом одной строкой, а не предлагает пустое действие."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "**The check runs when you ask for it.** There is no universal default for someone else's machine, and the default measuring tier does not fit a slow channel: nodes get cut off before the speed is even known. That is why the line next to **Run** says what the check is for and what it costs — about 20 s and ~20 MB of traffic — and offers the button. The program never measures on its own: your traffic and your time are not its to spend. The check result is stored next to the run summary (not in the settings), so later launches show *when* it was made; and the program notices when the network has changed since (another Wi-Fi, mobile data) and asks to measure again. The settings are never written without **Apply all**.",
+            "ru": "**Проверка идёт по вашей команде.** Универсального дефолта для чужой машины не существует, а дефолтный тир замера не подходит медленному каналу: ноды отсекаются раньше, чем станет ясна скорость. Поэтому рядом с кнопкой **Запустить** есть строка — что проверка даёт и сколько стоит (около 20 с и ~20 МБ трафика) и кнопка. Программа сама не меряет: ваш трафик и ваше время не в её распоряжении. Результат проверки хранится рядом со сводкой прогона (не в настройках), поэтому при следующих запусках видно *когда* он сделан; если сеть сменилась (другой Wi-Fi, мобильная связь) — программа заметит это и предложит перемерить. В настройки ничего не пишется без **Применить всё**."
+          }
+        },
+        {
+          "t": "h",
+          "id": "cards",
+          "text": { "en": "The four cards", "ru": "Четыре карточки" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "**CPU** — how many links per second this PC parses; the verdict turns that into the time needed for the link count of your own last run, not for an invented number. **Internet** — channel speed from real HTTPS transfers, plus ping and jitter. **Disk** — write and read speed of the cache folder. **Last run** — what the pipeline actually measured.",
+            "ru": "**CPU** — сколько ссылок в секунду разбирает этот ПК; вердикт переводит это в время на число ссылок вашего последнего прогона, а не на выдуманное число. **Интернет** — скорость канала по настоящим HTTPS-загрузкам, плюс пинг и джиттер. **Диск** — скорость записи и чтения папки кэша. **Последний прогон** — то, что пайплайн действительно измерил."
+          }
+        },
+        {
+          "t": "h",
+          "id": "network",
+          "text": { "en": "Why the internet test uses 3 MB", "ru": "Почему тест интернета берёт 3 МБ" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The speed is computed from the time the whole body takes, not from the first byte. On a 1 MB body the connection setup (DNS, TLS, slow start) eats 13–15 % of the transfer, and the channel looks slower than it is; 3 MB is the smallest size where that error stops mattering. A non-2xx answer (403/429) is discarded instead of being counted as a slow sample, and the number shown is the median of the successful samples. If the channel turns out to be slow (one download takes longer than the whole window), the test switches to a smaller body so it still collects several samples instead of a single one.",
+            "ru": "Скорость считается по времени передачи всего тела ответа, а не первого байта. На теле в 1 МБ установка соединения (DNS, TLS, медленный старт) съедает 13–15 % передачи, и канал выглядит медленнее, чем он есть; 3 МБ — наименьший размер, где эта ошибка перестаёт влиять. Ответ не-2xx (403/429) отбрасывается, а не считается медленным замером, а показанное число — медиана удачных замеров. Если канал оказался медленным (одна загрузка дольше всего окна), тест переходит на меньшее тело, чтобы набрать несколько образцов, а не один."
+          }
+        },
+        {
+          "t": "h",
+          "id": "disk",
+          "text": { "en": "Device speed versus page cache", "ru": "Скорость устройства и кэш страниц" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The disk test writes files, forces them onto the device (`fsync`) and reads them back. Without `fsync` Windows reports the speed of the page cache — 3.8 GB/s in our own measurement against 412 MB/s on the device — and the “slow disk” threshold becomes unreachable. The card shows both: the device rate is the big number, the page-cache rate sits next to it. Free space is checked too: under 500 MB the next run may fail while writing the cache, whatever the speed.",
+            "ru": "Тест диска записывает файлы, сбрасывает их на устройство (`fsync`) и читает обратно. Без `fsync` Windows показывает скорость кэша страниц — 3.8 ГБ/с в нашем замере против 412 МБ/с на устройстве — и порог «медленный диск» становится недостижимым. Карточка показывает оба числа: скорость устройства — крупно, скорость кэша страниц — рядом. Свободное место тоже проверяется: меньше 500 МБ — следующий прогон может упасть на записи кэша, каким бы быстрым ни был диск."
+          }
+        },
+        {
+          "t": "h",
+          "id": "run",
+          "text": { "en": "The last run card", "ru": "Карточка последнего прогона" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The fourth card is not a measurement but a fact: `output/summary.json`. It shows how many links were parsed, how many nodes were measured, the p10/median/p90 speed of each tier, how many candidates the quick tier dropped and why, whether the full-tier ceiling (`speedtest.full_max_measure`) was hit, and the most frequent failure reason. Suggestions from this card only ever **raise** a timeout: if the slowest tenth of the nodes does not fit into the current window, that tail is exactly the case the timeout exists for. The suggested value is the slowest-tenth transfer time with a fixed **jitter margin** (3× by default — see the “Why” column) — so 16.7 s needed becomes 50 s, not 17 s.",
+            "ru": "Четвёртая карточка — не замер, а факт: `output/summary.json`. Она показывает, сколько ссылок разобрано, сколько узлов измерено, скорости p10/медиана/p90 по каждому тиру, сколько кандидатов отсеял быстрый тир и почему, достигнут ли потолок полного тира (`speedtest.full_max_measure`) и самая частая причина отказа. Предложения из этой карточки только **поднимают** таймаут: если медленная десятая часть узлов не влезает в текущее окно, этот хвост и есть тот случай, ради которого таймаут держат. Предложенное значение — время передачи медленной десятки с постоянным **запасом на джиттер** (по умолчанию 3×, см. колонку «Why»): из 16,7 с, которые нужно, получается 50 с, а не 17 с."
+          }
+        },
+        {
+          "t": "h",
+          "id": "duration",
+          "text": { "en": "Duration (s): how long the load lasts", "ru": "Duration (s): длительность нагрузки" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "How many seconds the load runs. More is a more accurate measurement, but the test takes longer. The range is 1–60 seconds.",
+            "ru": "Сколько секунд идёт нагрузка. Больше — замер точнее, но тест дольше. Диапазон 1–60 секунд."
+          }
+        },
+        {
+          "t": "h",
+          "id": "requests",
+          "text": { "en": "Requests: how many requests", "ru": "Requests: число запросов" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "How many requests the internet test makes. The range is 1–100. It checks not only the speed but the stability of the connection.",
+            "ru": "Сколько запросов делает тест интернета. Диапазон 1–100. Проверяет не только скорость, но и стабильность связи."
+          }
+        },
+        {
+          "t": "h",
+          "id": "size",
+          "text": { "en": "Size (MB): the size of one request", "ru": "Size (MB): размер одного запроса" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The size of one request in megabytes. The range is 1–100 MB, the default is 3 MB (see above). A bigger request shows the speed more honestly, but takes more traffic.",
+            "ru": "Объём одного запроса в мегабайтах. Диапазон 1–100 МБ, по умолчанию 3 МБ (см. выше). Больший запрос честнее показывает скорость, но забирает больше трафика."
+          }
+        },
+        {
+          "t": "h",
+          "id": "files",
+          "text": { "en": "Files: how many files", "ru": "Files: число файлов" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "How many files the disk test creates. The range is 1–64, the default is 20. Each file is one independent sample and the card shows their median, so too few files make the number jumpy: a 3-file test lasts about 0.2 s and on a cold disk showed 134 MB/s against 411–424 MB/s measured over 20 files (2026-10-24). The first two files are warm-up and are not counted. A full 20-file run takes about one second and writes ~280 MB, which is deleted afterwards.",
+            "ru": "Сколько файлов создаёт тест диска. Диапазон 1–64, по умолчанию 20. Каждый файл — один независимый образец, а карточка показывает их медиану, поэтому на малом числе число скачет: тест из 3 файлов длится около 0.2 с и на холодном диске показал 134 МБ/с против 411–424 МБ/с на 20 файлах (2026-10-24). Первые два файла — прогрев, в статистику они не идут. Полный прогон из 20 файлов занимает около секунды и пишет ~280 МБ, которые потом удаляются."
+          }
+        },
+        {
+          "t": "h",
+          "id": "file-size",
+          "text": { "en": "File size (MB): the size of one file", "ru": "File size (MB): размер файла" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The size of every created file in megabytes. The range is 1–256.",
+            "ru": "Размер каждого создаваемого файла в мегабайтах. Диапазон 1–256."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-testing", "text": { "en": "Checks and thresholds: testing", "ru": "Проверки и пороги: testing" } },
+            { "id": "config-speedtest", "text": { "en": "The speed measurement: speedtest", "ru": "Замер скорости: speedtest" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sharing",
+      "category": "share",
+      "title": { "en": "Sharing the nodes with a phone", "ru": "Как отдать ноды на телефон" },
+      "summary": {
+        "en": "A local share for the same network and a gist for everywhere else.",
+        "ru": "Локальная шара для своей сети и gist для любой другой."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The **Share** tab hands the node list over in two ways.",
+            "ru": "Вкладка **Поделиться** отдаёт список нод двумя способами."
+          }
+        },
+        {
+          "t": "h",
+          "id": "lan",
+          "text": { "en": "Local share (Wi-Fi)", "ru": "Локальная шара (Wi-Fi)" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "Raises a separate read-only server on `0.0.0.0` (port 8766 by default) and shows a QR code and three links. Access is by a secret token inside the link itself: without it the server answers 404.",
+            "ru": "Поднимает отдельный read-only сервер на `0.0.0.0` (порт 8766 по умолчанию) и показывает QR-код и три ссылки. Доступ — по секретному токену внутри самой ссылки: без него сервер отвечает 404."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "It works only while the share is switched on and the phone is on the same network. Leaving the program switches the share off.",
+            "ru": "Работает, только пока шара включена и телефон в той же сети. При выходе из программы шара гаснет."
+          }
+        },
+        {
+          "t": "h",
+          "id": "gist",
+          "text": { "en": "Publishing to a gist (from anywhere)", "ru": "Публикация в gist (из любой сети)" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The **«Publish to gist»** button uploads the subscription into a **secret** gist and shows a permanent link — it works from any network, a mobile one included. Publishing is always manual: a run never uploads anything by itself.",
+            "ru": "Кнопка **«Опубликовать в gist»** выкладывает подписку в **secret** gist и показывает постоянную ссылку — она работает из любой сети, в том числе с мобильной. Публикация всегда ручная: прогон сам ничего не выкладывает."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The token needs the `gist` permission. You can enter it in a field in the browser (it lives in the memory of the tab and is never written to disk) or set the environment variable `GITHUB_TOKEN` before the start.",
+            "ru": "Токену нужно право `gist`. Его можно ввести в поле в браузере (живёт в памяти вкладки и на диск не пишется) или задать переменной окружения `GITHUB_TOKEN` перед запуском."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "A secret gist is **not private**: search engines do not index it, but anyone with the link reads it. The same is true for the local share link.",
+            "ru": "Secret gist — **не приватный**: поисковики его не индексируют, но читает любой, у кого есть ссылка. То же — со ссылкой локальной шары."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "share",
+          "label": { "en": "Open the Share tab", "ru": "Открыть вкладку «Поделиться»" }
+        }
+      ]
+    },
+    {
+      "id": "port-busy",
+      "category": "fix",
+      "title": { "en": "Port 8765 is busy", "ru": "Порт 8765 занят" },
+      "summary": {
+        "en": "The interface did not start — the port is taken by another process.",
+        "ru": "Интерфейс не поднялся — порт занят другим процессом."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "If the page does not open and the console mentions a busy port, the interface did not start.",
+            "ru": "Если страница не открывается, а в консоли есть сообщение о занятом порте, интерфейс не поднялся."
+          }
+        },
+        {
+          "t": "ol",
+          "items": [
+            {
+              "en": "Open **Settings** → **Web interface** and put another port there (8767, for example).",
+              "ru": "Откройте **Настройки** → **Web interface** и поставьте другой порт (например 8767)."
+            },
+            {
+              "en": "Press **Save** and restart the program — the port is read at start.",
+              "ru": "Нажмите **Сохранить** и перезапустите программу: порт читается при старте."
+            },
+            {
+              "en": "The alternative is the environment variable `UI_PORT`.",
+              "ru": "Альтернатива — переменная окружения `UI_PORT`."
+            }
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "If the interface does not open at all, the same port is changed in `config.yaml`, in the `ui` section, key `port`.",
+            "ru": "Если интерфейс не открывается вообще, тот же порт меняется в `config.yaml`, в разделе `ui`, ключ `port`."
+          }
+        }
+      ]
+    },
+    {
+      "id": "zero-nodes",
+      "category": "fix",
+      "title": { "en": "No nodes were found", "ru": "Нашлось 0 нод" },
+      "summary": {
+        "en": "Almost never a breakage — usually one of five reasons.",
+        "ru": "Почти никогда не поломка — обычно одна из пяти причин."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "An empty result is almost never a breakage. Check these five in order.",
+            "ru": "Пустой результат — почти никогда не поломка. Проверьте по порядку."
+          }
+        },
+        {
+          "t": "ol",
+          "items": [
+            {
+              "en": "**Is the VPN/TUN on?** The most frequent cause: the DNS is replaced and no node is found. Switch it off — [why](no-vpn).",
+              "ru": "**Включён VPN/TUN?** Самая частая причина: подменён DNS, ноды не находятся. Выключите — [почему](no-vpn)."
+            },
+            {
+              "en": "**Are there blacklists?** An empty blacklist is normal; a non-empty one by country (`ru`) can cut out everything.",
+              "ru": "**Есть ли чёрные списки?** Пустой список — это нормально; непустой по странам (`ru`) может вырезать всё."
+            },
+            {
+              "en": "**Are the lists fresh?** Sources whose update is older than 7 days are dropped — try raising the [source freshness](fetch#source-freshness) or refreshing the sources.",
+              "ru": "**Свежие ли списки?** Источники, чьё обновление старше 7 дней, отбрасываются — попробуйте поднять [свежесть источников](fetch#source-freshness) или обновить источники."
+            },
+            {
+              "en": "**Is a protocol excluded?** The excluded protocols in the [filters](filters#protocol-blacklist) cut nodes out before any check.",
+              "ru": "**Не исключён ли протокол?** Исключённые протоколы в [фильтрах](filters#protocol-blacklist) отсекают ноды до проверок."
+            },
+            {
+              "en": "**Do the cores work?** The **Self test** button in the toolbar checks both of them in a couple of seconds.",
+              "ru": "**Работают ли ядра?** Кнопка **Self test** в панели проверяет оба за пару секунд."
+            }
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "Look at **Last Scan**: the funnel shows the stage where the nodes disappeared. Gone at **Policy** — the filters are to blame; gone at **TCP** — the lists hand out dead addresses.",
+            "ru": "Смотрите **Последний скан**: воронка покажет этап, на котором ноды исчезли. Исчезли на **Policy** — виноваты фильтры; на **TCP** — списки отдают мёртвые адреса."
+          }
+        }
+      ]
+    },
+    {
+      "id": "av-blocked",
+      "category": "fix",
+      "title": { "en": "The antivirus removed the cores", "ru": "Антивирус удалил ядра" },
+      "summary": {
+        "en": "Foreign binaries downloaded from the internet get flagged — here is what to do.",
+        "ru": "Чужие бинарники, скачанные из интернета, попадают под подозрение — что делать."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "Windows Defender and other antiviruses sometimes flag `bin\\xray.exe` and `bin\\sing-box.exe` as suspicious: they are foreign binaries downloaded from the internet and have no legitimate publisher.",
+            "ru": "Windows Defender и другие антивирусы иногда помечают `bin\\xray.exe` и `bin\\sing-box.exe` как подозрительные: это чужие бинарники, скачанные из интернета, и легитимного издателя у них нет."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "If **Self test** complains about a core and the file is missing from `bin/`, add the program folder to the exclusions of your antivirus and download the cores again. The detailed instruction is in `README.md` next to the program — see the section \"If your antivirus removes the cores\".",
+            "ru": "Если **Self test** ругается на ядро, а файла в `bin/` нет, добавьте папку программы в исключения антивируса и скачайте ядра заново. Подробная инструкция — в `README.md` рядом с программой, раздел «If your antivirus removes the cores»."
+          }
+        }
+      ]
+    },
+    {
+      "id": "logs",
+      "category": "fix",
+      "title": { "en": "Where to look at the log", "ru": "Где смотреть лог" },
+      "summary": {
+        "en": "The console shows the run in real time, the log files keep the full text.",
+        "ru": "Консоль показывает прогон в реальном времени, файлы лога хранят полный текст."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The **Console** tab shows the run line by line while it happens. When no run is going, the tab is empty: the output of a finished run is not brought back — open the **Logs** tab for that. The full text goes to the log folder `logs`: a run started from the interface writes to `logs/ui_run.log` (the file is appended to), and a run started from `run_curate.bat` writes its own `logs/run_*.log`.",
+            "ru": "Вкладка **Консоль** показывает ход прогона построчно. Когда прогон не идёт, вкладка пуста: вывод закончившегося прогона не подставляется — за ним идите во вкладку **Логи**. Полный текст попадает в папку логов `logs`: прогон, запущенный из интерфейса, пишет в `logs/ui_run.log` (файл дописывается), а прогон из `run_curate.bat` — в свой `logs/run_*.log`."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "Logs older than 14 days are cleaned up: `run_curate.bat` deletes `run_*.log`, and the **Logs** tab can delete the run logs on request — it shows the list first. The archived run artifacts in `logs/` are kept: they are the only copies of those runs.",
+            "ru": "Логи старше 14 дней убираются: `run_curate.bat` удаляет `run_*.log`, а вкладка **Логи** может удалить логи прогонов по запросу — список показывается заранее. Архивные артефакты прогонов в `logs/` остаются: это единственные копии тех прогонов."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "logs",
+          "label": { "en": "Open the Logs tab", "ru": "Открыть вкладку «Логи»" }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "The line `[critical] audit: ok=… failed=…` at the end describes the composition of the availability check. It is a metric, not a filter: the nodes it mentions are not cut out.",
+            "ru": "Строка `[critical] audit: ok=… failed=…` в конце описывает состав проверки доступности. Это метрика, а не фильтр: ноды с этой проверки не вырезаются."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "log", "text": { "en": "The dictionary of the log", "ru": "Словарь лога" } },
+            { "id": "config-urls", "text": { "en": "The addresses a node is checked against", "ru": "Адреса, по которым проверяется нода" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glossary",
+      "category": "reference",
+      "title": { "en": "Words used in this guide", "ru": "Словарь" },
+      "summary": {
+        "en": "The terms that show up in the interface, in the log and in the settings.",
+        "ru": "Термины, которые встречаются в интерфейсе, в логе и в настройках."
+      },
+      "blocks": [
+        {
+          "t": "table",
+          "head": [
+            { "en": "Word", "ru": "Слово" },
+            { "en": "What it means", "ru": "Что значит" }
+          ],
+          "rows": [
+            [
+              { "en": "node", "ru": "нода" },
+              { "en": "one proxy link from a list: an address, a port, a protocol and an access key", "ru": "одна прокси-ссылка из списка: адрес, порт, протокол и ключ доступа" }
+            ],
+            [
+              { "en": "list / source", "ru": "список / источник" },
+              { "en": "the collection of links the program downloads; the addresses live in `sources.txt`", "ru": "сбор ссылок, который программа скачивает; адреса лежат в `sources.txt`" }
+            ],
+            [
+              { "en": "funnel", "ru": "воронка" },
+              { "en": "how many nodes reached every stage of the run; shown in **Last Scan**", "ru": "сколько нод дошло до каждого этапа прогона; видно в **Последний скан**" }
+            ],
+            [
+              { "en": "exit country", "ru": "страна выхода" },
+              { "en": "the country by the external IP of the node; it is detected through the tunnel of that node, the label in the name is not trusted", "ru": "страна по внешнему IP ноды; определяется через туннель самой ноды, надписи в названии не доверяют" }
+            ],
+            [
+              { "en": "fail-open", "ru": "fail-open" },
+              { "en": "the rule “better to skip than to cut out wrongly”: when a check fails, the node stays", "ru": "правило «лучше пропустить, чем ошибочно отсечь»: при сбое проверки нода остаётся" }
+            ],
+            [
+              { "en": "subscription", "ru": "подписка" },
+              { "en": "the file with the node list in a format a client can read (URI, base64, Clash YAML)", "ru": "файл со списком нод в формате, который читает клиент (URI, base64, Clash YAML)" }
+            ],
+            [
+              { "en": "core", "ru": "ядро" },
+              { "en": "the program a node is tested through: Xray (`vless`, `vmess`, `trojan`, `ss`) or sing-box (`hysteria2`, `tuic`, `anytls`); `wireguard` and `mtproto` have no core", "ru": "программа, через которую проверяется нода: Xray (`vless`, `vmess`, `trojan`, `ss`) или sing-box (`hysteria2`, `tuic`, `anytls`); у `wireguard` и `mtproto` ядра нет" }
+            ],
+            [
+              { "en": "checkpoint", "ru": "чекпоинт" },
+              { "en": "the intermediate state of a run: when the connection breaks, it lets the program continue from the same place", "ru": "промежуточное состояние прогона: при обрыве связи позволяет продолжить с того же места" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "protocols", "text": { "en": "Protocols, transports and encryption", "ru": "Протоколы, транспорты и шифрование" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-map",
+      "category": "config",
+      "title": { "en": "config.yaml: the map of the file", "ru": "config.yaml: карта разделов" },
+      "summary": {
+        "en": "Which section holds which setting, and how edits are checked.",
+        "ru": "В каком разделе какой параметр и как проверяются правки."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "`config.yaml` is the single source of settings for the whole pipeline. The **Settings** tab edits that very file: every field of the form is one key of it.",
+            "ru": "`config.yaml` — единственный источник настроек для всего пайплайна. Вкладка **Настройки** правит тот же файл: каждое поле формы — один его ключ."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "Edits are checked by the same schema the pipeline reads. A value outside the allowed range (for example `network_probe_interval` outside 0.5–5.0) is rejected and the file stays as it was. The previous version is kept in `config.yaml.prev` — the **Restore previous** button brings it back.",
+            "ru": "Правки проверяются той же схемой, что читает пайплайн. Значение вне допустимого диапазона (например `network_probe_interval` вне 0.5–5.0) отклоняется, и файл остаётся прежним. Предыдущая версия хранится в `config.yaml.prev` — кнопка **Restore previous** возвращает её."
+          }
+        },
+        {
+          "t": "h",
+          "id": "sections",
+          "text": { "en": "The sections", "ru": "Разделы" }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Section", "ru": "Раздел" },
+            { "en": "What it holds", "ru": "Что в нём" }
+          ],
+          "rows": [
+            [
+              { "en": "`xray`, `singbox`", "ru": "`xray`, `singbox`" },
+              { "en": "where the cores live and whether they are used", "ru": "где лежат ядра и включены ли они" }
+            ],
+            [
+              { "en": "`fetching`", "ru": "`fetching`" },
+              { "en": "the list of sources, how many links to take, how long to wait", "ru": "список источников, сколько ссылок брать, как долго ждать" }
+            ],
+            [
+              { "en": "`tcping`, `udping`", "ru": "`tcping`, `udping`" },
+              { "en": "the cheapest probes: TCP and QUIC reachability", "ru": "самые дешёвые пробы: достижимость по TCP и QUIC" }
+            ],
+            [
+              { "en": "`testing`", "ru": "`testing`" },
+              { "en": "timeouts, parallelism, thresholds, caches", "ru": "таймауты, параллелизм, пороги, кэши" }
+            ],
+            [
+              { "en": "`filters`", "ru": "`filters`" },
+              { "en": "which nodes enter the run at all", "ru": "какие ноды вообще берутся в прогон" }
+            ],
+            [
+              { "en": "`speedtest`", "ru": "`speedtest`" },
+              { "en": "the speed measurement: profiles, the quick tier, rescue", "ru": "замер скорости: профили, быстрый тир, rescue" }
+            ],
+            [
+              { "en": "`output`", "ru": "`output`" },
+              { "en": "where the result is written", "ru": "куда пишется результат" }
+            ],
+            [
+              { "en": "`ui`", "ru": "`ui`" },
+              { "en": "the port of the web interface", "ru": "порт веб-интерфейса" }
+            ],
+            [
+              { "en": "`connectivity_urls`, `bypass_urls`, `critical_urls`", "ru": "`connectivity_urls`, `bypass_urls`, `critical_urls`" },
+              { "en": "the addresses a node is checked against", "ru": "адреса, по которым проверяется нода" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "editing",
+          "text": { "en": "How to edit", "ru": "Как править" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The form at the top of the **Settings** tab covers the parameters you change often. The **Advanced settings** area below it is the whole `config.yaml` as text: press **Save** and the lines the form owns are overwritten with the form values, while the lines you edited by hand stay as they are.",
+            "ru": "Форма вверху вкладки **Настройки** — параметры, которые меняют часто. Область **Advanced settings** под ней — весь `config.yaml` текстом: после **Сохранить** строки, за которые отвечает форма, перезаписываются её значениями, а строки, правленные руками, остаются как есть."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "Paths inside `config.yaml` are relative to the program folder (`bin/xray.exe`). The whole folder can therefore be copied to another disk without touching the configuration.",
+            "ru": "Пути в `config.yaml` относительные, от папки программы (`bin/xray.exe`). Поэтому всю папку можно перенести на другой диск, не правя конфигурацию."
+          }
+        },
+        {
+          "t": "ui",
+          "tab": "settings",
+          "label": { "en": "Open the settings", "ru": "Открыть настройки" }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-cores", "text": { "en": "Cores: xray and sing-box", "ru": "Ядра: xray и sing-box" } },
+            { "id": "config-fetching", "text": { "en": "Collecting the links: fetching", "ru": "Сбор ссылок: fetching" } },
+            { "id": "config-testing", "text": { "en": "Checks and thresholds: testing", "ru": "Проверки и пороги: testing" } },
+            { "id": "settings-overview", "text": { "en": "Settings: what to change where", "ru": "Настройки: где что менять" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-cores",
+      "category": "config",
+      "title": { "en": "Cores: xray and sing-box", "ru": "Ядра: xray и sing-box" },
+      "summary": {
+        "en": "Two engines, chosen by the protocol of the node — never by hand.",
+        "ru": "Два движка; ядро выбирается по протоколу ноды, а не руками."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "Nodes are checked through two engines: Xray (vless, vmess, trojan, ss) and sing-box (hysteria2, tuic, anytls). The engine follows from the protocol of the node, so you never pick it yourself — you pick which protocols to test.",
+            "ru": "Ноды проверяются через два движка: Xray (vless, vmess, trojan, ss) и sing-box (hysteria2, tuic, anytls). Ядро определяется протоколом ноды, поэтому выбирать его вручную не нужно — вы выбираете, какие протоколы тестировать."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`xray.path`", "ru": "`xray.path`" },
+              { "en": "path to the Xray binary", "ru": "путь к бинарнику Xray" },
+              { "en": "never by hand: the path is relative (`bin/xray.exe`) and travels with the folder", "ru": "никогда вручную: путь относительный (`bin/xray.exe`) и переезжает вместе с папкой" }
+            ],
+            [
+              { "en": "`xray.enabled`", "ru": "`xray.enabled`" },
+              { "en": "whether nodes are checked through Xray at all", "ru": "проверять ли ноды через Xray вообще" },
+              { "en": "`false` — no vless / vmess / trojan / ss nodes in the result", "ru": "`false` — в результате не будет нод vless / vmess / trojan / ss" }
+            ],
+            [
+              { "en": "`xray.use_xhttp_name`", "ru": "`xray.use_xhttp_name`" },
+              { "en": "how the transport is named in the config built for Xray: `xhttp` or `splithttp`", "ru": "как называется транспорт в конфиге для Xray: `xhttp` или `splithttp`" },
+              { "en": "only if Xray refuses to start on xhttp nodes; the default suits the current core", "ru": "только если Xray отказывается подниматься на xhttp-нодах; по умолчанию подходит текущему ядру" }
+            ],
+            [
+              { "en": "`singbox.path`", "ru": "`singbox.path`" },
+              { "en": "path to the sing-box binary", "ru": "путь к бинарнику sing-box" },
+              { "en": "never by hand — same as `xray.path`", "ru": "никогда вручную — как и `xray.path`" }
+            ],
+            [
+              { "en": "`singbox.enabled`", "ru": "`singbox.enabled`" },
+              { "en": "whether nodes are checked through sing-box at all", "ru": "проверять ли ноды через sing-box вообще" },
+              { "en": "`false` — no hysteria2 / tuic / anytls nodes in the result", "ru": "`false` — в результате не будет нод hysteria2 / tuic / anytls" }
+            ]
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "A missing or disabled binary does not stop the run — the nodes of that engine are simply dropped. The log says which: `[engines] sing-box: binary not found (...)`.",
+            "ru": "Отсутствующий или выключенный бинарник не остановит прогон — ноды этого движка просто отбросятся. Что именно, видно в логе: `[engines] sing-box: binary not found (...)`."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "protocols", "text": { "en": "Protocols, transports and encryption", "ru": "Протоколы, транспорты и шифрование" } },
+            { "id": "av-blocked", "text": { "en": "The antivirus removed the cores", "ru": "Антивирус удалил ядра" } },
+            { "id": "config-map", "text": { "en": "config.yaml: the map of the file", "ru": "config.yaml: карта разделов" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-fetching",
+      "category": "config",
+      "title": { "en": "Collecting the links: fetching", "ru": "Сбор ссылок: fetching" },
+      "summary": {
+        "en": "How many links are taken, how old they may be and how long to wait.",
+        "ru": "Сколько ссылок берётся, какой возраст допустим и сколько ждать."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "This section decides what the program downloads before anything is checked. The friendly version of it is in [Collecting the links](fetch); this is the complete list of keys.",
+            "ru": "Этот раздел решает, что программа скачивает до всяких проверок. Простая версия — в статье [Сбор ссылок](fetch); здесь полный список ключей."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`sources_file`", "ru": "`sources_file`" },
+              { "en": "the file with the addresses of the lists", "ru": "файл с адресами списков" },
+              { "en": "leave it alone: by default `sources.txt`, edited on the **Sources** tab", "ru": "не трогайте: по умолчанию `sources.txt`, его правят на вкладке **Источники**" }
+            ],
+            [
+              { "en": "`max_links`", "ru": "`max_links`" },
+              { "en": "how many links are taken from one source", "ru": "сколько ссылок берётся с одного источника" },
+              { "en": "`0` — no limit; put 100 for a quick test run", "ru": "`0` — без ограничения; для быстрой проверки поставьте 100" }
+            ],
+            [
+              { "en": "`max_age_days`", "ru": "`max_age_days`" },
+              { "en": "how many days back a source's update date may be; older lists are skipped as stale", "ru": "на сколько дней назад может отставать дата обновления источника; более старые списки пропускаются как протухшие" },
+              { "en": "raise it if lists update rarely; lower it if stale nodes waste the budget (default: 7)", "ru": "поднимите, если списки обновляются редко; снизьте, если протухшие ноды съедают бюджет (по умолчанию: 7)" }
+            ],
+            [
+              { "en": "`workers`", "ru": "`workers`" },
+              { "en": "how many lists are downloaded at the same time", "ru": "сколько списков скачивается одновременно" },
+              { "en": "lower it on a weak connection — the run gets slower but loses fewer sources to timeouts", "ru": "снизьте на слабом канале — прогон будет дольше, но меньше источников отвалится по таймауту" }
+            ],
+            [
+              { "en": "`timeout`", "ru": "`timeout`" },
+              { "en": "how many seconds to wait for a source to answer", "ru": "сколько секунд ждать ответа источника" },
+              { "en": "a frequent cause of “the list vanished from the run”: too small a value", "ru": "частая причина «список пропал из прогона»: слишком маленькое значение" }
+            ],
+            [
+              { "en": "`feed_cache_enabled`", "ru": "`feed_cache_enabled`" },
+              { "en": "keep the downloaded lists in `cache/`: a list whose Last-Modified did not change is taken from the cache instead of being downloaded again", "ru": "хранить скачанные списки в `cache/`: список, чей Last-Modified не менялся, берётся из кэша, а не скачивается заново" },
+              { "en": "`false` — always download (slower, but the freshest possible)", "ru": "`false` — скачивать всегда (медленнее, зато свежее)" }
+            ],
+            [
+              { "en": "`feed_cache_ttl_hours`", "ru": "`feed_cache_ttl_hours`" },
+              { "en": "how long a cached list is considered fresh", "ru": "сколько часов кэш считается свежим" },
+              { "en": "the default is 24 hours", "ru": "по умолчанию 24 часа" }
+            ]
+          ]
+        },
+        {
+          "t": "ui",
+          "tab": "sources",
+          "label": { "en": "Open the list of sources", "ru": "Открыть список источников" }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "fetch", "text": { "en": "Collecting the links (short version)", "ru": "Сбор ссылок (коротко)" } },
+            { "id": "zero-nodes", "text": { "en": "No nodes were found", "ru": "Нашлось 0 нод" } },
+            { "id": "config-map", "text": { "en": "config.yaml: the map of the file", "ru": "config.yaml: карта разделов" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-probes",
+      "category": "config",
+      "title": { "en": "The probes: tcping and udping", "ru": "Пробы: tcping и udping" },
+      "summary": {
+        "en": "The cheapest check: does the host answer at all.",
+        "ru": "Самая дешёвая проверка: отвечает ли хост вообще."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "Before any core is started the program checks whether the host answers: over TCP for most protocols, over QUIC for hysteria2 and tuic. Everything that does not answer is dropped here — cheaply, before the expensive stages.",
+            "ru": "До запуска ядер программа проверяет, отвечает ли хост: по TCP для большинства протоколов, по QUIC для hysteria2 и tuic. Всё, что не отвечает, отбрасывается здесь — дёшево, до дорогих этапов."
+          }
+        },
+        {
+          "t": "h",
+          "id": "tcping",
+          "text": { "en": "tcping — the TCP probe", "ru": "tcping — проба по TCP" }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`timeout`", "ru": "`timeout`" },
+              { "en": "how many seconds a single connection attempt may take", "ru": "сколько секунд может занимать одна попытка соединения" },
+              { "en": "the default is 2.0; raising it was measured and did not bring more nodes", "ru": "по умолчанию 2.0; повышение измеряли, нод не прибавилось" }
+            ],
+            [
+              { "en": "`workers`", "ru": "`workers`" },
+              { "en": "how many probes run at the same time", "ru": "сколько проб идёт одновременно" },
+              { "en": "the default is 128; fewer is gentler on the network but makes the stage longer", "ru": "по умолчанию 128; меньше — аккуратнее к сети, но фаза дольше" }
+            ],
+            [
+              { "en": "`prefer_ipv4`", "ru": "`prefer_ipv4`" },
+              { "en": "try IPv4 addresses first", "ru": "сначала пробовать адреса IPv4" },
+              { "en": "leave it on: IPv4 is usually the faster path", "ru": "оставьте включённым: IPv4 обычно быстрее" }
+            ],
+            [
+              { "en": "`max_addrs`", "ru": "`max_addrs`" },
+              { "en": "how many addresses of one host are tried", "ru": "сколько адресов одного хоста пробуется" },
+              { "en": "raise it for hosts with many A-records", "ru": "поднимите для хостов с множеством A-записей" }
+            ],
+            [
+              { "en": "`probe_retries`", "ru": "`probe_retries`" },
+              { "en": "how many times a failed address is retried (`0` — once)", "ru": "сколько раз повторяется провалившийся адрес (`0` — одна попытка)" },
+              { "en": "the default is 2: a single attempt is wrong about 40 % of the time", "ru": "по умолчанию 2: одна попытка ошибается примерно в 40 % случаев" }
+            ],
+            [
+              { "en": "`retry_timeout`", "ru": "`retry_timeout`" },
+              { "en": "the timeout of a retry — shorter than the first attempt, because it only reaches the unlucky ones", "ru": "таймаут повтора — короче первого: до него доходят те, кому не повезло, а не медленные" },
+              { "en": "the default is 1.5", "ru": "по умолчанию 1.5" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "udping",
+          "text": { "en": "udping — the QUIC probe", "ru": "udping — проба по QUIC" }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`timeout`", "ru": "`timeout`" },
+              { "en": "how many seconds to wait for a QUIC answer", "ru": "сколько секунд ждать ответа по QUIC" },
+              { "en": "the default is 3.0", "ru": "по умолчанию 3.0" }
+            ],
+            [
+              { "en": "`workers`", "ru": "`workers`" },
+              { "en": "how many QUIC probes at the same time", "ru": "сколько QUIC-проб одновременно" },
+              { "en": "the default is 256", "ru": "по умолчанию 256" }
+            ],
+            [
+              { "en": "`attempts`", "ru": "`attempts`" },
+              { "en": "how many attempts per address", "ru": "сколько попыток на адрес" },
+              { "en": "the default is 2", "ru": "по умолчанию 2" }
+            ],
+            [
+              { "en": "`probe_size`", "ru": "`probe_size`" },
+              { "en": "the size of the test packet", "ru": "размер проверочного пакета" },
+              { "en": "the default is 1200 bytes", "ru": "по умолчанию 1200 байт" }
+            ],
+            [
+              { "en": "`max_consecutive_timeouts`", "ru": "`max_consecutive_timeouts`" },
+              { "en": "after that many tested nodes in a row with no answer, the rest are marked as blocked by the system", "ru": "после стольких подряд проверенных нод без ответа остальные помечаются как заблокированные системой" },
+              { "en": "`0` — switched off", "ru": "`0` — выключено" }
+            ],
+            [
+              { "en": "`prefer_ipv4`, `max_addrs`", "ru": "`prefer_ipv4`, `max_addrs`" },
+              { "en": "the same meaning as in `tcping`", "ru": "тот же смысл, что в `tcping`" },
+              { "en": "rarely need changing", "ru": "редко требуют правки" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "phases", "text": { "en": "What a run does, step by step", "ru": "Что делает прогон по шагам" } },
+            { "id": "config-testing", "text": { "en": "Checks and thresholds: testing", "ru": "Проверки и пороги: testing" } },
+            { "id": "config-map", "text": { "en": "config.yaml: the map of the file", "ru": "config.yaml: карта разделов" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-testing",
+      "category": "config",
+      "title": { "en": "Checks and thresholds: testing", "ru": "Проверки и пороги: testing" },
+      "summary": {
+        "en": "The largest section: how long each check waits, how much runs in parallel and what counts as good.",
+        "ru": "Самый большой раздел: сколько ждёт каждая проверка, сколько идёт параллельно и что считается хорошим."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "This section shapes the run: how long it takes and how many nodes survive. The values are the result of measurements on real runs — changing one of them is worth a test run, not a guess.",
+            "ru": "Этот раздел определяет вид прогона: сколько он длится и сколько нод уцелеет. Значения получены замерами на живых прогонах — менять их стоит после пробного прогона, а не на глаз."
+          }
+        },
+        {
+          "t": "h",
+          "id": "timeouts",
+          "text": { "en": "Timeouts", "ru": "Таймауты" }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`timeout`", "ru": "`timeout`" },
+              { "en": "the basic timeout of a node check", "ru": "базовый таймаут проверки ноды" },
+              { "en": "the default is 6.0", "ru": "по умолчанию 6.0" }
+            ],
+            [
+              { "en": "`connectivity_timeout`", "ru": "`connectivity_timeout`" },
+              { "en": "how long a node may take to reach the internet", "ru": "сколько нода может идти до выхода в интернет" },
+              { "en": "the default is 6.0", "ru": "по умолчанию 6.0" }
+            ],
+            [
+              { "en": "`connectivity_prefilter_timeout`", "ru": "`connectivity_prefilter_timeout`" },
+              { "en": "the ceiling for the quick pre-filter (stage 5)", "ru": "потолок для быстрого отсева (этап 5)" },
+              { "en": "do not lower it to 1.0: a single second cut about 75 % of working nodes on a mobile network", "ru": "не опускайте до 1.0: одна секунда отсекала около 75 % рабочих нод на мобильной сети" }
+            ],
+            [
+              { "en": "`bypass_timeout`", "ru": "`bypass_timeout`" },
+              { "en": "how long a blocked-site check may take", "ru": "сколько может длиться проверка заблокированного сайта" },
+              { "en": "the default is 8.0", "ru": "по умолчанию 8.0" }
+            ],
+            [
+              { "en": "`critical_timeout`", "ru": "`critical_timeout`" },
+              { "en": "how long a mandatory address may take", "ru": "сколько может длиться проверка обязательного адреса" },
+              { "en": "the default is 12.0", "ru": "по умолчанию 12.0" }
+            ],
+            [
+              { "en": "`diagnose_timeout`", "ru": "`diagnose_timeout`" },
+              { "en": "the probe of the server behind a dropped node: it tells “the server is dead” from “the protocol failed”", "ru": "зонд сервера у отсеянной ноды: отличает «сервер мёртв» от «виноват протокол»" },
+              { "en": "`0` switches the diagnosis off — the log then has no breakdown of the main cut", "ru": "`0` выключает диагностику — в логе не будет разбивки главного отсева" }
+            ],
+            [
+              { "en": "`diagnose_workers`", "ru": "`diagnose_workers`" },
+              { "en": "how many probes of that kind run at the same time", "ru": "сколько таких зондов идёт одновременно" },
+              { "en": "`0` — the same number as `connectivity_workers`", "ru": "`0` — столько же, сколько `connectivity_workers`" }
+            ],
+            [
+              { "en": "`geoip_timeout`", "ru": "`geoip_timeout`" },
+              { "en": "how long the country service may answer", "ru": "сколько может отвечать сервис страны" },
+              { "en": "`0` — the built-in default of 3 s; a failed answer never drops a node", "ru": "`0` — встроенное значение 3 с; неудачный ответ не отсекает ноду" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "parallel",
+          "text": { "en": "Parallelism and the port pool", "ru": "Параллелизм и пул портов" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "Every check that goes through a core needs a local port. The pool size is the ceiling for all of them at once — the program refuses settings that would need more ports than the pool holds.",
+            "ru": "Каждой проверке через ядро нужен локальный порт. Размер пула — потолок для всех сразу: программа отклоняет настройки, которым нужно больше портов, чем есть в пуле."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`port_pool_size`", "ru": "`port_pool_size`" },
+              { "en": "how many local ports the program may use at once", "ru": "сколько локальных портов программа может использовать одновременно" },
+              { "en": "raise it together with the workers below; lower it on a restrictive network", "ru": "поднимайте вместе с воркерами ниже; снижайте на ограниченной сети" }
+            ],
+            [
+              { "en": "`workers`", "ru": "`workers`" },
+              { "en": "the general parallelism of the checks", "ru": "общий параллелизм проверок" },
+              { "en": "the default is 24", "ru": "по умолчанию 24" }
+            ],
+            [
+              { "en": "`connectivity_workers`", "ru": "`connectivity_workers`" },
+              { "en": "the parallelism of the connectivity stage — the main lever of the run length", "ru": "параллелизм этапа связности — главный рычаг длительности прогона" },
+              { "en": "raise it on a fast line, lower it if the cores start failing", "ru": "поднимайте на быстром канале, снижайте, если ядра начинают отказывать стартовать" }
+            ],
+            [
+              { "en": "`connectivity_batch_size`", "ru": "`connectivity_batch_size`" },
+              { "en": "how many nodes one batch of the connectivity stage holds", "ru": "сколько нод в одном батче этапа связности" },
+              { "en": "the default is 15", "ru": "по умолчанию 15" }
+            ],
+            [
+              { "en": "`batch_size`", "ru": "`batch_size`" },
+              { "en": "how many nodes one batch of the delay stage holds", "ru": "сколько нод в одном батче этапа задержки" },
+              { "en": "the default is 15", "ru": "по умолчанию 15" }
+            ],
+            [
+              { "en": "`batch_workers`", "ru": "`batch_workers`" },
+              { "en": "how many batches of the delay stage run at the same time", "ru": "сколько батчей этапа задержки идут одновременно" },
+              { "en": "the default is 4; more than that was measured to double the failures of the core start", "ru": "по умолчанию 4; больше измеряли — отказы старта ядра выросли вдвое" }
+            ],
+            [
+              { "en": "`batch_stagger_ms`", "ru": "`batch_stagger_ms`" },
+              { "en": "the delay between the starts of parallel batches, in milliseconds", "ru": "пауза между стартами параллельных батчей, в миллисекундах" },
+              { "en": "the default is 200; it lowers the peak competition for the ports of the core", "ru": "по умолчанию 200; снижает пиковую конкуренцию за порты ядра" }
+            ],
+            [
+              { "en": "`recheck_pause_sec`", "ru": "`recheck_pause_sec`" },
+              { "en": "a pause before the dropped nodes are tried again", "ru": "пауза перед повтором отсеянных нод" },
+              { "en": "`0` — switched off; the repeat only helps for transient failures", "ru": "`0` — выключено; повтор помогает только при временных сбоях" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "thresholds",
+          "text": { "en": "Thresholds", "ru": "Пороги" }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`max_tcp_latency`", "ru": "`max_tcp_latency`" },
+              { "en": "the hard ceiling of the TCP latency, in milliseconds", "ru": "жёсткий потолок TCP-задержки, в миллисекундах" },
+              { "en": "the default is 3000; lower it only after a test run", "ru": "по умолчанию 3000; снижать — только после пробного прогона" }
+            ],
+            [
+              { "en": "`max_tcp_latency_soft`", "ru": "`max_tcp_latency_soft`" },
+              { "en": "the soft ceiling: nodes between the two thresholds are not dropped but may be returned by the rescue stage", "ru": "мягкий потолок: ноды между двумя порогами не отбрасываются, но могут вернуться на этапе rescue" },
+              { "en": "the default is 2000; `0` switches the soft filter off", "ru": "по умолчанию 2000; `0` выключает мягкий фильтр" }
+            ],
+            [
+              { "en": "`max_e2e_latency_ms`", "ru": "`max_e2e_latency_ms`" },
+              { "en": "the ceiling of the end-to-end latency through the tunnel", "ru": "потолок сквозной задержки через туннель" },
+              { "en": "`0` — no ceiling", "ru": "`0` — без потолка" }
+            ],
+            [
+              { "en": "`critical_mode`", "ru": "`critical_mode`" },
+              { "en": "how the mandatory addresses are applied: `all` — every one of them, `any` — at least one", "ru": "как применяются обязательные адреса: `all` — все, `any` — хотя бы один" },
+              { "en": "the default is `all`", "ru": "по умолчанию `all`" }
+            ],
+            [
+              { "en": "`ipv6_mode`", "ru": "`ipv6_mode`" },
+              { "en": "`auto` — IPv6 only if the network shows it works, `force` — always, `off` — never", "ru": "`auto` — IPv6, только если сеть показала, что он работает, `force` — всегда, `off` — никогда" },
+              { "en": "the default is `auto`", "ru": "по умолчанию `auto`" }
+            ],
+            [
+              { "en": "`network_probe_interval`", "ru": "`network_probe_interval`" },
+              { "en": "how often the program checks that the connection is still alive", "ru": "как часто программа проверяет, что связь жива" },
+              { "en": "the default is 3.0 (the range is 0.5–5.0): a longer interval notices an outage later", "ru": "по умолчанию 3.0 (диапазон 0.5–5.0): больший интервал замечает обрыв позже" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "caches",
+          "text": { "en": "Caches and trust", "ru": "Кэши и доверие" }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`dead_nodes_cache_enabled`", "ru": "`dead_nodes_cache_enabled`" },
+              { "en": "skip the nodes that failed the connectivity check in a previous run", "ru": "пропускать ноды, упавшие на проверке связности в прошлом прогоне" },
+              { "en": "the default is `true`: it shortens the run noticeably", "ru": "по умолчанию `true`: заметно сокращает прогон" }
+            ],
+            [
+              { "en": "`dead_nodes_ttl_hours`", "ru": "`dead_nodes_ttl_hours`" },
+              { "en": "how long a dead node is remembered", "ru": "сколько часов помнятся мёртвые ноды" },
+              { "en": "the default is 24", "ru": "по умолчанию 24" }
+            ],
+            [
+              { "en": "`trusted_nodes_enabled`", "ru": "`trusted_nodes_enabled`" },
+              { "en": "nodes from the previous run skip the pre-filter — but always pass the quick speed test, so a stale node cannot reach the subscription unchecked", "ru": "ноды прошлого прогона минуют пре-фильтр — но всегда проходят быстрый замер, так что протухшая нода не попадёт в подписку непроверенной" },
+              { "en": "the default is `true`", "ru": "по умолчанию `true`" }
+            ],
+            [
+              { "en": "`trusted_nodes_ttl_hours`", "ru": "`trusted_nodes_ttl_hours`" },
+              { "en": "the window of trust: an older file counts as absent", "ru": "окно доверия: более старый файл считается отсутствующим" },
+              { "en": "the default is 1.0", "ru": "по умолчанию 1.0" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "selfcheck", "text": { "en": "Checking and tuning your computer", "ru": "Проверка и тюнинг компьютера" } },
+            { "id": "phases", "text": { "en": "What a run does, step by step", "ru": "Что делает прогон по шагам" } },
+            { "id": "config-probes", "text": { "en": "The probes: tcping and udping", "ru": "Пробы: tcping и udping" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-speedtest",
+      "category": "config",
+      "title": { "en": "The speed measurement: speedtest", "ru": "Замер скорости: speedtest" },
+      "summary": {
+        "en": "The two profiles, the quick tier before the delay stage and the rescue stage.",
+        "ru": "Два профиля, быстрый тир перед замером задержки и этап rescue."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The final stage measures the throughput of every surviving node. The profile chosen in the toolbar (Auto / Full / Light) picks one of the two volume blocks below.",
+            "ru": "Финальный этап измеряет скорость каждой уцелевшей ноды. Профиль, выбранный в панели (Auto / Full / Light), выбирает один из двух блоков объёма ниже."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`enabled`", "ru": "`enabled`" },
+              { "en": "whether the throughput is measured at all", "ru": "измерять ли скорость вообще" },
+              { "en": "`false` — the subscription has no speed order", "ru": "`false` — в подписке не будет порядка по скорости" }
+            ],
+            [
+              { "en": "`url`", "ru": "`url`" },
+              { "en": "the address the test file is downloaded from", "ru": "адрес, с которого качается тестовый файл" },
+              { "en": "put your own if the default is blocked on your network", "ru": "подставьте свой, если стандартный адрес закрыт в вашей сети" }
+            ],
+            [
+              { "en": "`light.bytes`, `light.timeout`", "ru": "`light.bytes`, `light.timeout`" },
+              { "en": "the volume and the time limit of the Light profile", "ru": "объём и лимит времени профиля Light" },
+              { "en": "the defaults are 1 MB and 5 s", "ru": "по умолчанию 1 МБ и 5 с" }
+            ],
+            [
+              { "en": "`full.bytes`, `full.timeout`", "ru": "`full.bytes`, `full.timeout`" },
+              { "en": "the volume and the time limit of the Full profile", "ru": "объём и лимит времени профиля Full" },
+              { "en": "the defaults are 3 MB and 10 s; a larger volume drew a rate limit from the test service", "ru": "по умолчанию 3 МБ и 10 с; больший объём получал rate limit от тестового сервиса" }
+            ],
+            [
+              { "en": "`retries`", "ru": "`retries`" },
+              { "en": "how many times a broken measurement is repeated", "ru": "сколько раз повторяется оборванный замер" },
+              { "en": "the default is 1", "ru": "по умолчанию 1" }
+            ],
+            [
+              { "en": "`workers`", "ru": "`workers`" },
+              { "en": "how many nodes are measured at the same time", "ru": "сколько нод меряется одновременно" },
+              { "en": "the default is 8; more means more load on the test service", "ru": "по умолчанию 8; больше — больше нагрузки на тестовый сервис" }
+            ],
+            [
+              { "en": "`quick.enabled`", "ru": "`quick.enabled`" },
+              { "en": "the quick tier before the delay stage: a rough measurement that discards hopeless nodes early", "ru": "быстрый тир перед этапом задержки: грубый замер, отбрасывающий заведомо плохие ноды заранее" },
+              { "en": "the default is `true`", "ru": "по умолчанию `true`" }
+            ],
+            [
+              { "en": "`quick.bytes`, `quick.timeout`", "ru": "`quick.bytes`, `quick.timeout`" },
+              { "en": "the volume and the time limit of the quick measurement", "ru": "объём и лимит времени быстрого замера" },
+              { "en": "the defaults are 250 KB and 3 s", "ru": "по умолчанию 250 КБ и 3 с" }
+            ],
+            [
+              { "en": "`quick.workers`, `quick.retries`", "ru": "`quick.workers`, `quick.retries`" },
+              { "en": "the parallelism and the retries of the quick tier", "ru": "параллелизм и повторы быстрого тира" },
+              { "en": "the defaults are 10 and 1", "ru": "по умолчанию 10 и 1" }
+            ],
+            [
+              { "en": "`quick_min_mbps`", "ru": "`quick_min_mbps`" },
+              { "en": "the speed below which a node is dropped in the quick tier", "ru": "скорость, ниже которой нода отбрасывается в быстром тире" },
+              { "en": "`0` — drop nothing by speed", "ru": "`0` — не отбрасывать по скорости" }
+            ],
+            [
+              { "en": "`quick_drop_failed`", "ru": "`quick_drop_failed`" },
+              { "en": "drop the nodes whose quick measurement failed outright", "ru": "отбрасывать ноды, у которых быстрый замер не удался вовсе" },
+              { "en": "the default is `true`", "ru": "по умолчанию `true`" }
+            ],
+            [
+              { "en": "`rescue_enabled`", "ru": "`rescue_enabled`" },
+              { "en": "return the nodes dropped for a soft reason if they turn out to be fast enough", "ru": "возвращать ноды, отброшенные по мягкой причине, если они всё же быстрые" },
+              { "en": "the default is `true`", "ru": "по умолчанию `true`" }
+            ],
+            [
+              { "en": "`rescue_min_mbps`", "ru": "`rescue_min_mbps`" },
+              { "en": "the speed a node must show to be returned by the rescue stage", "ru": "скорость, которую нода должна показать, чтобы её вернул этап rescue" },
+              { "en": "the default is 5 Mbps", "ru": "по умолчанию 5 Мбит/с" }
+            ],
+            [
+              { "en": "`full_max_measure`", "ru": "`full_max_measure`" },
+              { "en": "how many nodes get the full measurement", "ru": "сколько нод получают полный замер" },
+              { "en": "`0` — no limit", "ru": "`0` — без ограничения" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "profiles", "text": { "en": "Auto / Full / Light: how much traffic it costs", "ru": "Auto / Full / Light: сколько трафика уходит" } },
+            { "id": "config-testing", "text": { "en": "Checks and thresholds: testing", "ru": "Проверки и пороги: testing" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-filters",
+      "category": "config",
+      "title": { "en": "Filters: the complete list of keys", "ru": "Фильтры: полный список ключей" },
+      "summary": {
+        "en": "Every key of the filters section, including the ones the form does not show.",
+        "ru": "Все ключи раздела filters — включая те, которых нет в форме."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The everyday part of the filters is described in [Filters: which nodes are taken at all](filters); this is the full list of keys.",
+            "ru": "Обычная часть фильтров описана в статье [Фильтры: какие ноды берутся вообще](filters); здесь полный список ключей."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`only_standard_ports`", "ru": "`only_standard_ports`" },
+              { "en": "keep only the nodes on the ports from `standard_ports`", "ru": "оставлять только ноды на портах из `standard_ports`" },
+              { "en": "switch it on when the lists are full of junk ports", "ru": "включайте, когда в списках много мусорных портов" }
+            ],
+            [
+              { "en": "`standard_ports`", "ru": "`standard_ports`" },
+              { "en": "the ports considered standard", "ru": "порты, считающиеся стандартными" },
+              { "en": "add the ports your own sources use — 22443 and 35000 are common for hysteria2 and tuic", "ru": "добавьте порты, которые используют ваши источники — 22443 и 35000 частые для hysteria2 и tuic" }
+            ],
+            [
+              { "en": "`blacklist_domains`", "ru": "`blacklist_domains`" },
+              { "en": "substrings of the domains whose nodes are dropped while the links are parsed", "ru": "подстроки доменов, ноды которых отбрасываются при разборе ссылок" },
+              { "en": "the list ships empty; fill it with the substrings you do not want — an empty list switches the filter off", "ru": "список поставляется пустым; заполните подстроками, которых не хотите, — пустой список отключает фильтр" }
+            ],
+            [
+              { "en": "`name_blacklist`", "ru": "`name_blacklist`" },
+              { "en": "substrings of the node names to drop", "ru": "подстроки имён нод, которые отбрасываются" },
+              { "en": "empty by default; a good place for `expired`, `free`, `traffic`", "ru": "по умолчанию пусто; хорошее место для `expired`, `free`, `traffic`" }
+            ],
+            [
+              { "en": "`protocol_blacklist`", "ru": "`protocol_blacklist`" },
+              { "en": "the protocols that are not tested at all", "ru": "протоколы, которые не тестируются вообще" },
+              { "en": "codes: vless, vmess, trojan, ss, hysteria2, tuic, anytls, mtproto, wireguard. It ships with `mtproto`: neither core speaks MTProxy, so such a node cannot be verified", "ru": "коды: vless, vmess, trojan, ss, hysteria2, tuic, anytls, mtproto, wireguard. В поставке стоит `mtproto`: ни одно ядро не говорит по MTProxy, поэтому такую ноду нечем проверить" }
+            ],
+            [
+              { "en": "`country_blacklist`", "ru": "`country_blacklist`" },
+              { "en": "the countries whose nodes are dropped", "ru": "страны, ноды которых отбрасываются" },
+              { "en": "country codes (`ru`, `de`); empty — no country filtering. The country is detected by the external IP of the node", "ru": "коды стран (`ru`, `de`); пусто — фильтра по стране нет. Страна определяется по внешнему IP ноды" }
+            ],
+            [
+              { "en": "`country_paranoid`", "ru": "`country_paranoid`" },
+              { "en": "what to do with a node whose country is unknown: `false` — keep it (fail-open), `true` — drop it (fail-closed), `adaptive` — drop it only if the service answered confidently", "ru": "что делать с нодой, у которой страна неизвестна: `false` — оставить (fail-open), `true` — отбросить (fail-closed), `adaptive` — отбросить, только если сервис ответил уверенно" },
+              { "en": "the default is `adaptive` (drop unknown only when the country service answered confidently); `true` is “safety at the price of the whole list”, `false` keeps every node", "ru": "по умолчанию `adaptive` (отбрасывать неизвестную страну, только если сервис ответил уверенно); `true` — это «безопасность ценой всей подписки», `false` оставляет любую ноду" }
+            ],
+            [
+              { "en": "`country_adaptive_min_confidence`", "ru": "`country_adaptive_min_confidence`" },
+              { "en": "how confident the country service must be for the adaptive mode to drop a node", "ru": "насколько уверенным должен быть сервис страны, чтобы adaptive-режим отбросил ноду" },
+              { "en": "the default is 0.8; it works only together with `country_paranoid: adaptive`", "ru": "по умолчанию 0.8; работает только вместе с `country_paranoid: adaptive`" }
+            ],
+            [
+              { "en": "`geo_cache_enabled`", "ru": "`geo_cache_enabled`" },
+              { "en": "remember the country of an address between runs", "ru": "помнить страну адреса между прогонами" },
+              { "en": "the default is `true`", "ru": "по умолчанию `true`" }
+            ],
+            [
+              { "en": "`geo_cache_ttl_hours`", "ru": "`geo_cache_ttl_hours`" },
+              { "en": "how long the country of an address is remembered", "ru": "сколько часов помнится страна адреса" },
+              { "en": "the default is 168 (a week)", "ru": "по умолчанию 168 (неделя)" }
+            ],
+            [
+              { "en": "`strategy_dedup`", "ru": "`strategy_dedup`" },
+              { "en": "collapse the full duplicates of one endpoint that differ only in the DPI strategy, keeping the fastest", "ru": "схлопывать полных двойников одного endpoint'а, отличающихся только стратегией DPI, оставляя лучший" },
+              { "en": "the default is `true`; it makes the list noticeably shorter", "ru": "по умолчанию `true`; список заметно короче" }
+            ],
+            [
+              { "en": "`aggressive_dedup`", "ru": "`aggressive_dedup`" },
+              { "en": "a stricter deduplication of the same address", "ru": "более строгая дедупликация того же адреса" },
+              { "en": "off by default; turn it on only if the list is full of repeats", "ru": "по умолчанию выключено; включайте, только если список полон повторов" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "filters", "text": { "en": "Filters: which nodes are taken at all", "ru": "Фильтры: какие ноды берутся вообще" } },
+            { "id": "config-map", "text": { "en": "config.yaml: the map of the file", "ru": "config.yaml: карта разделов" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-output",
+      "category": "config",
+      "title": { "en": "Where the result is written: output and ui", "ru": "Куда пишется результат: output и ui" },
+      "summary": {
+        "en": "The paths of the result, how many nodes are kept and the port of the interface.",
+        "ru": "Пути результата, сколько нод остаётся и порт интерфейса."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The paths are relative to the program folder, so the whole thing can be moved to another disk. The friendly version is in [The Nodes tab and the files in output/](nodes-and-files).",
+            "ru": "Пути относительные, от папки программы, поэтому её можно перенести на другой диск. Простая версия — в статье [Вкладка Узлы и файлы в output/](nodes-and-files)."
+          }
+        },
+        {
+          "t": "h",
+          "id": "min-speed",
+          "text": { "en": "Minimum speed: the last quality gate", "ru": "Минимальная скорость: последний контроль качества" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "After the full speed test, before the export, any node measured below `output.min_speed_mbps` is dropped from the subscription. The speed is read from the full measurement; for nodes that have none (rescued, or capped), the quick measurement is used. A node with no measurement at all is kept: the absence of a number is not proof of slowness. The gate does not work in the `--ping-only` and `--tcping-only` service modes, where nothing is measured.",
+            "ru": "После полного замера скорости, перед экспортом, узлы с замером ниже `output.min_speed_mbps` убираются из подписки. Скорость читается из полного замера; для узлов, у которых его нет (спасённые, либо отсечённые), используется быстрый замер. Узел без обоих замеров остаётся: отсутствие числа — не доказательство медленности. В служебных режимах `--ping-only` и `--tcping-only` контроль не работает, потому что замеров там нет."
+          }
+        },
+        {
+          "t": "h",
+          "id": "max-latency",
+          "text": { "en": "Maximum latency: the second limit", "ru": "Максимальная задержка: второй порог" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "`output.max_latency_ms` limits how slowly a node may answer the full check. Latency is the response time of the full check, not the TCP probe; because it is known right after the delay stage, the same limit drops slow nodes before the full speed test. If the two limits together remove every node, the fastest `output.quality_gate_min_keep` (10 by default) are kept and the summary records `relaxed: true` — an empty subscription is worse than an imprecise one. The dropped nodes are not written to a separate file; the counts are in `summary.json -> quality_prefilter` and `quality_gate`.",
+            "ru": "`output.max_latency_ms` ограничивает, насколько медленно узел может отвечать на полную проверку. Задержка — это время отклика полной проверки, а не TCP-пробы; она известна сразу после фазы задержки, поэтому тот же порог отсеивает медленные узлы ещё до полного замера скорости. Если два порога вместе отсеяли все узлы, остаются самые быстрые в количестве `output.quality_gate_min_keep` (по умолчанию 10), а в сводке ставится `relaxed: true` — пустая подписка хуже неточной. Отсеянные узлы не пишутся в отдельный файл: счётчики — в `summary.json -> quality_prefilter` и `quality_gate`."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Key", "ru": "Ключ" },
+            { "en": "What it does", "ru": "Что делает" },
+            { "en": "When to change it", "ru": "Когда менять" }
+          ],
+          "rows": [
+            [
+              { "en": "`output.working_nodes`", "ru": "`output.working_nodes`" },
+              { "en": "the file with the ready list of nodes", "ru": "файл с готовым списком нод" },
+              { "en": "the default is `output/working_nodes.txt`; the clients import it", "ru": "по умолчанию `output/working_nodes.txt`; его импортируют клиенты" }
+            ],
+            [
+              { "en": "`output.summary`", "ru": "`output.summary`" },
+              { "en": "the file with the summary of the run", "ru": "файл со сводкой прогона" },
+              { "en": "the default is `output/summary.json`; the **Last Scan** tab reads it", "ru": "по умолчанию `output/summary.json`; его читает вкладка **Последний скан**" }
+            ],
+            [
+              { "en": "`output.log_dir`", "ru": "`output.log_dir`" },
+              { "en": "where the pipeline writes the log files", "ru": "куда пайплайн пишет файлы лога" },
+              { "en": "the default is `logs`; the web interface always uses `logs` and ignores this key", "ru": "по умолчанию `logs`; веб-интерфейс всегда использует `logs` и этот ключ игнорирует" }
+            ],
+            [
+              { "en": "`output.cache_dir`", "ru": "`output.cache_dir`" },
+              { "en": "where the caches of the lists and of the countries are kept", "ru": "где хранятся кэши списков и стран" },
+              { "en": "the default is `cache`", "ru": "по умолчанию `cache`" }
+            ],
+            [
+              { "en": "`output.max_nodes`", "ru": "`output.max_nodes`" },
+              { "en": "how many nodes stay in the subscription", "ru": "сколько нод остаётся в подписке" },
+              { "en": "`0` — no limit; 50–100 is enough for a phone", "ru": "`0` — без ограничения; для телефона хватает 50–100" }
+            ],
+            [
+              { "en": "`output.max_nodes_per_endpoint`", "ru": "`output.max_nodes_per_endpoint`" },
+              { "en": "how many nodes of one address may stay", "ru": "сколько нод одного адреса может остаться" },
+              { "en": "`0` — no limit", "ru": "`0` — без ограничения" }
+            ],
+            [
+              { "en": "`output.summary_max_nodes`", "ru": "`output.summary_max_nodes`" },
+              { "en": "how many nodes are described in the summary", "ru": "сколько нод описывается в сводке" },
+              { "en": "`0` — all of them", "ru": "`0` — все" }
+            ],
+            [
+              { "en": "`output.clip_to_clipboard`", "ru": "`output.clip_to_clipboard`" },
+              { "en": "copy the list to the clipboard after the export", "ru": "копировать список в буфер обмена после экспорта" },
+              { "en": "the default is `false`: the clipboard is the user's state", "ru": "по умолчанию `false`: буфер обмена — это состояние пользователя" }
+            ],
+            [
+              { "en": "`output.min_speed_mbps`", "ru": "`output.min_speed_mbps`" },
+              { "en": "drop from the subscription any node measured slower than this many Mbps", "ru": "не допускать в подписку узлы, замеренные медленнее, чем это значение (Мбит/с)" },
+              { "en": "`0` — off; the speed is taken from the full measurement, falling back to the quick one; the slider on the Settings tab sets it", "ru": "`0` — выключено; скорость берётся из полного замера, при его отсутствии — из быстрого; задаётся ползунком на вкладке Настройки" }
+            ],
+            [
+              { "en": "`output.max_latency_ms`", "ru": "`output.max_latency_ms`" },
+              { "en": "drop from the subscription any node whose response time exceeds this many ms", "ru": "не допускать в подписку узлы, отвечающие дольше этого значения (мс)" },
+              { "en": "`0` — off; the latency is known right after the delay stage, so this limit drops slow nodes before the full speed test; the summary splits the counts into `quality_prefilter` and `quality_gate`", "ru": "`0` — выключено; задержка известна сразу после фазы задержки, поэтому порог отсеивает медленные узлы ещё до полного замера скорости; в сводке счётчики разделены на `quality_prefilter` и `quality_gate`" }
+            ],
+            [
+              { "en": "`output.quality_gate_min_keep`", "ru": "`output.quality_gate_min_keep`" },
+              { "en": "how many nodes the safety valve keeps when the limits drop every node", "ru": "сколько узлов оставляет предохранитель, если пороги отсеяли все" },
+              { "en": "the default is 10; `0` turns the valve off, so an empty result stays empty", "ru": "по умолчанию 10; `0` выключает предохранитель, и пустой результат остаётся пустым" }
+            ],
+            [
+              { "en": "`ui.port`", "ru": "`ui.port`" },
+              { "en": "the port of the web interface", "ru": "порт веб-интерфейса" },
+              { "en": "the default is 8765; change it if the port is busy, then restart the program", "ru": "по умолчанию 8765; меняйте, если порт занят, потом перезапустите программу" }
+            ]
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "nodes-and-files", "text": { "en": "The Nodes tab and the files in output/", "ru": "Вкладка Узлы и файлы в output/" } },
+            { "id": "output", "text": { "en": "Writing the result", "ru": "Запись результата" } },
+            { "id": "port-busy", "text": { "en": "Port 8765 is busy", "ru": "Порт 8765 занят" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "config-urls",
+      "category": "config",
+      "title": { "en": "The addresses a node is checked against", "ru": "Адреса, по которым проверяется нода" },
+      "summary": {
+        "en": "Three lists: the internet exit, the blocked sites and the mandatory addresses.",
+        "ru": "Три списка: выход в интернет, заблокированные сайты и обязательные адреса."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "A node is judged by three lists of addresses. Each entry has an address, the answers that count as success and an optional name.",
+            "ru": "Ноду судят по трём спискам адресов. В каждой записи есть адрес, ответы, которые считаются успехом, и необязательное имя."
+          }
+        },
+        {
+          "t": "code",
+          "text": "- url: 'https://example.org/'\n  ok_statuses: [200, 301, 302]\n  name: 'example'"
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "List", "ru": "Список" },
+            { "en": "What it decides", "ru": "Что решает" }
+          ],
+          "rows": [
+            [
+              { "en": "`connectivity_urls`", "ru": "`connectivity_urls`" },
+              { "en": "does the node reach the internet at all — any answer counts", "ru": "доходит ли нода до интернета вообще — важен любой ответ" }
+            ],
+            [
+              { "en": "`bypass_urls`", "ru": "`bypass_urls`" },
+              { "en": "does the node open the blocked sites — at least one of them is enough", "ru": "открывает ли нода заблокированные сайты — достаточно хотя бы одного" }
+            ],
+            [
+              { "en": "`critical_urls`", "ru": "`critical_urls`" },
+              { "en": "the mandatory addresses: with `critical_mode: all` a node that misses any of them is dropped", "ru": "обязательные адреса: при `critical_mode: all` нода, не открывшая ни один из них, отбрасывается" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "critical-urls",
+          "text": { "en": "`critical_urls`: the addresses a node must open", "ru": "`critical_urls`: адреса, которые нода обязана открыть" }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "An empty `critical_urls` switches that stage off completely. To keep the list empty, write `critical_urls: []` — a bare `critical_urls:` with only a comment under it breaks the loading of the configuration.",
+            "ru": "Пустой `critical_urls` выключает эту стадию целиком. Чтобы список остался пустым, пишите `critical_urls: []` — голое `critical_urls:` с одним комментарием ломает загрузку конфигурации."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "Before the delay stage each mandatory address is checked directly from the host. One that is unreachable from the host itself is excluded from the check for that run — otherwise a site that is down worldwide would drop every node. The line `[critical] audit: ok=… failed=…` in the log is the composition of the check, not a filter: the nodes it mentions are not cut out.",
+            "ru": "Перед этапом задержки каждый обязательный адрес проверяется прямо с хоста. Недоступный с самого хоста исключается из проверки на этот прогон — иначе лежащий по всему миру сайт отсёк бы все ноды. Строка `[critical] audit: ok=… failed=…` в логе — это состав проверки, а не фильтр: упомянутые в ней ноды не вырезаются."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "phases", "text": { "en": "What a run does, step by step", "ru": "Что делает прогон по шагам" } },
+            { "id": "logs", "text": { "en": "Where to look at the log", "ru": "Где смотреть лог" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cli",
+      "category": "reference",
+      "title": { "en": "Command line flags and exit codes", "ru": "Флаги командной строки и коды возврата" },
+      "summary": {
+        "en": "What the program does when it is started from the command line.",
+        "ru": "Что программа делает при запуске из командной строки."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "Started without arguments the program opens the web interface. The flags matter when a run goes through the console or has to be narrowed down.",
+            "ru": "Запущенная без аргументов программа открывает веб-интерфейс. Флаги важны, когда прогон идёт из консоли или его нужно сузить."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Flag", "ru": "Флаг" },
+            { "en": "What it does", "ru": "Что делает" }
+          ],
+          "rows": [
+            [
+              { "en": "`--report`", "ru": "`--report`" },
+              { "en": "a full run in the console, without a browser. Run it by hand and with the VPN off", "ru": "полный прогон в консоли, без браузера. Запускать вручную и без VPN" }
+            ],
+            [
+              { "en": "`--selftest`", "ru": "`--selftest`" },
+              { "en": "checks that both cores are installed and work, then exits", "ru": "проверяет, что оба ядра установлены и работают, и выходит" }
+            ],
+            [
+              { "en": "`--ping-only`", "ru": "`--ping-only`" },
+              { "en": "the TCP/QUIC probes only (stage 4), no cores at all. Writes `output/working_nodes.ping.txt`", "ru": "только TCP/QUIC-пробы (этап 4), ядра не нужны. Пишет `output/working_nodes.ping.txt`" }
+            ],
+            [
+              { "en": "`--tcping-only`", "ru": "`--tcping-only`" },
+              { "en": "PING + CONNECTIVITY + DIAGNOSIS: a fast cut without the delay and speed stages. The main subscription is not touched", "ru": "PING + CONNECTIVITY + DIAGNOSIS: быстрый отсев без замера задержки и скорости. Основная подписка не трогается" }
+            ],
+            [
+              { "en": "`--only vless,trojan`", "ru": "`--only vless,trojan`" },
+              { "en": "a run over the listed protocols only", "ru": "прогон только по указанным протоколам" }
+            ],
+            [
+              { "en": "`--speed-profile auto|full|light`", "ru": "`--speed-profile auto|full|light`" },
+              { "en": "the volume of the speed measurement: chosen automatically, 3 MB or 1 MB", "ru": "объём замера скорости: выбирается сам, 3 МБ или 1 МБ" }
+            ],
+            [
+              { "en": "`--auto-tune`", "ru": "`--auto-tune`" },
+              { "en": "adapt the parameters of the measurement to the measured delay and jitter of your channel. It refines the profile, it never replaces it", "ru": "подстроить параметры замера под измеренные задержку и джиттер канала. Уточняет профиль, но не заменяет его" }
+            ],
+            [
+              { "en": "`--log-file path`", "ru": "`--log-file path`" },
+              { "en": "write the log to a file as well", "ru": "писать лог ещё и в файл" }
+            ],
+            [
+              { "en": "`--profile home|mobile`", "ru": "`--profile home|mobile`" },
+              { "en": "deprecated: works as `--speed-profile full|light` and prints a warning", "ru": "устарел: работает как `--speed-profile full|light` и печатает предупреждение" }
+            ],
+            [
+              { "en": "`--merge`", "ru": "`--merge`" },
+              { "en": "internal: merge the current list with the previous one and exit", "ru": "внутренний: объединить текущий список с предыдущим и выйти" }
+            ],
+            [
+              { "en": "`--backup-working`", "ru": "`--backup-working`" },
+              { "en": "internal: copy the result files to `*.prev.*` and exit", "ru": "внутренний: скопировать файлы результата в `*.prev.*` и выйти" }
+            ],
+            [
+              { "en": "`--apply-mode replace|append|keep|none`", "ru": "`--apply-mode replace|append|keep|none`" },
+              { "en": "internal: apply the decision about the node list after a run", "ru": "внутренний: применить решение по списку нод после прогона" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "exit-codes",
+          "text": { "en": "Exit codes", "ru": "Коды возврата" }
+          },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Code", "ru": "Код" },
+            { "en": "What it means", "ru": "Что значит" }
+          ],
+          "rows": [
+            [
+              { "en": "`0`", "ru": "`0`" },
+              { "en": "everything went through", "ru": "всё прошло" }
+            ],
+            [
+              { "en": "`1`", "ru": "`1`" },
+              { "en": "an uncaught exception — the traceback is in the log", "ru": "непойманное исключение — трассировка в логе" }
+            ],
+            [
+              { "en": "`2`", "ru": "`2`" },
+              { "en": "the list was restored to the previous one (internal mode)", "ru": "список вернулся к предыдущему (внутренний режим)" }
+            ],
+            [
+              { "en": "`3`", "ru": "`3`" },
+              { "en": "no working nodes were found; the previous list was kept and the summary was written anyway", "ru": "рабочих нод не оказалось; предыдущий список оставлен, сводка записана" }
+            ],
+            [
+              { "en": "`130`", "ru": "`130`" },
+              { "en": "interrupted by the user (Ctrl+C)", "ru": "прервано пользователем (Ctrl+C)" }
+            ]
+          ]
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "Code `3` is not a failure of the program: it means the run found nothing. The list itself stays intact, and the summary is written precisely so that the funnel can be read.",
+            "ru": "Код `3` — не поломка программы: значит, прогон ничего не нашёл. Сам список остаётся целым, а сводка пишется именно для того, чтобы прочитать воронку."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "flags", "text": { "en": "Service modes of the launch", "ru": "Служебные режимы запуска" } },
+            { "id": "log", "text": { "en": "The dictionary of the log", "ru": "Словарь лога" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "log",
+      "category": "reference",
+      "title": { "en": "The dictionary of the log", "ru": "Словарь лога" },
+      "summary": {
+        "en": "What every prefix in the console and in the log file means.",
+        "ru": "Что означает каждый префикс в консоли и в файле лога."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The run is shown line by line in the **Console** tab; the full text is written to `logs\\run_*.log`. Stages are announced by a header `=== PHASE N/11: … ===`, and the other lines carry a prefix in square brackets.",
+            "ru": "Ход прогона виден построчно во вкладке **Консоль**; полный текст пишется в `logs\\run_*.log`. Этапы объявляются заголовком `=== PHASE N/11: … ===`, а остальные строки несут префикс в квадратных скобках."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Prefix", "ru": "Префикс" },
+            { "en": "What it means", "ru": "Что означает" }
+          ],
+          "rows": [
+            [
+              { "en": "`[env]`", "ru": "`[env]`" },
+              { "en": "the environment: where the program is, which cores were found and with which version", "ru": "окружение: где программа, какие ядра найдены и какой версии" }
+            ],
+            [
+              { "en": "`[cores]`", "ru": "`[cores]`" },
+              { "en": "the check for new core builds and the update itself", "ru": "проверка новых сборок ядер и само обновление" }
+            ],
+            [
+              { "en": "`[engines]`", "ru": "`[engines]`" },
+              { "en": "which cores are available — and why not, if one is disabled or missing", "ru": "какие ядра доступны — и почему нет, если одно выключено или отсутствует" }
+            ],
+            [
+              { "en": "`[route]`", "ru": "`[route]`" },
+              { "en": "how many nodes went to each core", "ru": "сколько нод ушло в каждое ядро" }
+            ],
+            [
+              { "en": "`[conn]`", "ru": "`[conn]`" },
+              { "en": "the connectivity stage: how many nodes were dropped and why", "ru": "этап связности: сколько нод отсеяно и почему" }
+            ],
+            [
+              { "en": "`[diag]`", "ru": "`[diag]`" },
+              { "en": "the breakdown of the dropped nodes: the server is dead, or the protocol failed", "ru": "разбивка отсеянных нод: сервер мёртв или виноват протокол" }
+            ],
+            [
+              { "en": "`[delay]`", "ru": "`[delay]`" },
+              { "en": "the delay stage: the pool per core, the progress and the final count", "ru": "этап задержки: пул по ядрам, ход и итог" }
+            ],
+            [
+              { "en": "`[speedtest]`", "ru": "`[speedtest]`" },
+              { "en": "the speed measurement: the quick tier and the final one", "ru": "замер скорости: быстрый тир и финальный" }
+            ],
+            [
+              { "en": "`[rescue]`", "ru": "`[rescue]`" },
+              { "en": "the nodes returned by the rescue stage", "ru": "ноды, возвращённые этапом rescue" }
+            ],
+            [
+              { "en": "`[geo]`", "ru": "`[geo]`" },
+              { "en": "the exit countries and the cut by the country blacklist", "ru": "страны выхода и отсев по чёрному списку стран" }
+            ],
+            [
+              { "en": "`[critical]`", "ru": "`[critical]`" },
+              { "en": "the mandatory addresses: the canary before the stage and the audit after it", "ru": "обязательные адреса: канарейка перед стадией и аудит после неё" }
+            ],
+            [
+              { "en": "`[net]`", "ru": "`[net]`" },
+              { "en": "an interruption of the connection and the waiting for it to come back", "ru": "обрыв связи и ожидание восстановления" }
+            ],
+            [
+              { "en": "`[out]`", "ru": "`[out]`" },
+              { "en": "the writing of the result: the files, the cut by the limit, the clipboard", "ru": "запись результата: файлы, обрезка по лимиту, буфер обмена" }
+            ],
+            [
+              { "en": "`[resume]`", "ru": "`[resume]`" },
+              { "en": "the continuation of an interrupted run from its checkpoint", "ru": "продолжение прерванного прогона с чекпоинта" }
+            ],
+            [
+              { "en": "`[dedup]`", "ru": "`[dedup]`" },
+              { "en": "the removal of the duplicate nodes", "ru": "удаление дублей нод" }
+            ],
+            [
+              { "en": "`[!]`", "ru": "`[!]`" },
+              { "en": "a warning — the run continues", "ru": "предупреждение — прогон продолжается" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "phases",
+          "text": { "en": "The stage headers", "ru": "Заголовки этапов" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The stages always go in the same order: SOURCES → FRESHNESS + FETCH → PARSE + POLICY → PING → CONNECTIVITY PRE-FILTER → DIAGNOSIS → SPEEDTEST-QUICK → DELAY TESTS → RESCUE → SPEEDTEST → EXPORT. A stage skipped by a service mode says so in its header: `[skipped: resume]`.",
+            "ru": "Этапы всегда идут в одном порядке: SOURCES → FRESHNESS + FETCH → PARSE + POLICY → PING → CONNECTIVITY PRE-FILTER → DIAGNOSIS → SPEEDTEST-QUICK → DELAY TESTS → RESCUE → SPEEDTEST → EXPORT. Пропущенный служебным режимом этап говорит об этом в заголовке: `[skipped: resume]`."
+          }
+        },
+        {
+          "t": "h",
+          "id": "where",
+          "text": { "en": "What to look at first", "ru": "Что смотреть в первую очередь" }
+        },
+        {
+          "t": "ul",
+          "items": [
+            {
+              "en": "`[env]` — are the cores there at all? `NOT FOUND` means the binary is missing from `bin/`.",
+              "ru": "`[env]` — есть ли вообще ядра? `NOT FOUND` означает, что бинарника нет в `bin/`."
+            },
+            {
+              "en": "`[net]` — was the connection lost? `connection restored` means the run went on.",
+              "ru": "`[net]` — пропадала ли связь? `connection restored` означает, что прогон продолжился."
+            },
+            {
+              "en": "`[delay] final failures` — the result per core at the end of the delay stage.",
+              "ru": "`[delay] final failures` — итог по ядрам в конце этапа задержки."
+            },
+            {
+              "en": "`[out] N nodes -> output\\working_nodes.txt` — what was actually written.",
+              "ru": "`[out] N nodes -> output\\working_nodes.txt` — что реально записано."
+            },
+            {
+              "en": "`[critical] audit` — the composition of the mandatory-address check: a metric, not a filter.",
+              "ru": "`[critical] audit` — состав проверки обязательных адресов: метрика, а не фильтр."
+            }
+          ]
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "logs", "text": { "en": "Where to look at the log", "ru": "Где смотреть лог" } },
+            { "id": "phases", "text": { "en": "What a run does, step by step", "ru": "Что делает прогон по шагам" } },
+            { "id": "config-urls", "text": { "en": "The addresses a node is checked against", "ru": "Адреса, по которым проверяется нода" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "protocols",
+      "category": "reference",
+      "title": { "en": "Protocols, transports and encryption", "ru": "Протоколы, транспорты и шифрование" },
+      "summary": {
+        "en": "What the words in a node name mean and which core checks them.",
+        "ru": "Что значат слова в имени ноды и каким ядром она проверяется."
+      },
+      "blocks": [
+        {
+          "t": "p",
+          "text": {
+            "en": "The program reads the protocol from the link itself, and the transport and the encryption from its parameters. The name of the node is only a label — but it usually repeats the same words, and they are worth understanding.",
+            "ru": "Протокол программа читает из самой ссылки, а транспорт и шифрование — из её параметров. Имя ноды — только ярлык, но обычно в нём повторяются те же слова, и их стоит понимать."
+          }
+        },
+        {
+          "t": "table",
+          "head": [
+            { "en": "Protocol", "ru": "Протокол" },
+            { "en": "What it is", "ru": "Что это" },
+            { "en": "Core", "ru": "Ядро" },
+            { "en": "Transport", "ru": "Транспорт" }
+          ],
+          "rows": [
+            [
+              { "en": "`vless`", "ru": "`vless`" },
+              { "en": "VLESS", "ru": "VLESS" },
+              { "en": "Xray", "ru": "Xray" },
+              { "en": "tcp, ws, gRPC, xhttp, …", "ru": "tcp, ws, gRPC, xhttp, …" }
+            ],
+            [
+              { "en": "`vmess`", "ru": "`vmess`" },
+              { "en": "VMess", "ru": "VMess" },
+              { "en": "Xray", "ru": "Xray" },
+              { "en": "the same", "ru": "то же" }
+            ],
+            [
+              { "en": "`trojan`", "ru": "`trojan`" },
+              { "en": "Trojan", "ru": "Trojan" },
+              { "en": "Xray", "ru": "Xray" },
+              { "en": "the same", "ru": "то же" }
+            ],
+            [
+              { "en": "`ss`", "ru": "`ss`" },
+              { "en": "Shadowsocks", "ru": "Shadowsocks" },
+              { "en": "Xray", "ru": "Xray" },
+              { "en": "the same", "ru": "то же" }
+            ],
+            [
+              { "en": "`hysteria2`", "ru": "`hysteria2`" },
+              { "en": "Hysteria 2", "ru": "Hysteria 2" },
+              { "en": "sing-box", "ru": "sing-box" },
+              { "en": "QUIC only", "ru": "только QUIC" }
+            ],
+            [
+              { "en": "`tuic`", "ru": "`tuic`" },
+              { "en": "TUIC", "ru": "TUIC" },
+              { "en": "sing-box", "ru": "sing-box" },
+              { "en": "QUIC only", "ru": "только QUIC" }
+            ],
+            [
+              { "en": "`anytls`", "ru": "`anytls`" },
+              { "en": "AnyTLS", "ru": "AnyTLS" },
+              { "en": "sing-box", "ru": "sing-box" },
+              { "en": "tcp", "ru": "tcp" }
+            ],
+            [
+              { "en": "`mtproto`", "ru": "`mtproto`" },
+              { "en": "MTProxy — the Telegram proxy", "ru": "MTProxy — прокси Telegram" },
+              { "en": "no core: only the TCP reachability is checked", "ru": "ядра нет: проверяется только достижимость по TCP" },
+              { "en": "tcp", "ru": "tcp" }
+            ],
+            [
+              { "en": "`wireguard`", "ru": "`wireguard`" },
+              { "en": "WireGuard", "ru": "WireGuard" },
+              { "en": "the engine was removed: such nodes show up in the report as “untestable proto wireguard”", "ru": "движок удалён: такие ноды видны в отчёте как «untestable proto wireguard»" },
+              { "en": "—", "ru": "—" }
+            ]
+          ]
+        },
+        {
+          "t": "h",
+          "id": "transport",
+          "text": { "en": "The transport in a node name", "ru": "Транспорт в имени ноды" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "The transport is the way the client holds the connection to the server, not the encryption. In a name it often appears in brackets: `ws`, `grpc`, `xhttp`, `httpupgrade`, `kcp`, `quic`, `tcp`. The same node with a different transport is a different node, and the two behave differently under blocking.",
+            "ru": "Транспорт — это способ, которым клиент держит соединение с сервером, а не шифрование. В имени он часто стоит в скобках: `ws`, `grpc`, `xhttp`, `httpupgrade`, `kcp`, `quic`, `tcp`. Одна и та же нода с разным транспортом — это разные ноды, и под блокировкой они ведут себя по-разному."
+          }
+        },
+        {
+          "t": "h",
+          "id": "security",
+          "text": { "en": "The encryption: none, tls, reality", "ru": "Шифрование: none, tls, reality" }
+        },
+        {
+          "t": "p",
+          "text": {
+            "en": "`none` — no encryption (rare). `tls` — ordinary TLS. `reality` — a disguise: the server has no certificate of its own, and the client pretends to talk to somebody else's site. Under blocking this is often the only variant that works.",
+            "ru": "`none` — без шифрования (редко). `tls` — обычный TLS. `reality` — маскировка: у сервера нет своего сертификата, и клиент притворяется, что говорит с чужим сайтом. Под блокировкой это часто единственный рабочий вариант."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
+            "en": "The core can build `reality` only over `tcp`, `grpc` and `xhttp`. Nodes with `ws` and `reality` do not assemble and are dropped during the selection — they show up in the report as “unsupported transport”.",
+            "ru": "Ядро умеет собирать `reality` только поверх `tcp`, `grpc` и `xhttp`. Ноды `ws` + `reality` не собираются и отсекаются на этапе отбора — в отчёте они видны как «unsupported transport»."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "tip",
+          "text": {
+            "en": "`mtproto` is a special case: neither core speaks MTProxy, so the program checks only that the TCP connection works and never verifies the secret. Such a node may be useless in practice — that is why they are usually put into the protocol blacklist in advance.",
+            "ru": "`mtproto` — особый случай: ни одно ядро не говорит по MTProxy, поэтому программа проверяет только то, что TCP-соединение работает, и никогда не сверяет секрет. Такая нода может оказаться бесполезной по существу — поэтому их обычно заранее кладут в чёрный список протоколов."
+          }
+        },
+        {
+          "t": "links",
+          "items": [
+            { "id": "config-cores", "text": { "en": "Cores: xray and sing-box", "ru": "Ядра: xray и sing-box" } },
+            { "id": "config-filters", "text": { "en": "Filters: the complete list of keys", "ru": "Фильтры: полный список ключей" } },
+            { "id": "glossary", "text": { "en": "Words used in this guide", "ru": "Словарь" } }
+          ]
+        }
+      ]
+    }
+  ],
+  "tips": {
+    "tt_exclude_protocols": "filters#protocol-blacklist",
+    "tt_std_ports": "filters#standard-ports",
+    "tt_ports_list": "filters#standard-ports",
+    "tt_names": "filters#name-blacklist",
+    "tt_domains": "filters#domain-blacklist",
+    "tt_countries": "filters#country-blacklist",
+    "tt_max_links": "fetch#max-links",
+    "tt_max_age": "fetch#source-freshness",
+    "tt_workers": "fetch#workers",
+    "tt_timeout": "fetch#timeout",
+    "tt_max_nodes": "output#max-nodes",
+    "tt_clipboard": "output#clipboard",
+    "tt_critical_urls": "config-urls#critical-urls",
+    "tt_require_country": "filters#country-blacklist",
+    "tt_country_confidence": "filters#country-blacklist",
+    "tt_critical_mode": "config-testing#thresholds",
+    "tt_critical_timeout": "config-testing#timeouts",
+    "tt_min_speed": "output#min-speed",
+    "tt_max_latency": "output#max-latency",
+    "tt_ui_port": "settings-overview#ui-port",
+    "tt_stress_duration": "selfcheck#duration",
+    "tt_stress_requests": "selfcheck#requests",
+    "tt_stress_size_mb": "selfcheck#size",
+    "tt_stress_files": "selfcheck#files",
+    "tt_stress_file_mb": "selfcheck#file-size"
+  }
+}
