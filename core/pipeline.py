@@ -321,7 +321,7 @@ def run_pipeline(args: "argparse.Namespace") -> int:
         _log_per_feed(per_feed)
 
     if not final:
-        _exit_no_nodes(out_path, nodes_out, summary_out, stats, t_start)
+        _exit_no_nodes(nodes_out, summary_out, stats, t_start)
 
 
 
@@ -346,7 +346,7 @@ def run_pipeline(args: "argparse.Namespace") -> int:
         state.final = apply_latency_prefilter(state.final, stats, cfg.output)
         if not state.final:
             LOG("[quality] prefilter removed every node — nothing to measure")
-            _exit_no_nodes(out_path, nodes_out, summary_out, stats, t_start)
+            _exit_no_nodes(nodes_out, summary_out, stats, t_start)
             archive_run_artifacts(out_path.parent, str(stats.get("run_network")))
             return 3
         speedtest_phase(state, engines, cfg, port_pool)
@@ -365,7 +365,7 @@ def run_pipeline(args: "argparse.Namespace") -> int:
         final = state.final
         if not final:
             LOG("[geo] country filter removed every node — nothing to export")
-            _exit_no_nodes(out_path, nodes_out, summary_out, stats, t_start)
+            _exit_no_nodes(nodes_out, summary_out, stats, t_start)
             archive_run_artifacts(out_path.parent,
                                   str(stats.get("run_network")))
             return 3

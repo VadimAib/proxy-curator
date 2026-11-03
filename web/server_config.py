@@ -7,11 +7,51 @@ import shutil
 import tempfile
 import yaml
 from core.config import Config
-from core.paths import rp
+from core.paths import ROOT, rp
 from pathlib import Path
-ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = ROOT / "config.yaml"
 CONFIG_PREV = CONFIG_PATH.with_name(CONFIG_PATH.name + ".prev")
+
+
+
+
+
+
+_DEFAULT_NODES = "output/working_nodes.txt"
+_DEFAULT_SUMMARY = "output/summary.json"
+
+
+def artifact_paths() -> dict[str, Path]:
+                                                                        
+
+                                                                         
+                                                                             
+                                                                             
+                                                                         
+
+                                                                   
+                                                                        
+                                         
+
+                                                                               
+                                                              
+                                       
+       
+    nodes_rel = _DEFAULT_NODES
+    summary_rel = _DEFAULT_SUMMARY
+    try:
+        cfg = Config.load(CONFIG_PATH)
+        nodes_rel = cfg.output.working_nodes or nodes_rel
+        summary_rel = cfg.output.summary or summary_rel
+    except Exception:
+        pass
+    nodes = Path(rp(nodes_rel))
+    return {
+        "nodes": nodes,
+        "nodes_json": nodes.with_name(nodes.stem + ".json"),
+        "summary": Path(rp(summary_rel)),
+        "dir": nodes.parent,
+    }
 
 
 def _read_summary() -> dict | None:

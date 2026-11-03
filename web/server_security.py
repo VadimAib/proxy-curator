@@ -44,4 +44,6 @@ def _token_valid(token: str | None) -> bool:
 
 
 
-_DESTRUCTIVE_ROUTES = frozenset({"/api/logs/delete"})
+
+
+_DESTRUCTIVE_ROUTES = frozenset({"/api/logs/delete", "/api/nodes/delete"})

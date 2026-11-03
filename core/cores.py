@@ -23,7 +23,8 @@ from .cores_fetch import (API_PER_PAGE, API_TIMEOUT, CHUNK, Cancelled,
                           DOWNLOAD_DEADLINE, DOWNLOAD_TIMEOUT, DOWNLOAD_URL,
                           MAX_ARCHIVE_BYTES, _download, _extract_binary,
                           _fetch, _sha256, digest_from_dgst, latest_release)
-from .cores_plan import build_plan, check_cores, core_state, plan_cores
+from .cores_plan import (build_plan, check_cores, core_state,
+                         missing_core_binaries, plan_cores)
 from .cores_specs import CORE_SPECS, CorePlan, CoreSpec, spec_for
 from .cores_version import is_newer, parse_version, probe_version, version_key
 
@@ -41,4 +42,5 @@ __all__ = [
     "API_PER_PAGE", "API_TIMEOUT", "DOWNLOAD_URL", "DOWNLOAD_TIMEOUT",
     "DOWNLOAD_DEADLINE", "CHUNK", "MAX_ARCHIVE_BYTES",
     "Cancelled", "apply_plans", "core_state", "check_cores",
+    "missing_core_binaries",
 ]

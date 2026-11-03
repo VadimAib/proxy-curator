@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Dict, Tuple, Optional
 
 from .cores_specs import CoreSpec
 from .engine.selftest import get_kernel_version
@@ -57,6 +57,17 @@ def is_newer(candidate: str, current: str) -> bool:
     return version_key(candidate) > version_key(current)
 
 
+
+
+
+
+
+
+
+
+_PROBE_MEMO: Dict[Tuple[str, int, int], str] = {}
+
+
 def probe_version(binary: Optional[Path], spec: CoreSpec) -> str:
                                                                            
 
@@ -64,7 +75,22 @@ def probe_version(binary: Optional[Path], spec: CoreSpec) -> str:
                                                                                     
                                                                               
                                                       
+
+                                                                            
+                                                                         
+                                                                         
+                                                         
        
     if binary is None:
         return ""
-    return parse_version(get_kernel_version(binary, spec.version_args))
+    try:
+        st = binary.stat()
+    except OSError:
+        return parse_version(get_kernel_version(binary, spec.version_args))
+    key = (str(binary), st.st_mtime_ns, st.st_size)
+    cached = _PROBE_MEMO.get(key)
+    if cached is not None:
+        return cached
+    version = parse_version(get_kernel_version(binary, spec.version_args))
+    _PROBE_MEMO[key] = version
+    return version

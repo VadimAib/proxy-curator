@@ -27,7 +27,7 @@ from datetime import datetime
 
 from .log import LOG
 from .models import Node, Protocol
-from .utils import first_line
+from .utils import first_line, write_text_atomic
 
 
 
@@ -93,12 +93,13 @@ def export_nodes(nodes: List[Tuple[Node, float]], output_path: Path) -> None:
        
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plain = nodes_text(nodes)
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(plain + ("\n" if plain else ""))
+
+
+    write_text_atomic(output_path, plain + ("\n" if plain else ""))
     if plain:
         b64_path = output_path.with_name(output_path.stem + "_b64.txt")
-        with open(b64_path, "w", encoding="utf-8") as f:
-            f.write(base64.b64encode(plain.encode("utf-8")).decode())
+        write_text_atomic(b64_path,
+                          base64.b64encode(plain.encode("utf-8")).decode())
 
 
 def _speed_fields(n: Node, stats: Dict) -> Dict:
@@ -204,9 +205,11 @@ def export_working_nodes_json(nodes: List[Tuple[Node, float]], stats: Dict,
         }
         entry.update(_speed_fields(n, stats))
         items.append(entry)
-    json_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(items, f, ensure_ascii=False, separators=(",", ":"))
+
+
+    write_text_atomic(json_path,
+                      json.dumps(items, ensure_ascii=False,
+                                 separators=(",", ":")))
 
 
 def export_summary(nodes: List[Tuple[Node, float]], stats: Dict,
@@ -232,6 +235,6 @@ def export_summary(nodes: List[Tuple[Node, float]], stats: Dict,
         "duration_sec": round(duration, 1),
         "working": working_list,
     })
-    summary_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(summary_path, "w", encoding="utf-8") as f:
-        json.dump(stats, f, ensure_ascii=False, separators=(",", ":"))
+    write_text_atomic(summary_path,
+                      json.dumps(stats, ensure_ascii=False,
+                                 separators=(",", ":")))

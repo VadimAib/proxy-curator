@@ -1,7 +1,7 @@
 
 [project]
 name = "proxy-curator"
-version = "0.1.0"
+version = "0.1.1"
 description = "Pipeline for collecting, filtering and testing free VPN nodes"
 requires-python = ">=3.12"
 

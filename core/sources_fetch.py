@@ -38,9 +38,34 @@ UA = {"User-Agent": "v2rayN/7.x"}
 
 
 
-def http_get(url: str, timeout: int = 30) -> bytes:
+
+
+
+
+
+MAX_FEED_BYTES = 8 * 1024 * 1024
+
+
+def http_get(url: str, timeout: int = 30,
+             max_bytes: int = MAX_FEED_BYTES) -> bytes:
+                                                     
+
+                                                                         
+                                                                          
+                                                                             
+                                                                        
+                                                                           
+       
     with urlopen(Request(url, headers=UA), timeout=timeout) as r:
-        return r.read()
+        declared = r.headers.get("Content-Length") if r.headers else None
+        if declared and str(declared).strip().isdigit() \
+                and int(declared) > max_bytes:
+            raise ValueError(f"feed too large: {int(declared)} bytes "
+                             f"> limit {max_bytes}")
+        data = r.read(max_bytes + 1)
+        if len(data) > max_bytes:
+            raise ValueError(f"feed too large: more than {max_bytes} bytes")
+        return data
 
 
 

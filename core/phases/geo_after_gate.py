@@ -41,10 +41,11 @@ from ..engine.engines import EngineRuntime, engine_name_for
 from ..filters import geo_lookup_enabled
 from ..log import LOG
 from ..models import Node
-from ..net.geo_cache import init_geo_cache, save_geo_cache
+from ..net.geo_cache import GEO_CACHE_FILE, init_geo_cache, save_geo_cache
 from ..net.geoip import (GEO_TIMEOUT, GeoState, fetch_country_via_port,
                          get_cached_country, set_cached_country)
 from ..output_quality import _keep_count
+from ..paths import rp
 from ..state import PipelineState
 from ..ui import ProgressBar
 from .geofilter import _drop_by_exit_country
@@ -172,7 +173,8 @@ def _collect_countries(state: PipelineState,
        
     if not geo_lookup_enabled(cfg.filters):
         return None
-    init_geo_cache(cfg.filters.geo_cache_enabled, cfg.filters.geo_cache_ttl_hours)
+    init_geo_cache(cfg.filters.geo_cache_enabled, cfg.filters.geo_cache_ttl_hours,
+                   path=rp(cfg.output.cache_dir) / GEO_CACHE_FILE)
     geo = GeoState()
     _probe_countries(state, engines, cfg, geo)
     return geo

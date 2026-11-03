@@ -6,7 +6,8 @@ import re
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from core.paths import ROOT
+
 LOG_DIR = ROOT / "logs"
 OUTPUT_DIR = ROOT / "output"
 

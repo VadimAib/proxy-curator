@@ -7,11 +7,15 @@ import secrets
 import socket
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
 
 from server_logs import _strip_query
+from server_config import artifact_paths
 
-ROOT = Path(__file__).resolve().parent.parent
+from core.paths import ROOT
+
+
+
+
 OUTPUT_DIR = ROOT / "output"
 
 
@@ -66,7 +70,7 @@ def _lan_ip() -> str:
 
 def _share_nodes_text() -> str:
     try:
-        return (OUTPUT_DIR / "working_nodes.txt").read_text(encoding="utf-8", errors="replace")
+        return artifact_paths()["nodes"].read_text(encoding="utf-8", errors="replace")
     except OSError:
         return ""
 

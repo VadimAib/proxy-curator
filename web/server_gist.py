@@ -9,7 +9,8 @@ from pathlib import Path
 
 from server_share import _share_nodes_text
 
-ROOT = Path(__file__).resolve().parent.parent
+from core.paths import ROOT
+
 OUTPUT_DIR = ROOT / "output"
 GIST_STATUS_FILE = OUTPUT_DIR / "gist_status.json"
 GIST_SCRIPT = ROOT / "upload_to_gist.py"

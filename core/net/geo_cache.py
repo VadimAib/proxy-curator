@@ -30,22 +30,37 @@ GEO_CACHE_PATH = ROOT / "cache" / GEO_CACHE_FILE
 _geo_persistent: Dict[str, Dict[str, Any]] = {}
 _geo_cache_enabled: bool = False
 _geo_cache_ttl_s: float = 0.0
+
+
+
+
+
+_geo_path: Optional[Path] = None
 _geo_cache_lock = threading.Lock()
 
 
 def init_geo_cache(enabled: bool, ttl_hours: float,
-                   path: Path = GEO_CACHE_PATH) -> None:
+                   path: Optional[Path] = None) -> None:
                                                                             
+
+                                                                          
+                                                                    
+                                                                             
+                                                                            
+                                                     
 
                                                                       
                                                                     
                                                             
        
-    global _geo_persistent, _geo_cache_enabled, _geo_cache_ttl_s
+    global _geo_persistent, _geo_cache_enabled, _geo_cache_ttl_s, _geo_path
+    target = Path(path) if path is not None else None
     with _geo_cache_lock:
+        _geo_path = target
         _geo_cache_enabled = bool(enabled)
         _geo_cache_ttl_s = float(ttl_hours) * 3600.0
-        _geo_persistent = load_geo_cache(path) if _geo_cache_enabled else {}
+        _geo_persistent = (load_geo_cache(target or GEO_CACHE_PATH)
+                           if _geo_cache_enabled else {})
 
 
 def load_geo_cache(path: Path = GEO_CACHE_PATH) -> Dict[str, Dict[str, Any]]:
@@ -65,20 +80,22 @@ def load_geo_cache(path: Path = GEO_CACHE_PATH) -> Dict[str, Dict[str, Any]]:
     return data
 
 
-def save_geo_cache(path: Path = GEO_CACHE_PATH) -> None:
+def save_geo_cache(path: Optional[Path] = None) -> None:
                                                                          
 
-                                                                 
+                                                                            
+                                                                              
+                                  
                                                                   
                                        
        
     with _geo_cache_lock:
         enabled = _geo_cache_enabled
         data = _geo_persistent
+        target = Path(path) if path is not None else (_geo_path or GEO_CACHE_PATH)
     if not enabled:
         return
     try:
-        target = Path(path)
         target.parent.mkdir(parents=True, exist_ok=True)
         tmp = target.with_name(target.name + ".tmp")
         tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2),

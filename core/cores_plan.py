@@ -144,6 +144,32 @@ def core_state(cfg: Config) -> List[dict]:
     return states
 
 
+def missing_core_binaries(cfg: Config) -> List[str]:
+                                                         
+
+                                                                           
+                                                                            
+                                                                           
+                                                                     
+
+                                                                  
+                                                                              
+                                                                            
+                                                                           
+           
+       
+    missing: List[str] = []
+    for spec in CORE_SPECS:
+        section = getattr(cfg, spec.name, None)
+        if section is None or not bool(getattr(section, "enabled", True)):
+            continue
+        raw_path = str(getattr(section, "path", "") or "")
+        binary = rp(raw_path) if raw_path else None
+        if binary is None or not binary.exists():
+            missing.append(spec.name)
+    return missing
+
+
 def check_cores(cfg: Config, *, force: bool = False) -> List[CorePlan]:
                                                               
 

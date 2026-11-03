@@ -56,6 +56,11 @@ class BatchMixin(ProcessMixin):
 
         config_path = self.generate_batch_config(nodes, ports)
         proc = None
+
+
+
+
+        yielded = 0
         try:
             t0 = time.time()
             proc = self._spawn(config_path, binary_path)
@@ -91,11 +96,12 @@ class BatchMixin(ProcessMixin):
                 ms = (time.time() - t0) * 1000 if err is None else None
 
                 yield node, port, ms, err
+                yielded = i + 1
 
         except Exception as e:
             dlog(f"{self.__class__.__name__} batch config: {config_path}")
             err_msg = self._trim_err(first_line(e))
-            for n, p in zip(nodes, ports):
+            for n, p in zip(nodes[yielded:], ports[yielded:]):
                 yield n, p, None, err_msg
         finally:
             if proc:

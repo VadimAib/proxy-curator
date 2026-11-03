@@ -232,6 +232,7 @@ h1 { font-size: 15px; font-weight: 650; letter-spacing: -.01em; margin: 0; white
 .status.idle { background: var(--ok-soft); color: var(--ok); }
 .status.running { background: var(--warn-soft); color: var(--warn); }
 .status.running::before { animation: pulse 1.2s ease-in-out infinite; }
+.status.failed { background: var(--danger-soft); color: var(--danger); }
 .status.updating { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
 .status.updating::before { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .25; } }
@@ -1517,7 +1518,7 @@ details.adv summary::marker { color: var(--muted); }
         <label class="nodes-autodel"><input type="checkbox" id="nodes-autodel" onchange="nodesSaveAutodel()" data-i18n="nodes_btn_autodelete"> <span id="nodes-autodel-label"></span></label>
         <button id="btn-nodes-delete" class="danger" onclick="nodesDeleteSelected()" data-i18n="nodes_btn_delete">Delete selected</button>
         <button id="btn-nodes-test" class="primary" onclick="nodesTestSelected()" data-i18n="nodes_btn_test">Test selected</button>
-        <span id="nodes-test-status" class="nodes-test-status"></span>
+        <span id="nodes-test-status" class="nodes-test-status" role="status" aria-live="polite"></span>
       </div>
     </div>
     <div id="nodes" class="nodes-panel"><div class="nodes-empty" data-i18n="nodes_empty">no data</div></div>
@@ -1958,6 +1959,16 @@ refreshAPIToken();
 const I18N = {
   en: {
     status_idle: "Not running",
+    status_failed: "Run failed (code {code})",
+    status_no_nodes: "Run finished: 0 working nodes",
+    status_failed_hint: "The run ended with an error. Open the Console tab for the reason; the node list and the Last Scan numbers belong to the previous run.",
+    status_no_nodes_hint: "The run finished, but no node passed the filters. Open the Console tab for the funnel; the node list and the Last Scan numbers belong to the previous run.",
+    run_start_failed: "Could not start the run: ",
+    run_cores_missing: "Cores not installed: {names}. Click the core buttons in the toolbar (about 110 MB on the first download) and press Run again.",
+    nodes_delete_confirm: "Delete {n} node(s) from the list? The subscription files are rewritten and there is no undo.",
+    nodes_delete_failed: "Delete failed: ",
+    nodes_delete_none: "Nothing deleted — the selected nodes are no longer in the list.",
+    nodes_deleted: "Deleted {n} node(s).",
     boot_hint: "Loading…", status_running: "Running…", status_updating: "Updating…",
     label_lang: "Language",
     no_config: "⚠️ config.yaml not found — the program cannot start",
@@ -2362,6 +2373,16 @@ const I18N = {
   },
   ru: {
     status_idle: "Прогон не запущен",
+    status_failed: "Прогон завершился ошибкой (код {code})",
+    status_no_nodes: "Прогон завершён: 0 рабочих нод",
+    status_failed_hint: "Прогон закончился ошибкой. Причина — во вкладке «Консоль»; список нод и цифры Last Scan относятся к прошлому прогону.",
+    status_no_nodes_hint: "Прогон завершён, но ни одна нода не прошла фильтры. Воронка — во вкладке «Консоль»; список нод и цифры Last Scan относятся к прошлому прогону.",
+    run_start_failed: "Не удалось запустить прогон: ",
+    run_cores_missing: "Ядра не установлены: {names}. Нажмите кнопки ядер на панели сверху (первое скачивание — около 110 МБ) и запустите снова.",
+    nodes_delete_confirm: "Удалить {n} нод(ы) из списка? Файлы подписки будут перезаписаны, отмены нет.",
+    nodes_delete_failed: "Не удалось удалить: ",
+    nodes_delete_none: "Ничего не удалено — выбранных нод уже нет в списке.",
+    nodes_deleted: "Удалено нод: {n}.",
     boot_hint: "Загрузка…", status_running: "Выполняется…", status_updating: "Обновление…",
     label_lang: "Язык",
     no_config: "⚠️ Файл config.yaml не найден — программа не запустится",
@@ -2827,7 +2848,7 @@ function applyI18n() {
   });
                                                                    
   const rs = document.getElementById('run-status');
-  if (rs && !rs.dataset.pending) rs.textContent = T('status_idle');
+  if (rs && !rs.dataset.pending) _renderStatusChip();
   const nodes = document.getElementById('nodes');
   if (nodes && !nodes.dataset.loaded) nodes.innerHTML = '<div class="nodes-empty">' + T('nodes_empty') + '</div>';
   renderLogHeader();
@@ -3939,14 +3960,42 @@ async function applyTune() {
   }
 }
 
+                                                                            
+                                                                      
+                                      
+function _runStartFailure(data, status) {
+  if (data && data.code === 'cores_missing') {
+                                                                        
+                                                        
+    const names = (data.cores || []).join(', ');
+    return () => Tf('run_cores_missing', { names });
+  }
+  return () => T('run_start_failed') + ((data && data.error) || ('HTTP ' + status));
+}
+
 async function startRun() {
-  isRunning = true;
-  renderLogHeader();
-  await api('/api/run', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ profile: activeProfile, mode: activeMode }),
-  });
+                                                                           
+                                                                       
+                                                  
+  setRunning(true);
+  try {
+    const resp = await api('/api/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ profile: activeProfile, mode: activeMode }),
+    });
+    if (!resp.ok) {
+                                                                           
+                                                                               
+      const data = await resp.json().catch(() => ({}));
+      _runFailed(_runStartFailure(data, resp.status));
+      return;
+    }
+  } catch (e) {
+    _runFailed(() => T('run_start_failed')
+      + String((e && e.message) || e));
+    return;
+  }
   setTimeout(fetchStatus, 500);
 }
 
@@ -3958,13 +4007,23 @@ async function stopRun() {
 async function runSelfTest() {
                                                                             
                                                                             
-  isRunning = true;
-  renderLogHeader();
-  await api('/api/run', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ selftest: true }),
-  });
+  setRunning(true);
+  try {
+    const resp = await api('/api/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ selftest: true }),
+    });
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => ({}));
+      _runFailed(_runStartFailure(data, resp.status));
+      return;
+    }
+  } catch (e) {
+    _runFailed(() => T('run_start_failed')
+      + String((e && e.message) || e));
+    return;
+  }
   switchTab('log');
   setTimeout(fetchStatus, 500);
 }
@@ -3981,12 +4040,59 @@ function exitApp() {
 
 let polling = true;
 
+                                                                            
+                                                                             
+                                                                             
+let runFailure = null;
+
+                                                              
+                                                                               
+                                                                        
+                                                        
+                                                           
+function _renderStatusChip() {
+  const el = document.getElementById('run-status');
+  if (!el) return;
+  if (isRunning) {
+    el.textContent = T('status_running');
+    el.className = 'status running';
+    el.removeAttribute('title');
+    return;
+  }
+  if (coresJob && coresJob.running) {
+    el.textContent = T('status_updating');
+    el.className = 'status updating';
+    el.removeAttribute('title');
+    return;
+  }
+  if (runFailure) {
+    el.textContent = runFailure.text();
+    el.className = 'status failed';
+    el.title = T(runFailure.hint);
+    return;
+  }
+  el.textContent = T('status_idle');
+  el.className = 'status idle';
+  el.removeAttribute('title');
+}
+
+function _runFailed(makeText, hintKey) {
+  runFailure = {
+    text: typeof makeText === 'function'
+      ? makeText : () => T('status_failed_hint'),
+                                                                        
+                                                                  
+    hint: hintKey || 'status_failed_hint',
+  };
+  isRunning = false;
+  setRunning(false);
+}
+
 function setRunning(running) {
   isRunning = running;
   renderLogHeader();
-  const el = document.getElementById('run-status');
-  el.textContent = T(running ? 'status_running' : 'status_idle');
-  el.className = 'status ' + (running ? 'running' : 'idle');
+  if (running) runFailure = null;
+  _renderStatusChip();
   document.getElementById('btn-run').disabled = running;
   document.getElementById('btn-stop').disabled = !running;
   document.getElementById('btn-auto').disabled = running;
@@ -4389,8 +4495,11 @@ function nodesSaveAutodel() {
 async function nodesDeleteSelected() {
   const cks = nodesGetSelectedCks();
   if (!cks.length) return;
-                                                                          
-                                                                   
+                                                                        
+                                                                        
+                                             
+  if (!confirm(Tf('nodes_delete_confirm', {n: cks.length}))) return;
+  const status = document.getElementById('nodes-test-status');
   try {
     const resp = await fetch('/api/nodes/delete', {
       method: 'DELETE',
@@ -4399,9 +4508,20 @@ async function nodesDeleteSelected() {
     });
     const data = await resp.json();
     if (data.ok) {
+      if (status) {
+                                                                            
+                                                                            
+        status.textContent = data.removed > 0
+          ? Tf('nodes_deleted', { n: data.removed })
+          : T('nodes_delete_none');
+      }
       await fetchNodes();
+    } else if (status) {
+      status.textContent = T('nodes_delete_failed') + (data.error || ('HTTP ' + resp.status));
     }
-  } catch (e) {              }
+  } catch (e) {
+    if (status) status.textContent = T('nodes_delete_failed') + String((e && e.message) || e);
+  }
 }
 
 async function nodesDeleteDead(selectedCks) {
@@ -4635,6 +4755,20 @@ async function fetchStatus() {
     const resp = await fetch('/api/status');
     const data = await resp.json();
     setRunning(data.running);
+                                                                                  
+                                                                            
+                                                                              
+                                                        
+    if (!data.running && !runFailure && data.last_finished > 0) {
+      const code = data.last_exit;
+      const kind = data.last_kind || 'full';
+      if (kind !== 'retest' && code !== null && code !== undefined && code !== 0) {
+        _runFailed(code === 3
+          ? () => T('status_no_nodes')
+          : () => Tf('status_failed', { code }),
+          code === 3 ? 'status_no_nodes_hint' : 'status_failed_hint');
+      }
+    }
   } catch (e) {              }
 }
 
@@ -5370,11 +5504,10 @@ function updateCoresUI() {
   }
 }
 
-function escapeHtml(text) {
-  const d = document.createElement('div');
-  d.textContent = text || '';
-  return d.innerHTML;
-}
+                                                                              
+                                                                               
+                                                                           
+                                                                     
 
                                                                           
                                                                           
@@ -5434,24 +5567,11 @@ async function updateCore(name) {
   }
 }
 
-                                                                
-                                                        
-                               
+                                                                         
+                                                                            
+                                                                   
 function _updateStatusChip() {
-  const el = document.getElementById('run-status');
-  if (!el) return;
-  if (isRunning) {
-    el.textContent = T('status_running');
-    el.className = 'status running';
-    return;
-  }
-  if (coresJob.running) {
-    el.textContent = T('status_updating');
-    el.className = 'status updating';
-    return;
-  }
-  el.textContent = T('status_idle');
-  el.className = 'status idle';
+  _renderStatusChip();
 }
 
 let _coresJobPollTimer = null;

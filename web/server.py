@@ -37,19 +37,21 @@ from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import parse_qs
 
-_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(_ROOT))
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 
 from core.config import Config
 from core.engine.winjob import assign_to_job
 from core.log import LOG
+from core.parsers import parse_node
 from core.paths import ROOT
 from core.speed_profile import normalize_speed_profile
+from core.utils import first_line, write_text_atomic
 from core.working_lists import apply_mode, backup_previous
 from core import stress_tests as st
 from core.cores import (CorePlan, apply_plans, Cancelled, check_cores,
-                        core_state, plan_cores)
+                        core_state, missing_core_binaries, plan_cores)
 
 
 
@@ -61,7 +63,8 @@ from _progress_parser import is_progress_bar_line, update_progress_from_line
 
 from server_advisor import (_check_everything, _run_notes_and_proposals,
     _selfcheck_state, _mark_selfcheck, _clear_selfcheck_proposals)
-from server_config import (ConfigError, restore_config_text, save_config_text)
+from server_config import (ConfigError, artifact_paths, restore_config_text,
+    save_config_text)
 from server_gist import _gist_info, _publish_gist
 from server_logs import (_LOG_TAIL_LINES_FILE, _LOG_TAIL_LINES_FRESH,
     _LOGS_CLEAN_DAYS, _log_files, _log_path,
@@ -73,12 +76,13 @@ import server_logs
 from server_share import _share_info, share_start, share_stop
 from server_sources import (SourcesError, _sources_error_body,
     load_sources_data, restore_sources_text, save_sources_data)
-from server_stress import _run_stress_worker, _stress_kwargs
+from server_stress import (StressRun, _register, _run_stress_worker,
+    _stress_kwargs, _unregister)
 import server_stress
 
 HOST = "127.0.0.1"
 
-WEB_DIR = Path(__file__).resolve().parent
+WEB_DIR = Path(_WEB_DIR)
 OUTPUT_DIR = ROOT / "output"
 LOG_DIR = ROOT / "logs"
 CONFIG_PATH = ROOT / "config.yaml"
@@ -206,13 +210,32 @@ _run_log_path: Path | None = None
 
 
 
+
+_run_outcome: dict = {"code": None, "kind": "", "at": 0.0}
+
+
+
+
+_merge_active: bool = False
+
+
+
 def _backup_working_lists() -> None:
                                                                                                            
-    backup_previous(OUTPUT_DIR)
+    backup_previous(artifact_paths()["dir"])
 
 
 def _merge_subprocess() -> int:
-                                                                                                                        
+                                                                          
+
+                                                                             
+                                                               
+                                                                            
+                                         
+       
+    global _merge_active
+    with _run_lock:
+        _merge_active = True
     try:
         r = subprocess.run(
             [sys.executable, "-u", str(ROOT / "curate.py"),
@@ -220,15 +243,51 @@ def _merge_subprocess() -> int:
             cwd=str(ROOT),
             capture_output=True,
             timeout=600,
+            env={**os.environ,
+                 "CURATE_LOG_TAG": time.strftime("#%Y%m%d-%H%M%S")},
         )
-    except Exception:
+    except Exception as e:
+
+
+        LOG(f"[web] merge subprocess failed: {first_line(e)}")
         return 1
+    finally:
+        with _run_lock:
+            _merge_active = False
     return r.returncode
+
+
+def _run_busy() -> str:
+                                                         
+
+                                                                     
+                                           
+       
+    if _run_proc is not None and _run_proc.poll() is None:
+        return "already running"
+    if _merge_active:
+        return "merge in progress"
+    return ""
+
+
+def _cores_missing_for_run() -> list[str]:
+                                                                      
+
+                                                              
+                                                                       
+                                                                       
+                                                    
+       
+    try:
+        return missing_core_binaries(Config.load(CONFIG_PATH))
+    except Exception as e:
+        LOG(f"[web] cores gate skipped: {first_line(e) or type(e).__name__}")
+        return []
 
 
 def _apply_run_mode(mode: str) -> str:
                                                                                                                           
-    note, _ = apply_mode(mode, OUTPUT_DIR, merge=_merge_subprocess)
+    note, _ = apply_mode(mode, artifact_paths()["dir"], merge=_merge_subprocess)
     return note
 
 
@@ -283,6 +342,16 @@ def _active_run_log() -> Path | None:
     return _run_log_path
 
 
+def _visible_lines(lines: list[str]) -> list[str]:
+                                             
+
+                                                                          
+                                                                        
+                                                                   
+       
+    return [l for l in lines if not is_progress_bar_line(l)]
+
+
 def _console_history() -> list[str]:
                                                                   
 
@@ -294,7 +363,7 @@ def _console_history() -> list[str]:
     if proc is None or proc.poll() is not None:
         return []
     with _output_cond:
-        return [l for l in _run_output[-200:] if not is_progress_bar_line(l)]
+        return _visible_lines(_run_output[-200:])
 
 
 def _reader_thread(proc: subprocess.Popen) -> None:
@@ -332,6 +401,10 @@ def _spawn_run(cmd: list[str], mode: str) -> subprocess.Popen:
     global _run_log_path
     _run_kind = ("retest" if "--retest" in cmd
                  else "selftest" if "--selftest" in cmd else "full")
+
+
+
+    _run_outcome.update({"code": None, "kind": _run_kind, "at": 0.0})
     _run_log_path = _log_path_from_cmd(cmd)
     _run_mode = mode
     _progress_state.update({
@@ -360,6 +433,10 @@ def _spawn_run(cmd: list[str], mode: str) -> subprocess.Popen:
     env["CURATE_FORCE_TTY"] = "0"
     env["PYTHONUNBUFFERED"] = "1"
     env["PYTHONUTF8"] = "1"
+
+
+
+    env["CURATE_LOG_TAG"] = time.strftime("#%Y%m%d-%H%M%S")
     proc = subprocess.Popen(
         cmd,
         cwd=str(ROOT),
@@ -395,8 +472,10 @@ def _watch_run_finished(proc: subprocess.Popen | None) -> None:
         if proc is not current:
             return
         mode = _run_mode
+        kind = _run_kind
         _run_proc = None
         _progress_state["running"] = False
+        _run_outcome.update({"code": rc, "kind": kind, "at": time.time()})
     if _run_kind == "retest":
 
 
@@ -414,6 +493,24 @@ def _watch_run_finished(proc: subprocess.Popen | None) -> None:
                 f.write(note + "\n")
     except OSError:
         pass
+
+
+def _uri_ck_pairs(uris: list[str]) -> list[tuple[str, str]]:
+                                                                            
+
+                                                                      
+                                                                          
+                                                                          
+                                                                         
+                                                                      
+                                                                        
+                                               
+       
+    pairs: list[tuple[str, str]] = []
+    for uri in uris:
+        node = parse_node(uri)
+        pairs.append((uri, node.ck() if node is not None else ""))
+    return pairs
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -594,7 +691,7 @@ class Handler(BaseHTTPRequestHandler):
 
             self._send_json({"token": _UI_API_TOKEN})
         elif self.path == "/api/summary":
-            p = OUTPUT_DIR / "summary.json"
+            p = artifact_paths()["summary"]
             try:
                 data = json.loads(p.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):
@@ -689,7 +786,7 @@ class Handler(BaseHTTPRequestHandler):
                 except OSError:
                     pass
             self._send_json({
-                "lines": [l for l in lines if not is_progress_bar_line(l)],
+                "lines": _visible_lines(lines),
                 **meta,
             })
         elif self.path == "/api/nodes":
@@ -705,7 +802,11 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == "/api/status":
             with _run_lock:
                 running = _run_proc is not None and _run_proc.poll() is None
-            self._send_json({"running": running})
+                outcome = dict(_run_outcome)
+            self._send_json({"running": running,
+                             "last_exit": outcome.get("code"),
+                             "last_kind": outcome.get("kind", ""),
+                             "last_finished": outcome.get("at", 0.0)})
         elif self.path == "/api/progress":
             with _run_lock:
                 state = dict(_progress_state)
@@ -761,8 +862,7 @@ class Handler(BaseHTTPRequestHandler):
                             pos = 0
                         _output_cond.wait(timeout=3)
                         if pos < len(_run_output):
-                            new_lines = [l for l in _run_output[pos:]
-                                         if not is_progress_bar_line(l)]
+                            new_lines = _visible_lines(_run_output[pos:])
                             pos = len(_run_output)
                         else:
                             new_lines = []
@@ -772,20 +872,37 @@ class Handler(BaseHTTPRequestHandler):
                             self.wfile.flush()
                         except (BrokenPipeError, ConnectionResetError):
                             return
+                    if not new_lines:
+
+
+
+
+
+                        try:
+                            self.wfile.write(b": ping\n\n")
+                            self.wfile.flush()
+                        except (BrokenPipeError, ConnectionResetError):
+                            return
 
                     with _run_lock:
                         proc = _run_proc
                     if proc is not None and proc.poll() is not None:
 
+
+
+
                         with _output_cond:
                             if pos < len(_run_output):
-                                new_lines = _run_output[pos:]
-                                for line in new_lines:
-                                    try:
-                                        self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
-                                        self.wfile.flush()
-                                    except (BrokenPipeError, ConnectionResetError):
-                                        return
+                                tail = _visible_lines(_run_output[pos:])
+                                pos = len(_run_output)
+                            else:
+                                tail = []
+                        for line in tail:
+                            try:
+                                self.wfile.write(f"data: {line}\n\n".encode("utf-8"))
+                                self.wfile.flush()
+                            except (BrokenPipeError, ConnectionResetError):
+                                return
                         break
             except (BrokenPipeError, ConnectionResetError):
                 pass
@@ -796,9 +913,9 @@ class Handler(BaseHTTPRequestHandler):
 
 
     def _read_working_nodes_json(self) -> list:
-                                                                                                         
+                                                                                                          
         try:
-            path = OUTPUT_DIR / "working_nodes.json"
+            path = artifact_paths()["nodes_json"]
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
             return data if isinstance(data, list) else []
@@ -806,49 +923,63 @@ class Handler(BaseHTTPRequestHandler):
             return []
 
     def _read_working_nodes_txt(self) -> list:
-                                                                                        
+                                                                                                  
         try:
-            p = OUTPUT_DIR / "working_nodes.txt"
+            p = artifact_paths()["nodes"]
             text = p.read_text(encoding="utf-8", errors="replace")
             return [l.strip() for l in text.splitlines() if l.strip()]
         except OSError:
             return []
 
     def _write_working_nodes_txt(self, nodes: list) -> None:
-                                                                                       
-        p = OUTPUT_DIR / "working_nodes.txt"
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text("\n".join(nodes) + ("\n" if nodes else ""), encoding="utf-8")
+                                                                                                               
+        p = artifact_paths()["nodes"]
+        write_text_atomic(p, "\n".join(nodes) + ("\n" if nodes else ""))
 
     def _handle_api_nodes(self) -> None:
                                                                              
 
-                                                                       
-                                                                         
+                                                                            
+                                                                          
+                                                               
            
-        nodes_txt = self._read_working_nodes_txt()
+        pairs = _uri_ck_pairs(self._read_working_nodes_txt())
         nodes_json = self._read_working_nodes_json()
+        uri_by_ck: dict[str, str] = {}
+        for uri, ck in pairs:
+            if ck:
+                uri_by_ck.setdefault(ck, uri)
 
         out = []
-        for i, uri in enumerate(nodes_txt):
-            item = {"uri": uri, "ck": "", "dead": False}
-            if i < len(nodes_json) and isinstance(nodes_json[i], dict):
-                entry = nodes_json[i]
-                item["ck"] = entry.get("ck", "")
-                item["protocol"] = entry.get("protocol", "")
-                item["host"] = entry.get("host", "")
-                item["port"] = entry.get("port", 0)
-                item["name"] = entry.get("name", "")
-                item["ms"] = entry.get("ms", 0)
-                item["speed_mbps"] = entry.get("speed_mbps")
-                item["speed_quick_mbps"] = entry.get("speed_quick_mbps")
-                item["net"] = entry.get("net")
-                item["security"] = entry.get("security")
-                item["sni"] = entry.get("sni")
-                item["fp"] = entry.get("fp")
-                item["flow"] = entry.get("flow")
-                item["exit_country"] = entry.get("exit_country")
+        seen: set[str] = set()
+        for entry in nodes_json:
+            if not isinstance(entry, dict):
+                continue
+            ck = str(entry.get("ck") or "")
+            seen.add(ck)
+            item = {"uri": uri_by_ck.get(ck, ""), "ck": ck, "dead": False}
+            item["protocol"] = entry.get("protocol", "")
+            item["host"] = entry.get("host", "")
+            item["port"] = entry.get("port", 0)
+            item["name"] = entry.get("name", "")
+            item["ms"] = entry.get("ms", 0)
+            item["speed_mbps"] = entry.get("speed_mbps")
+            item["speed_quick_mbps"] = entry.get("speed_quick_mbps")
+            item["net"] = entry.get("net")
+            item["security"] = entry.get("security")
+            item["sni"] = entry.get("sni")
+            item["fp"] = entry.get("fp")
+            item["flow"] = entry.get("flow")
+            item["exit_country"] = entry.get("exit_country")
             out.append(item)
+
+
+
+        for uri, ck in pairs:
+            if not ck or ck not in seen:
+                out.append({"uri": uri, "ck": ck, "dead": False})
+                if ck:
+                    seen.add(ck)
 
         self._send_json({"nodes": out, "count": len(out)})
 
@@ -861,41 +992,47 @@ class Handler(BaseHTTPRequestHandler):
            
         payload = payload or {}
         cks = payload.get("cks", [])
-        if not isinstance(cks, list):
-            self._send_json({"ok": False, "error": "cks must be a list"}, 400)
-            return
+        if not isinstance(cks, list) or not cks:
 
-        nodes_txt = self._read_working_nodes_txt()
+
+            self._send_json({"ok": False, "error": "cks must be a non-empty list"},
+                            400)
+            return
+        clean = [ck for ck in cks if isinstance(ck, str) and _CK_RE.match(ck)]
+        if len(clean) != len(cks):
+            self._send_json({"ok": False, "error": "invalid ck in cks"}, 400)
+            return
+        cks = clean
+
+        pairs = _uri_ck_pairs(self._read_working_nodes_txt())
         nodes_json = self._read_working_nodes_json()
 
         cks_set = set(cks)
         kept_txt = []
-        kept_json = []
         removed = 0
 
-        for idx, uri in enumerate(nodes_txt):
+        for uri, ck in pairs:
 
 
 
-            entry = nodes_json[idx] if idx < len(nodes_json) else None
-            ck = entry.get("ck", "") if isinstance(entry, dict) else ""
-            if ck in cks_set:
+
+            if ck and ck in cks_set:
                 removed += 1
             else:
                 kept_txt.append(uri)
 
-        for entry in nodes_json:
-            if isinstance(entry, dict) and entry.get("ck") in cks_set:
-                continue
-            kept_json.append(entry)
+        kept_json = [entry for entry in nodes_json
+                     if not (isinstance(entry, dict)
+                             and entry.get("ck") in cks_set)]
 
         self._write_working_nodes_txt(kept_txt)
 
         try:
-            path = OUTPUT_DIR / "working_nodes.json"
-            path.parent.mkdir(parents=True, exist_ok=True)
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump(kept_json, f, ensure_ascii=False, separators=(",", ":"))
+            path = artifact_paths()["nodes_json"]
+            write_text_atomic(
+                path,
+                json.dumps(kept_json, ensure_ascii=False,
+                           separators=(",", ":")))
         except OSError:
             pass
 
@@ -925,8 +1062,9 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json({"ok": False, "error": "no valid ck in cks"}, 400)
             return
         with _run_lock:
-            if _run_proc is not None and _run_proc.poll() is None:
-                self._send_json({"ok": False, "error": "already running"}, 409)
+            busy = _run_busy()
+            if busy:
+                self._send_json({"ok": False, "error": busy}, 409)
                 return
             try:
                 RETEST_CKS_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -962,7 +1100,15 @@ class Handler(BaseHTTPRequestHandler):
         self.path = _strip_query(self.path)
         if not self._api_preflight():
             return
-        length = int(self.headers.get("Content-Length", 0))
+        try:
+            length = int(self.headers.get("Content-Length", 0) or 0)
+        except (TypeError, ValueError):
+
+
+
+            self._drain_body()
+            self._send_json({"ok": False, "error": "bad Content-Length"}, 400)
+            return
         if length > self._MAX_CONTENT_LENGTH:
 
 
@@ -973,7 +1119,11 @@ class Handler(BaseHTTPRequestHandler):
                 413,
             )
             return
-        body = self.rfile.read(length) if length else b""
+
+
+
+
+        body = self.rfile.read(length) if length > 0 else b""
         try:
             payload = json.loads(body.decode("utf-8")) if body else {}
         except (json.JSONDecodeError, UnicodeDecodeError):
@@ -985,8 +1135,11 @@ class Handler(BaseHTTPRequestHandler):
 
 
 
-            server_stress._stress_cancel.set()
-            self._send_json({"ok": True, "cancelled": True})
+
+
+
+            cancelled = server_stress.cancel_all()
+            self._send_json({"ok": True, "cancelled": True, "runs": cancelled})
             return
 
         if self.path.startswith("/api/stress/"):
@@ -1002,21 +1155,35 @@ class Handler(BaseHTTPRequestHandler):
             if ceiling_error:
                 self._send_json({"ok": False, "error": ceiling_error}, 400)
                 return
+            if kind == "network":
+                target_error = server_stress.network_target_error(kwargs)
+                if target_error:
+                    self._send_json(
+                        {"ok": False, "code": "forbidden_target",
+                         "error": target_error}, 400)
+                    return
+            run = StressRun(kind)
+            _register(run)
+            try:
+                threading.Thread(target=_run_stress_worker,
+                                 args=(run, kwargs), daemon=True).start()
+                with run.cond:
+                    deadline = time.monotonic() + 300.0
+                    while run.result is None:
+                        remaining = deadline - time.monotonic()
+                        if remaining <= 0:
+                            self._send_json(
+                                {"ok": False, "error": "stress test timed out"},
+                                504)
+                            return
+                        run.cond.wait(remaining)
+                    result = run.result
+                    if not isinstance(result, dict):
+                        result = result._asdict()
+            finally:
 
 
-            server_stress._stress_cancel.clear()
-            threading.Thread(target=_run_stress_worker, args=(kind, kwargs), daemon=True).start()
-            with server_stress._stress_cond:
-                deadline = time.monotonic() + 300.0
-                while server_stress._stress_result is None:
-                    remaining = deadline - time.monotonic()
-                    if remaining <= 0:
-                        self._send_json({"ok": False, "error": "stress test timed out"}, 504)
-                        return
-                    server_stress._stress_cond.wait(remaining)
-                result = server_stress._stress_result
-                if not isinstance(result, dict):
-                    result = result._asdict()
+                _unregister(run)
 
 
 
@@ -1037,14 +1204,26 @@ class Handler(BaseHTTPRequestHandler):
                 if ceiling_error:
                     self._send_json({"ok": False, "error": ceiling_error}, 400)
                     return
+                if kind == "network":
+                    target_error = server_stress.network_target_error(kwargs)
+                    if target_error:
+                        self._send_json(
+                            {"ok": False, "code": "forbidden_target",
+                             "error": target_error}, 400)
+                        return
                 params[kind] = kwargs
-            server_stress._stress_cancel.clear()
+            run = StressRun("check")
+            _register(run)
             try:
-                result = _check_everything(params, cancel=_cancel_check)
+                result = _check_everything(params, cancel=run.cancel.is_set)
             except Exception as exc:
                 self._send_json(
                     {"ok": False, "error": f"{type(exc).__name__}: {exc}"}, 500)
                 return
+            finally:
+
+
+                _unregister(run)
             if result.get("cancelled"):
 
 
@@ -1204,8 +1383,9 @@ class Handler(BaseHTTPRequestHandler):
 
         if self.path == "/api/run":
             with _run_lock:
-                if _run_proc is not None and _run_proc.poll() is None:
-                    self._send_json({"error": "already running"}, 409)
+                busy = _run_busy()
+                if busy:
+                    self._send_json({"error": busy}, 409)
                     return
 
 
@@ -1215,6 +1395,18 @@ class Handler(BaseHTTPRequestHandler):
                 mode = payload.get("mode") or "replace"
                 if mode not in ("replace", "append", "keep"):
                     mode = "replace"
+
+
+
+
+                missing = _cores_missing_for_run()
+                if missing:
+                    self._send_json({
+                        "error": "cores not installed: " + ", ".join(missing),
+                        "code": "cores_missing",
+                        "cores": missing,
+                    }, 409)
+                    return
                 if selftest:
 
 
@@ -1246,6 +1438,9 @@ class Handler(BaseHTTPRequestHandler):
                         except Exception:
                             pass
                     _run_proc = None
+
+
+                    _run_outcome.update({"code": None, "at": 0.0})
                 _progress_state["running"] = False
             self._send_json({"stopped": True})
         elif self.path == "/api/shutdown":

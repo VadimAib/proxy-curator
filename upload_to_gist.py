@@ -30,6 +30,7 @@ import os
 import sys
 import time
 from datetime import datetime
+from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
@@ -45,13 +46,32 @@ import yaml
 
 
 
+from core.config import Config
 from core.log import LOG
-from core.paths import ROOT
+from core.paths import ROOT, rp
 from core.utils import first_line
 
 OUT_DIR = ROOT / "output"
+
+
+def _configured_nodes_file() -> Path:
+                                                              
+
+                                                                       
+                                                                    
+                                                                           
+                                                      
+                                                                          
+                         
+       
+    try:
+        return Path(rp(Config.load(ROOT / "config.yaml").output.working_nodes))
+    except Exception:
+        return OUT_DIR / "working_nodes.txt"
+
+
 GIST_ID_FILE = OUT_DIR / "gist_id.txt"
-NODES_FILE = OUT_DIR / "working_nodes.txt"
+NODES_FILE = _configured_nodes_file()
 URL_FILE = OUT_DIR / "subscription_url.txt"
 CLASH_URL_FILE = OUT_DIR / "subscription_url_clash.txt"
 STATUS_FILE = OUT_DIR / "gist_status.json"

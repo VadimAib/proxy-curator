@@ -1,8 +1,12 @@
                                                                                                               
 from __future__ import annotations
 
+import ipaddress
+import itertools
 import shutil
+import socket
 import threading
+from typing import Any
 from core import stress_advice
 from core import stress_tests as st
 from core.config import Config
@@ -11,22 +15,55 @@ from server_config import CONFIG_PATH, _read_summary
 
 
 
-_stress_result: dict | None = None
-_stress_cond = threading.Condition()
 
 
 
 
 
-_stress_cancel = threading.Event()
 
 
-def _cancel_check() -> bool:
-                                                                                                      
-    return _stress_cancel.is_set()
+class StressRun:
+                                                                                                             
+
+    _ids = itertools.count(1)
+
+    def __init__(self, kind: str) -> None:
+        self.id = next(StressRun._ids)
+        self.kind = kind
+        self.cancel = threading.Event()
+        self.cond = threading.Condition()
+        self.result: dict | None = None
 
 
-def _run_stress(kind: str, payload: dict) -> dict:
+_active: list[StressRun] = []
+_active_lock = threading.Lock()
+
+
+def _register(run: StressRun) -> None:
+    with _active_lock:
+        _active.append(run)
+
+
+def _unregister(run: StressRun) -> None:
+    with _active_lock:
+        if run in _active:
+            _active.remove(run)
+
+
+def cancel_all() -> int:
+                                                               
+
+                                                                             
+                                                                 
+       
+    with _active_lock:
+        runs = list(_active)
+    for run in runs:
+        run.cancel.set()
+    return len(runs)
+
+
+def _run_stress(kind: str, payload: dict, run: StressRun) -> dict:
                                                                                    
     try:
         kwargs = {
@@ -40,7 +77,7 @@ def _run_stress(kind: str, payload: dict) -> dict:
             kwargs["dir"] = str(rp(Config.load(CONFIG_PATH).output.cache_dir))
 
 
-        kwargs["cancel"] = _cancel_check
+        kwargs["cancel"] = run.cancel.is_set
         result = st.run_stress(kind, **kwargs)
         out = result._asdict()
 
@@ -73,22 +110,17 @@ def _run_stress(kind: str, payload: dict) -> dict:
         }
 
 
-def _run_stress_worker(kind: str, payload: dict) -> None:
+def _run_stress_worker(run: StressRun, payload: dict) -> None:
                                                                             
 
-                                                                            
-                                                                      
-                                                     
+                                                                           
+                                                                              
+                                    
        
-    global _stress_result
-    with _stress_cond:
-        _stress_result = None
-
-
-    result = _run_stress(kind, payload)
-    with _stress_cond:
-        _stress_result = result
-        _stress_cond.notify_all()
+    result = _run_stress(run.kind, payload, run)
+    with run.cond:
+        run.result = result
+        run.cond.notify_all()
 
 
 def _run_reference_nodes() -> int | None:
@@ -146,3 +178,82 @@ def _stress_kwargs(kind: str, payload: dict, *,
     if isinstance(bytes_per_file, (int, float)) and bytes_per_file > max_bytes:
         return {}, f"bytes_per_file too large (max {max_bytes} bytes)"
     return kwargs, None
+
+
+
+
+
+_LOCAL_SUFFIXES = (".localhost", ".local", ".internal", ".home.arpa")
+
+
+def _forbidden_ip(addr: str) -> bool:
+                                                                                                          
+    try:
+        ip = ipaddress.ip_address(addr)
+    except ValueError:
+        return False
+    return (ip.is_private or ip.is_loopback or ip.is_link_local
+            or ip.is_reserved or ip.is_multicast or ip.is_unspecified)
+
+
+def _resolves_to_internal(host: str, port: int) -> bool:
+                                                                         
+
+                                                                          
+                                                                         
+                                                  
+       
+    try:
+        infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    except (socket.gaierror, UnicodeError):
+        return False
+    except OSError:
+        return False
+    return any(_forbidden_ip(str(info[4][0])) for info in infos)
+
+
+def network_target_error(kwargs: dict[str, Any]) -> str | None:
+                                                            
+
+                                                                    
+                                                                        
+                                                                           
+                                                              
+                                                
+       
+    host = kwargs.get("host")
+    if host is None:
+        return None
+    if not isinstance(host, str):
+        return "host must be a string"
+    name = host.strip()
+    if not name:
+        return "host is empty"
+    if "://" in name or "/" in name or " " in name:
+
+
+        return "host must be a bare hostname (no scheme, path or spaces)"
+    try:
+        port = int(kwargs.get("port") or 443)
+    except (TypeError, ValueError):
+        return "port must be a number"
+    if not 1 <= port <= 65535:
+        return "port must be 1..65535"
+    lowered = name.lower().rstrip(".")
+    if lowered == "localhost" or lowered.endswith(_LOCAL_SUFFIXES):
+        return "localhost is not a measurement target"
+    if _forbidden_ip(lowered):
+        return f"private address {name} is not a measurement target"
+    if _resolves_to_internal(lowered, port):
+        return f"host {name} resolves to a private address"
+    header = kwargs.get("host_header")
+    if header is not None:
+
+
+        if not isinstance(header, str):
+            return "host_header must be a string"
+        bare = header.strip()
+        if (not bare or "://" in bare or "/" in bare
+                or any(ch.isspace() for ch in bare)):
+            return "host_header must be a bare hostname (no scheme, path or spaces)"
+    return None

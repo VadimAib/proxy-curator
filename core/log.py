@@ -223,7 +223,8 @@ class Logger:
                 CONSOLE.line(line)
             if self.fh:
                 try:
-                    self.fh.write(f"{time.strftime('%H:%M:%S')} {line}\n")
+                    stamp = f"{TAG} " if TAG else ""
+                    self.fh.write(f"{stamp}{time.strftime('%H:%M:%S')} {line}\n")
                     self.fh.flush()
                 except Exception:
                     pass
@@ -241,14 +242,22 @@ LOG = Logger()
 DEBUG = False
 
 
+
+
+
+
+TAG = ""
+
+
 def dlog(msg):
     if DEBUG:
         LOG(f"      [debug] {msg}", console=False)
 
 
 def init(path=None, debug=False):
-    global DEBUG
+    global DEBUG, TAG
     _force_utf8_console()
     if path:
         LOG.open(path)
     DEBUG = debug
+    TAG = os.environ.get("CURATE_LOG_TAG", "")

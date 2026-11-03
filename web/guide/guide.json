@@ -61,6 +61,14 @@
           "t": "note",
           "kind": "warn",
           "text": {
+            "en": "On a fresh unpack the `bin\\` folder is empty: the cores are downloaded from the toolbar, one button per core, each with a status dot. Click both (about 110 MB the first time) and wait for the dots to turn green. If a core is missing, **Run** refuses to start and names it instead of finishing with an empty subscription.",
+            "ru": "На свежей распаковке папка `bin\\` пуста: ядра скачиваются из панели сверху — у каждого ядра своя кнопка с точкой состояния. Нажмите обе (в первый раз это около 110 МБ) и дождитесь зелёных точек. Если ядра нет, кнопка **Запустить** откажется стартовать и назовёт его — пустой подписки вместо ошибки не будет."
+          }
+        },
+        {
+          "t": "note",
+          "kind": "warn",
+          "text": {
             "en": "Turn the VPN off before the run — with it on, the result is distorted. See [Why a run needs the VPN off](no-vpn).",
             "ru": "Перед прогоном выключите VPN — с ним результат искажается. Подробнее: [Почему прогон нужен без VPN](no-vpn)."
           }
@@ -1206,8 +1214,8 @@
         {
           "t": "p",
           "text": {
-            "en": "The **Console** tab shows the run line by line while it happens. When no run is going, the tab is empty: the output of a finished run is not brought back — open the **Logs** tab for that. The full text goes to the log folder `logs`: a run started from the interface writes to `logs/ui_run.log` (the file is appended to), and a run started from `run_curate.bat` writes its own `logs/run_*.log`.",
-            "ru": "Вкладка **Консоль** показывает ход прогона построчно. Когда прогон не идёт, вкладка пуста: вывод закончившегося прогона не подставляется — за ним идите во вкладку **Логи**. Полный текст попадает в папку логов `logs`: прогон, запущенный из интерфейса, пишет в `logs/ui_run.log` (файл дописывается), а прогон из `run_curate.bat` — в свой `logs/run_*.log`."
+            "en": "The **Console** tab shows the run line by line while it happens. When no run is going, the tab is empty: the output of a finished run is not brought back — open the **Logs** tab for that. The full text goes to the log folder `logs`: a run started from the interface writes to `logs/ui_run.log` (the file is appended to), and a run started from `run_curate.bat` writes its own `logs/run_*.log`. Lines of different interface runs are marked with a start tag `#YYYYMMDD-HHMMSS`, so a run can be told apart in the appended file and in the log archive.",
+            "ru": "Вкладка **Консоль** показывает ход прогона построчно. Когда прогон не идёт, вкладка пуста: вывод закончившегося прогона не подставляется — за ним идите во вкладку **Логи**. Полный текст попадает в папку логов `logs`: прогон, запущенный из интерфейса, пишет в `logs/ui_run.log` (файл дописывается), а прогон из `run_curate.bat` — в свой `logs/run_*.log`. Строки разных запусков из интерфейса помечены меткой старта `#YYYYMMDD-HHMMSS` — по ней прогон видно и в дописываемом файле, и в архиве логов."
           }
         },
         {
@@ -2337,8 +2345,8 @@
               { "en": "write the log to a file as well", "ru": "писать лог ещё и в файл" }
             ],
             [
-              { "en": "`--profile home|mobile`", "ru": "`--profile home|mobile`" },
-              { "en": "deprecated: works as `--speed-profile full|light` and prints a warning", "ru": "устарел: работает как `--speed-profile full|light` и печатает предупреждение" }
+              { "en": "`--retest FILE`", "ru": "`--retest FILE`" },
+              { "en": "re-measure right now the nodes whose `ck` is listed in the file (one per line) and write fresh metrics into `working_nodes.json`; the feed and the outputs are not touched", "ru": "перепроверить сейчас ноды, чьи `ck` перечислены в файле (по одному в строке), и записать свежие метрики в `working_nodes.json`; фид и выходные файлы не трогаются" }
             ],
             [
               { "en": "`--merge`", "ru": "`--merge`" },

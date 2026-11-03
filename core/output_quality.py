@@ -227,6 +227,11 @@ def apply_latency_prefilter(final: List[Tuple[Node, float]],
         if not kept and keep > 0:
             kept = sorted(final, key=lambda it: float(it[1] or 0.0))[:keep]
             relaxed = True
+
+
+
+
+            dropped = len(final) - len(kept)
             LOG(f"[quality] prefilter would drop all {len(final)} node(s) — "
                 f"safety valve keeps top {len(kept)} by latency")
 

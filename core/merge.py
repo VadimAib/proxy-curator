@@ -183,9 +183,22 @@ def _merge_stats(prev_stats: Dict, fresh_stats: Dict) -> Dict:
         if isinstance(prev_val, dict):
             merged[field] = {**prev_val, **(fresh_stats.get(field) or {})}
     prev_rescued = prev_stats.get("rescued")
+
+
+
+
+    fresh_rescued = list(dict.fromkeys(fresh_stats.get("rescued") or []))
     if isinstance(prev_rescued, list):
-        seen = set(fresh_stats.get("rescued") or [])
-        merged["rescued"] = list(prev_rescued) + [k for k in seen]
+        fresh_keys = (set(fresh_stats.get("speedtest") or {})
+                      | set(fresh_stats.get("speedtest_quick") or {}))
+        prev_only = [k for k in dict.fromkeys(prev_rescued) if k not in fresh_keys]
+        merged["rescued"] = prev_only + fresh_rescued
+        merged["rescued_count"] = len(merged["rescued"])
+    elif "rescued" in fresh_stats:
+
+
+        merged["rescued"] = fresh_rescued
+        merged["rescued_count"] = len(fresh_rescued)
     return merged
 
 
@@ -241,8 +254,11 @@ def merge_working_lists(config_path: Optional[Path] = None) -> int:
 
             net = str(stats.get("run_network") or "")
             prev_stats = _load_json(summary_path.with_name("summary.prev.json"))
-            if prev_stats:
-                stats = _merge_stats(prev_stats, stats)
+
+
+
+
+            stats = _merge_stats(prev_stats or {}, stats)
 
 
 

@@ -198,7 +198,7 @@ def _export_phase(final: List[Tuple[Node, float]], stats: Dict[str, Any],
         LOG(f"   {ms:>6.1f}ms  {n.protocol.value:<6} {n.name[:48]}{suffix}{mark}")
 
 
-def _exit_no_nodes(out_path: Path, nodes_out: Path, summary_out: Path,
+def _exit_no_nodes(nodes_out: Path, summary_out: Path,
                    stats: Dict[str, Any], t_start: float) -> None:
                                                                          
 
@@ -211,8 +211,10 @@ def _exit_no_nodes(out_path: Path, nodes_out: Path, summary_out: Path,
                                                          
        
     age = ""
-    if out_path.exists():
-        age = f" (age {(time.time() - out_path.stat().st_mtime)/86400:.1f}d)"
+    if nodes_out.exists():
+
+
+        age = f" (age {(time.time() - nodes_out.stat().st_mtime)/86400:.1f}d)"
     LOG(f"[out] 0 working nodes - previous list kept{age}: {nodes_out}")
     duration = time.time() - t_start
     _log_funnel(stats, 0)

@@ -65,15 +65,21 @@ def _test_url_group_any(local_port: int, urls: List[TestUrlConfig], timeout: flo
     if not urls:
         return False
     opener = _build_opener(local_port)
-    with ThreadPoolExecutor(max_workers=min(len(urls), 3)) as executor:
-        futures = [executor.submit(_check_single_URL, opener, u, timeout) for u in urls]
+    executor = ThreadPoolExecutor(max_workers=min(len(urls), 3))
+    futures = [executor.submit(_check_single_URL, opener, u, timeout) for u in urls]
+    try:
         for future in as_completed(futures):
             if future.result():
-                for f in futures:
-                    if not f.done():
-                        f.cancel()
                 return True
-    return False
+        return False
+    finally:
+
+
+
+
+
+
+        executor.shutdown(wait=False, cancel_futures=True)
 
 
 def _test_url_group_all(

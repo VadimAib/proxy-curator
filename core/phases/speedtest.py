@@ -33,11 +33,6 @@ RESCUABLE_REASONS = ("no_bypass", "critical_failed:", "tcp_latency_soft")
 
 
 
-RESCUABLE_QUICK_REASONS = ("timeout", "ssl", "read", "eof", "reset", "quick_failed")
-
-
-
-
 def speedtest_quick_phase(state: PipelineState,
                            engines: Dict[str, EngineRuntime], cfg: Config,
                            port_pool: PortPool) -> None:
@@ -91,16 +86,20 @@ def speedtest_quick_phase(state: PipelineState,
             hit["tcp_ms"] = round(float(tcp_ms), 1)
 
     kept: List[Tuple[Node, float]] = []
+
+
+
     drops: Counter = Counter()
     for item in state.alive:
-        hit = results.get(item[0].key())
+        key = item[0].key()
+        hit = results.get(key)
         if hit is None:
             if drop_failed:
 
 
 
 
-                drops[fail_detail.get(item[0].key(), "quick_failed")] += 1
+                drops[fail_detail.get(key, "quick_failed")] += 1
                 continue
         elif min_mbps > 0 and float(hit["mbps"]) < min_mbps:
             drops["quick_slow"] += 1
@@ -228,29 +227,20 @@ def is_rescuable_reason(reason: str) -> bool:
     return any(reason == r or reason.startswith(r) for r in RESCUABLE_REASONS)
 
 
-def is_rescuable_quick_reason(reason: str) -> bool:
-                                                                               
-
-                                                                          
-                                   
-       
-    low = reason.lower()
-    return any(r in low for r in RESCUABLE_QUICK_REASONS)
-
-
-
-
 def rescue_phase(state: PipelineState, cfg: Config) -> None:
                                                                                     
 
-                                                                        
-                                                                             
-                                                                          
-                                                                        
                                                        
-                                                                   
+                                                                              
+                                                                                
+                                                                         
                                                                        
-                                      
+                                                       
+
+                                                                          
+                                                                         
+                                                                    
+                                                                   
 
                                                                        
                                                                       
@@ -269,10 +259,9 @@ def rescue_phase(state: PipelineState, cfg: Config) -> None:
         LOG("[rescue] skipped (rescue disabled)")
         return
     dropped = stats.get("delay_drop_reasons") or {}
-    quick_dropped = stats.get("speedtest_quick_drop_reasons") or {}
     overshoot = set(stats.get("tcp_latency_overshoot") or [])
     quick = stats.get("speedtest_quick") or {}
-    if not dropped and not quick_dropped and not overshoot or not quick or not state.quick_pool:
+    if not dropped and not overshoot or not quick or not state.quick_pool:
         LOG("[rescue] nothing to rescue (no quick measurements or drop reasons)")
         return
 
@@ -287,14 +276,11 @@ def rescue_phase(state: PipelineState, cfg: Config) -> None:
 
         reason = dropped.get(key)
 
-        if reason is None and key in quick_dropped:
-            reason = quick_dropped[key]
-
         if reason is None and key in overshoot:
             reason = "tcp_latency_soft"
         if reason is None:
             continue
-        if not is_rescuable_reason(reason) and not is_rescuable_quick_reason(reason):
+        if not is_rescuable_reason(reason):
             rejected[reason] += 1
             continue
         hit = quick.get(key)

@@ -15,6 +15,7 @@ from .log import LOG
 from .models import Node
 from .paths import ROOT
 from .state import PipelineState
+from .utils import first_line
 
 RESUME_FILE = ROOT / "temp" / "curate_resume.json"
 RESUME_TTL = 4 * 3600
@@ -90,7 +91,10 @@ def load_state() -> Optional[Dict]:
         else:
             LOG("[resume] state file expired")
             RESUME_FILE.unlink(missing_ok=True)
-    except Exception:
+    except Exception as e:
+
+
+        LOG(f"[resume] state unreadable, rescanning: {first_line(e)}")
         RESUME_FILE.unlink(missing_ok=True)
     return None
 

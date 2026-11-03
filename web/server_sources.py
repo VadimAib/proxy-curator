@@ -4,9 +4,9 @@ from __future__ import annotations
 import re
 import shutil
 import threading
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from core.paths import ROOT
+
 SOURCES_PATH = ROOT / "sources.txt"
 SOURCES_PREV = SOURCES_PATH.with_name(SOURCES_PATH.name + ".prev")
 

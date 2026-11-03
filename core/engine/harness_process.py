@@ -20,9 +20,11 @@
 import re
 import socket
 import subprocess
+import threading
 import time
+from collections import deque
 from pathlib import Path
-from typing import List, Optional
+from typing import Deque, List, Optional, Tuple
 
 from .harness_config import HarnessABC
 from ..log import dlog
@@ -33,6 +35,95 @@ from .winjob import assign_to_job
 
 
 CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
+
+
+
+MAX_CAPTURE_BYTES = 64 * 1024
+
+_READ_CHUNK = 64 * 1024
+
+
+class _TailReader:
+                                                         
+
+                                                                        
+                                                                        
+                                                                        
+                                                                   
+                
+
+                                                           
+                                                               
+       
+
+    def __init__(self, pipe, limit: int = MAX_CAPTURE_BYTES) -> None:
+        self._pipe = pipe
+        self._limit = limit
+        self._chunks: Deque[bytes] = deque()
+        self._size = 0
+        self._lock = threading.Lock()
+        self._done = threading.Event()
+        self._thread = threading.Thread(target=self._pump, daemon=True,
+                                        name="core-tail-reader")
+        self._thread.start()
+
+    def _pump(self) -> None:
+
+
+        read = getattr(self._pipe, "read1", None) or self._pipe.read
+        try:
+            while True:
+                chunk = read(_READ_CHUNK)
+                if not chunk:
+                    break
+                with self._lock:
+                    self._chunks.append(chunk)
+                    self._size += len(chunk)
+                    while self._size > self._limit and len(self._chunks) > 1:
+                        self._size -= len(self._chunks.popleft())
+        except Exception:
+
+
+            pass
+        finally:
+            self._done.set()
+
+    def wait(self, timeout: float) -> bool:
+                                                                                               
+        return self._done.wait(timeout)
+
+    def data(self) -> bytes:
+        with self._lock:
+            return b"".join(self._chunks)
+
+    def close(self) -> None:
+        try:
+            self._pipe.close()
+        except Exception:
+            pass
+
+
+def _captured_output(proc) -> Optional[Tuple[bytes, bytes]]:
+                                                                                                         
+    out_reader = getattr(proc, "_curate_out", None)
+    err_reader = getattr(proc, "_curate_err", None)
+    if out_reader is None or err_reader is None:
+        return None
+
+
+
+    out_reader.wait(1.0)
+    err_reader.wait(1.0)
+    return out_reader.data(), err_reader.data()
+
+
+def _close_captured(proc) -> None:
+    for name in ("_curate_out", "_curate_err"):
+        reader = getattr(proc, name, None)
+        if reader is not None:
+            reader.close()
+
 
 
 
@@ -57,6 +148,12 @@ class ProcessMixin(HarnessABC):
             creationflags=CREATE_NO_WINDOW,
         )
         assign_to_job(proc)
+
+
+
+
+        proc._curate_out = _TailReader(proc.stdout)
+        proc._curate_err = _TailReader(proc.stderr)
         return proc
 
     def _wait_port(self, proc: subprocess.Popen, port: int,
@@ -118,7 +215,14 @@ class ProcessMixin(HarnessABC):
 
         err_msg = ""
         try:
-            out, err = proc.communicate(timeout=1.0)
+            captured = _captured_output(proc)
+            if captured is None:
+
+
+
+                out, err = proc.communicate(timeout=1.0)
+            else:
+                out, err = captured
             out_str = (out or b"").decode("utf-8", "replace").strip()
             err_str = (err or b"").decode("utf-8", "replace").strip()
             status = self.parse_logs(out_str, err_str)
@@ -128,6 +232,8 @@ class ProcessMixin(HarnessABC):
 
 
             dlog(f"communicate/parse_logs failed: {first_line(e)}")
+        finally:
+            _close_captured(proc)
 
 
 
