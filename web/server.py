@@ -73,6 +73,7 @@ from server_logs import (_LOG_TAIL_LINES_FILE, _LOG_TAIL_LINES_FRESH,
 from server_security import (_DESTRUCTIVE_ROUTES, _UI_API_TOKEN, _origin_allowed,
     _token_valid)
 import server_logs
+import server_onboarding
 from server_share import _share_info, share_start, share_stop
 from server_sources import (SourcesError, _sources_error_body,
     load_sources_data, restore_sources_text, save_sources_data)
@@ -685,6 +686,16 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == "/api/cores/status":
 
             self._send_cores_status()
+        elif self.path == "/api/onboarding":
+
+
+
+            try:
+                self._send_json(server_onboarding.onboarding_state())
+            except Exception as exc:
+                LOG(f"[onboarding] {type(exc).__name__}: {exc}")
+                self._send_json(
+                    {"ok": False, "error": f"{type(exc).__name__}: {exc}"}, 500)
         elif self.path == "/api/token":
 
 
@@ -1130,6 +1141,18 @@ class Handler(BaseHTTPRequestHandler):
             payload = {}
         if not isinstance(payload, dict):
             payload = {}
+
+        if self.path == "/api/onboarding/complete":
+
+
+
+            try:
+                marker = server_onboarding.complete_onboarding()
+            except OSError as exc:
+                self._send_json({"ok": False, "error": str(exc)}, 500)
+                return
+            self._send_json({"ok": True, **marker})
+            return
 
         if self.path == "/api/tune/cancel":
 

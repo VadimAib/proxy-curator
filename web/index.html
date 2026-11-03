@@ -129,6 +129,103 @@ body.boot-ready main, body.boot-ready .toolbar, body.boot-ready header { visibil
 .boot-hint { font-size: 12px; color: var(--muted); }
 @keyframes boot-spin { to { transform: rotate(360deg); } }
 
+                                              
+                                                                        
+                                                                           
+#first-run {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(9, 14, 20, .62);
+}
+#first-run.hidden { display: none; }
+.fr-card {
+  width: min(620px, 100%);
+  max-height: 94vh;
+  overflow: auto;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 20px 22px 18px;
+}
+.fr-head { display: flex; gap: 12px; align-items: flex-start; }
+.fr-head .brand-mark {
+  width: 30px; height: 30px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  background: var(--accent);
+  color: var(--accent-text);
+  border-radius: 6px;
+}
+.fr-head h2 { margin: 0 0 4px; font-size: 18px; }
+.fr-sub { margin: 0; color: var(--muted); font-size: 13px; }
+.fr-steps { list-style: none; margin: 16px 0 12px; padding: 0; display: grid; gap: 4px; }
+.fr-step {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 9px;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+}
+.fr-step[data-state="active"] { background: var(--surface-2); color: var(--text); }
+.fr-step[data-state="done"] { color: var(--text-soft); }
+.fr-step[data-state="warn"] { color: var(--warn); }
+.fr-step[data-state="error"] { color: var(--danger); background: var(--danger-soft); }
+.fr-step[data-state="skipped"] { color: var(--muted); }
+.fr-dot {
+  width: 16px; height: 16px; margin-top: 1px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; line-height: 1;
+  color: var(--muted);
+}
+.fr-step[data-state="active"] .fr-dot { border-color: var(--accent); color: var(--accent); animation: boot-spin 1s linear infinite; }
+.fr-step[data-state="done"] .fr-dot { border-color: var(--ok); color: var(--ok); }
+.fr-step[data-state="warn"] .fr-dot { border-color: var(--warn); color: var(--warn); }
+.fr-step[data-state="error"] .fr-dot { border-color: var(--danger); color: var(--danger); }
+.fr-step-title { font-weight: 600; font-size: 13px; }
+.fr-step-note { display: block; font-weight: 400; font-size: 12px; color: var(--muted); margin-top: 1px; }
+.fr-bar {
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: 999px;
+  overflow: hidden;
+}
+#fr-fill { height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+.fr-status { margin: 8px 0 0; min-height: 18px; font-size: 12px; color: var(--muted); }
+.fr-error {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 13px;
+}
+.fr-error.hidden { display: none; }
+.fr-changes { margin: 10px 0 0; padding: 9px 11px; list-style: none; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); font-size: 12px; }
+.fr-changes.hidden { display: none; }
+.fr-changes li + li { margin-top: 3px; }
+.fr-changes code { font-family: var(--font-mono); font-size: 11px; }
+.fr-actions { display: flex; align-items: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.fr-actions .fr-spacer { flex: 1; }
+.fr-actions button.hidden { display: none; }
+@media (max-width: 520px) {
+  .fr-card { padding: 16px 14px 14px; }
+  .fr-actions { gap: 6px; }
+  .fr-actions button { flex: 1; }
+  .fr-actions .fr-spacer { display: none; }
+}
+
                       
 * { box-sizing: border-box; }
 html { height: 100%; }
@@ -1381,6 +1478,72 @@ details.adv summary::marker { color: var(--muted); }
   <div class="boot-spinner" aria-hidden="true"></div>
   <span class="boot-hint" data-i18n="boot_hint">Loading…</span>
 </div>
+                                                                        
+                                                                           
+                                                                            
+                                                                                 
+<div id="first-run" class="hidden" role="dialog" aria-modal="true" aria-labelledby="fr-title">
+  <div class="fr-card">
+    <div class="fr-head">
+      <span class="brand-mark" aria-hidden="true">PC</span>
+      <div>
+        <h2 id="fr-title" data-i18n="fr_title">First launch setup</h2>
+        <p class="fr-sub" data-i18n="fr_subtitle">A few steps before the first run — you can cancel at any time.</p>
+      </div>
+    </div>
+    <ol class="fr-steps" id="fr-steps">
+      <li class="fr-step" data-step="cores" data-state="pending">
+        <span class="fr-dot" aria-hidden="true">•</span>
+        <span>
+          <span class="fr-step-title" data-i18n="fr_step_cores">Download cores</span>
+          <span class="fr-step-note" data-i18n="fr_step_cores_hint">xray and sing-box, about 110 MB on the first download.</span>
+        </span>
+      </li>
+      <li class="fr-step" data-step="selftest" data-state="pending">
+        <span class="fr-dot" aria-hidden="true">•</span>
+        <span>
+          <span class="fr-step-title" data-i18n="fr_step_selftest">Check the cores</span>
+          <span class="fr-step-note" data-i18n="fr_step_selftest_hint">A short self-test through both engines.</span>
+        </span>
+      </li>
+      <li class="fr-step" data-step="network" data-state="pending">
+        <span class="fr-dot" aria-hidden="true">•</span>
+        <span>
+          <span class="fr-step-title" data-i18n="fr_step_network">Check the network</span>
+          <span class="fr-step-note" data-i18n="fr_step_network_hint">Make sure a VPN/TUN client is not hijacking DNS.</span>
+        </span>
+      </li>
+      <li class="fr-step" data-step="tune" data-state="pending">
+        <span class="fr-dot" aria-hidden="true">•</span>
+        <span>
+          <span class="fr-step-title" data-i18n="fr_step_tune">Measure the channel</span>
+          <span class="fr-step-note" data-i18n="fr_step_tune_hint">CPU, network and disk — about 15–30 seconds.</span>
+        </span>
+      </li>
+      <li class="fr-step" data-step="apply" data-state="pending">
+        <span class="fr-dot" aria-hidden="true">•</span>
+        <span>
+          <span class="fr-step-title" data-i18n="fr_step_apply">Apply safe settings</span>
+          <span class="fr-step-note" data-i18n="fr_step_apply_hint">Only speed-test sizes and timeouts; the previous config is kept as config.yaml.prev.</span>
+        </span>
+      </li>
+    </ol>
+    <div class="fr-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+         aria-label="Setup progress" data-i18n-aria="fr_aria_progress">
+      <div id="fr-fill"></div>
+    </div>
+    <p class="fr-status" id="fr-status" role="status" aria-live="polite"></p>
+    <div class="fr-error hidden" id="fr-error" role="alert"></div>
+    <ul class="fr-changes hidden" id="fr-changes"></ul>
+    <div class="fr-actions">
+      <button type="button" id="fr-exit" class="danger" data-i18n="fr_exit" data-i18n-tt="tt_fr_exit">Exit</button>
+      <button type="button" id="fr-cancel" data-i18n="fr_cancel" data-i18n-tt="tt_fr_cancel">Cancel</button>
+      <span class="fr-spacer"></span>
+      <button type="button" id="fr-skip" class="hidden" data-i18n="fr_skip" data-i18n-tt="tt_fr_skip">Skip</button>
+      <button type="button" id="fr-retry" class="primary hidden" data-i18n="fr_retry" data-i18n-tt="tt_fr_retry">Retry</button>
+    </div>
+  </div>
+</div>
 <header>
   <div class="brand">
     <span class="brand-mark" aria-hidden="true">PC</span>
@@ -1404,7 +1567,6 @@ details.adv summary::marker { color: var(--muted); }
   <div class="toolbar-primary">
     <button id="btn-run" onclick="startRun()" class="primary" data-i18n-tt="tt_run" data-i18n="btn_run">Run</button>
     <button id="btn-stop" onclick="stopRun()" disabled data-i18n-tt="tt_stop" data-i18n="btn_stop">Stop</button>
-    <button id="btn-selftest" onclick="runSelfTest()" data-i18n-tt="tt_selftest" data-i18n="btn_selftest">Self test</button>
   </div>
   <div class="tool-group">
     <span class="group-label" data-i18n="grp_profile">Measure size</span>
@@ -1970,6 +2132,50 @@ const I18N = {
     nodes_delete_none: "Nothing deleted — the selected nodes are no longer in the list.",
     nodes_deleted: "Deleted {n} node(s).",
     boot_hint: "Loading…", status_running: "Running…", status_updating: "Updating…",
+                                   
+    fr_title: "First launch setup",
+    fr_subtitle: "A few steps before the first run. You can cancel at any time — setup will be offered again next launch.",
+    fr_step_cores: "Download cores",
+    fr_step_cores_hint: "xray and sing-box, about 110 MB on the first download.",
+    fr_step_selftest: "Check the cores",
+    fr_step_selftest_hint: "A short self-test through both engines.",
+    fr_step_network: "Check the network",
+    fr_step_network_hint: "Make sure a VPN/TUN client is not hijacking DNS.",
+    fr_step_tune: "Measure the channel",
+    fr_step_tune_hint: "CPU, network and disk — about 15–30 seconds.",
+    fr_step_apply: "Apply safe settings",
+    fr_step_apply_hint: "Only speed-test sizes and timeouts; the previous config is kept as config.yaml.prev.",
+    fr_aria_progress: "Setup progress",
+    fr_exit: "Exit", fr_cancel: "Cancel", fr_skip: "Skip", fr_retry: "Retry",
+    tt_fr_exit: "Close the program completely.",
+    tt_fr_cancel: "Stop the current step and close this screen. Setup will be offered again next launch.",
+    tt_fr_skip: "Skip the current step and continue — the program stays usable.",
+    tt_fr_retry: "Run the failed step again (for example after turning the VPN off).",
+    fr_status_cores: "Downloading cores…",
+    fr_cores_downloading: "Downloading {name}: {pct}%",
+    fr_cores_done: "Cores downloaded.",
+    fr_cores_failed: "Could not download the cores: {error}",
+    fr_cores_missing_after: "Cores are still missing: {names}",
+    fr_status_selftest: "Checking both cores…",
+    fr_selftest_ok: "Both cores start and pass the check.",
+    fr_selftest_failed: "The self-test did not pass ({error}). You can continue — the run will show the details.",
+    fr_status_network: "Resolving {host}…",
+    fr_net_ok: "DNS looks clean: {address}.",
+    fr_net_vpn: "A VPN/TUN client hijacks DNS: {address} is a fake IP from 198.18.0.0/15. Turn the VPN off and press Retry — measurements through a tunnel have no meaning.",
+    fr_net_dns_failed: "Could not resolve {host}: {error}. Check the connection and press Retry.",
+    fr_status_tune: "Measuring the channel — about 15–30 seconds…",
+    fr_tune_clean: "No settings need changing for this channel.",
+    fr_tune_proposals: "{n} safe setting(s) proposed.",
+    fr_status_apply: "Writing the settings…",
+    fr_apply_none: "Nothing to apply.",
+    fr_apply_done: "Applied {n} setting(s). The previous config is kept as config.yaml.prev.",
+    fr_apply_failed: "Could not apply the settings: {error}",
+    fr_step_failed: "The step failed.",
+    fr_timeout: "The step took too long.",
+    fr_skipped: "Skipped.",
+    fr_warn_continue: "This step did not finish. Retry it, skip it, or cancel — setup will be offered again next launch.",
+    fr_done: "Setup is complete — press Run when you are ready.",
+    fr_cancelled: "Setup cancelled.",
     label_lang: "Language",
     no_config: "⚠️ config.yaml not found — the program cannot start",
 
@@ -2007,8 +2213,7 @@ const I18N = {
 
     btn_run: "Run", btn_stop: "Stop", btn_auto: "Auto",
     btn_full_profile: "Full (3MB)", btn_light_profile: "Light (1MB)",
-    btn_replace: "Replace", btn_append: "Append", btn_keep: "Keep",
-    btn_selftest: "Self test", btn_exit: "Exit",
+    btn_replace: "Replace", btn_append: "Append", btn_keep: "Keep", btn_exit: "Exit",
     btn_save: "Save", btn_cancel: "Cancel", btn_restore: "Restore previous", btn_add: "Add",
 
     tab_log: "Console", tab_lastscan: "Last Scan", tab_nodes: "Nodes", tab_settings: "Settings", tab_readme: "Docs",
@@ -2021,7 +2226,6 @@ const I18N = {
     tt_replace: "After the run: keep only the fresh list, discard the previous one (default).",
     tt_append: "After the run: merge the fresh list with the previous one (fresh nodes first).",
     tt_keep: "After the run: restore the previous list, discard the fresh one.",
-    tt_selftest: "Check that xray and sing-box are installed, then run a quick test of one node.",
     tt_exit: "Stop the pipeline and fully close the program.",
     tt_tab_log: "Live log of the pipeline — what the program is doing right now.",
     tt_tab_lastscan: "Summary of the last finished run: links, nodes, files, network and engines.",
@@ -2384,6 +2588,50 @@ const I18N = {
     nodes_delete_none: "Ничего не удалено — выбранных нод уже нет в списке.",
     nodes_deleted: "Удалено нод: {n}.",
     boot_hint: "Загрузка…", status_running: "Выполняется…", status_updating: "Обновление…",
+                                 
+    fr_title: "Первый запуск",
+    fr_subtitle: "Несколько шагов до первого прогона. Можно отменить в любой момент — при следующем запуске подготовка будет предложена снова.",
+    fr_step_cores: "Скачать ядра",
+    fr_step_cores_hint: "xray и sing-box, около 110 МБ при первом скачивании.",
+    fr_step_selftest: "Проверить ядра",
+    fr_step_selftest_hint: "Короткая самопроверка через оба движка.",
+    fr_step_network: "Проверить сеть",
+    fr_step_network_hint: "Убедиться, что VPN/TUN-клиент не перехватывает DNS.",
+    fr_step_tune: "Замерить канал",
+    fr_step_tune_hint: "Процессор, сеть и диск — около 15–30 секунд.",
+    fr_step_apply: "Применить безопасные настройки",
+    fr_step_apply_hint: "Только размеры замера и таймауты; прежний конфиг остаётся в config.yaml.prev.",
+    fr_aria_progress: "Ход подготовки",
+    fr_exit: "Выход", fr_cancel: "Отмена", fr_skip: "Пропустить", fr_retry: "Повторить",
+    tt_fr_exit: "Полностью закрыть программу.",
+    tt_fr_cancel: "Остановить текущий шаг и закрыть экран. При следующем запуске подготовка будет предложена снова.",
+    tt_fr_skip: "Пропустить текущий шаг и продолжить — программа останется рабочей.",
+    tt_fr_retry: "Повторить неудавшийся шаг (например, после выключения VPN).",
+    fr_status_cores: "Скачивание ядер…",
+    fr_cores_downloading: "Скачивание {name}: {pct}%",
+    fr_cores_done: "Ядра скачаны.",
+    fr_cores_failed: "Не удалось скачать ядра: {error}",
+    fr_cores_missing_after: "Ядер всё ещё нет на диске: {names}",
+    fr_status_selftest: "Проверка обоих ядер…",
+    fr_selftest_ok: "Оба ядра запускаются и проходят проверку.",
+    fr_selftest_failed: "Самопроверка не прошла ({error}). Можно продолжить — подробности покажет прогон.",
+    fr_status_network: "Резолв {host}…",
+    fr_net_ok: "DNS выглядит чистым: {address}.",
+    fr_net_vpn: "VPN/TUN-клиент перехватывает DNS: {address} — fake-IP из 198.18.0.0/15. Выключите VPN и нажмите «Повторить» — замеры через туннель ничего не значат.",
+    fr_net_dns_failed: "Не удалось разрешить {host}: {error}. Проверьте подключение и нажмите «Повторить».",
+    fr_status_tune: "Замер канала — около 15–30 секунд…",
+    fr_tune_clean: "Для этого канала менять настройки не нужно.",
+    fr_tune_proposals: "Предложено безопасных настроек: {n}.",
+    fr_status_apply: "Запись настроек…",
+    fr_apply_none: "Применять нечего.",
+    fr_apply_done: "Применено настроек: {n}. Прежний конфиг сохранён в config.yaml.prev.",
+    fr_apply_failed: "Не удалось применить настройки: {error}",
+    fr_step_failed: "Шаг не удался.",
+    fr_timeout: "Шаг выполнялся слишком долго.",
+    fr_skipped: "Пропущено.",
+    fr_warn_continue: "Шаг не завершён. Можно повторить, пропустить его или отменить — при следующем запуске подготовка будет предложена снова.",
+    fr_done: "Подготовка завершена — нажмите «Запустить», когда будете готовы.",
+    fr_cancelled: "Подготовка отменена.",
     label_lang: "Язык",
     no_config: "⚠️ Файл config.yaml не найден — программа не запустится",
 
@@ -2421,8 +2669,7 @@ const I18N = {
 
     btn_run: "Запустить", btn_stop: "Остановить", btn_auto: "Авто",
     btn_full_profile: "Полный (3МБ)", btn_light_profile: "Лёгкий (1МБ)",
-    btn_replace: "Заменить", btn_append: "Добавить", btn_keep: "Оставить",
-    btn_selftest: "Самотест", btn_exit: "Выход",
+    btn_replace: "Заменить", btn_append: "Добавить", btn_keep: "Оставить", btn_exit: "Выход",
     btn_save: "Сохранить", btn_cancel: "Отмена", btn_restore: "Вернуть прошлую", btn_add: "Добавить",
 
     tab_log: "Консоль", tab_lastscan: "Последний скан", tab_nodes: "Узлы", tab_settings: "Настройки", tab_readme: "Документация",
@@ -2435,7 +2682,6 @@ const I18N = {
     tt_replace: "После прогона: оставить только свежий список, прошлый удалить (по умолчанию).",
     tt_append: "После прогона: объединить свежий список с прошлым (свежие узлы первыми).",
     tt_keep: "После прогона: вернуть прошлый список, свежий удалить.",
-    tt_selftest: "Проверить, что xray и sing-box установлены, и запустить быстрый тест одного узла.",
     tt_exit: "Остановить прогон и полностью закрыть программу.",
     tt_tab_log: "Живой лог прогона: что программа делает прямо сейчас.",
     tt_tab_lastscan: "Итог последнего завершённого прогона: ссылки, узлы, файлы, сеть и ядра.",
@@ -2890,6 +3136,9 @@ function setLang(l) {
                                                                   
                  
   if (window.Logs) Logs.langChanged();
+                                                                             
+                                                  
+  _onboardingRelocalize();
 }
 document.getElementById('lang').addEventListener('change', e => setLang(e.target.value));
 
@@ -3924,6 +4173,28 @@ async function gotoYamlKey(path) {
   });
 }
 
+                                                                     
+                                                                            
+                                                                          
+async function _applyProposalsToConfig(proposals) {
+  const cur = await fetch('/api/config');
+  const curData = await cur.json();
+  let text = curData.config || '';
+  if (!text.trim()) throw new Error(T('saved_fail'));
+  proposals.forEach(p => { text = yamlSet(text, tuneYamlPath(p.path), String(p.value)); });
+  const resp = await fetch('/api/config', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ config: text }),
+  });
+  if (!resp.ok) {
+    const data = await resp.json().catch(() => ({}));
+    const err = new Error(data.error || ('HTTP ' + resp.status));
+    err.invalid = true;
+    throw err;
+  }
+}
+
 async function applyTune() {
   if (!_tuneProposals.length) return;
   const btn = document.getElementById('btn-tune-apply');
@@ -3932,27 +4203,16 @@ async function applyTune() {
                                                                             
                                                                              
                                         
-    const cur = await fetch('/api/config');
-    const curData = await cur.json();
-    let text = curData.config || '';
-    if (!text.trim()) {
-      _tuneMsg(T('saved_fail'), false);
+    try {
+      await _applyProposalsToConfig(_tuneProposals);
+    } catch (e) {
+      _tuneMsg(((e && e.invalid) ? T('saved_invalid') : T('saved_fail'))
+        + ((e && e.message) || ''), false);
       return;
     }
-    _tuneProposals.forEach(p => { text = yamlSet(text, tuneYamlPath(p.path), String(p.value)); });
-    const resp = await fetch('/api/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ config: text }),
-    });
-    if (resp.ok) {
-      cancelTune();
-      _tuneMsg(T('tune_applied'), true, 'tune_applied');
-      await loadSettings();
-    } else {
-      const data = await resp.json().catch(() => ({}));
-      _tuneMsg(T('saved_invalid') + (data.error || T('saved_fail')), false);
-    }
+    cancelTune();
+    _tuneMsg(T('tune_applied'), true, 'tune_applied');
+    await loadSettings();
   } catch (e) {
     _tuneMsg(T('saved_fail'), false);
   } finally {
@@ -4002,30 +4262,6 @@ async function startRun() {
 async function stopRun() {
   await api('/api/stop', { method: 'POST' });
   setTimeout(fetchStatus, 1000);
-}
-
-async function runSelfTest() {
-                                                                            
-                                                                            
-  setRunning(true);
-  try {
-    const resp = await api('/api/run', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ selftest: true }),
-    });
-    if (!resp.ok) {
-      const data = await resp.json().catch(() => ({}));
-      _runFailed(_runStartFailure(data, resp.status));
-      return;
-    }
-  } catch (e) {
-    _runFailed(() => T('run_start_failed')
-      + String((e && e.message) || e));
-    return;
-  }
-  switchTab('log');
-  setTimeout(fetchStatus, 500);
 }
 
 function exitApp() {
@@ -4101,7 +4337,6 @@ function setRunning(running) {
   document.getElementById('btn-replace').disabled = running;
   document.getElementById('btn-append').disabled = running;
   document.getElementById('btn-keep').disabled = running;
-  document.getElementById('btn-selftest').disabled = running;
                                                                       
                                                                        
   const _nodesTest = document.getElementById('btn-nodes-test');
@@ -5612,6 +5847,512 @@ async function cancelCores() {
   _pollCoresJob();
 }
 
+                                                               
+                                     
+  
+                                                                        
+                                                                         
+                                                                          
+                                                                             
+                                                      
+  
+                                                                 
+                                                                    
+                                                  
+                                                                  
+const FR_STEPS = [
+  { key: 'cores', weight: 45 },
+  { key: 'selftest', weight: 20 },
+  { key: 'network', weight: 10 },
+  { key: 'tune', weight: 20 },
+  { key: 'apply', weight: 5 },
+];
+
+                                                          
+let _fr = null;
+
+function _frSleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function _frEl(id) { return document.getElementById(id); }
+
+function _frText(note) {
+  if (!note) return '';
+  if (typeof note === 'string') return note;
+  if (note.text) return note.text;
+  return Tf(note.key, note.vars || {});
+}
+
+                                                                     
+                                                                             
+                                                           
+async function maybeStartOnboarding() {
+  try {
+    const resp = await fetch('/api/onboarding', { cache: 'no-store' });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data || !data.ok || !data.needed) return null;
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+function _frOpen(data) {
+  _fr = {
+    state: data,
+    steps: {},
+    notes: {},
+    pct: { cores: 0 },
+    proposals: [],
+    tuneCurrent: {},
+    applied: [],
+    resume: 'cores',
+    controller: null,
+    cancelled: false,
+  };
+  FR_STEPS.forEach(s => { _fr.steps[s.key] = 'pending'; });
+  const box = _frEl('first-run');
+  if (!box) { _fr = null; return; }
+  box.classList.remove('hidden');
+  _frBind();
+  _frRender();
+  _frSetButtons(false, false);
+  _frHideError();
+  const first = _frEl('fr-cancel');
+  if (first) first.focus();
+  _frRun();                                                    
+}
+
+function _frBind() {
+  const box = _frEl('first-run');
+  if (!box || box.dataset.bound === '1') return;
+  box.dataset.bound = '1';
+  const cancel = _frEl('fr-cancel');
+  const exit = _frEl('fr-exit');
+  const retry = _frEl('fr-retry');
+  const skip = _frEl('fr-skip');
+  if (cancel) cancel.addEventListener('click', _frCancel);
+  if (exit) exit.addEventListener('click', () => exitApp());
+  if (retry) retry.addEventListener('click', _frRetry);
+  if (skip) skip.addEventListener('click', _frSkip);
+}
+
+function _frClose() {
+  const box = _frEl('first-run');
+  if (box) box.classList.add('hidden');
+  _frHideError();
+  const changes = _frEl('fr-changes');
+  if (changes) { changes.innerHTML = ''; changes.classList.add('hidden'); }
+  _fr = null;
+  const run = _frEl('btn-run');
+  if (run) run.focus();
+}
+
+function _frDot(state) {
+  return state === 'done' ? '✓'
+    : state === 'warn' ? '!'
+      : state === 'error' ? '✕'
+        : state === 'skipped' ? '–'
+          : state === 'active' ? '…' : '•';
+}
+
+function _frPaintStep(key) {
+  if (!_fr) return;
+  const li = document.querySelector('#fr-steps [data-step="' + key + '"]');
+  if (!li) return;
+  const state = _fr.steps[key] || 'pending';
+  li.dataset.state = state;
+  const dot = li.querySelector('.fr-dot');
+  if (dot) dot.textContent = _frDot(state);
+  const noteEl = li.querySelector('.fr-step-note');
+  if (noteEl) {
+    const note = _fr.notes[key];
+    noteEl.textContent = note ? _frText(note) : T('fr_step_' + key + '_hint');
+  }
+}
+
+                                                                   
+                                                                    
+function _onboardingRelocalize() {
+  if (!_fr) return;
+  FR_STEPS.forEach(s => _frPaintStep(s.key));
+  const err = _frEl('fr-error');
+  if (err && !err.classList.contains('hidden') && _fr.errorNote) {
+    err.textContent = _frText(_fr.errorNote);
+  }
+}
+
+function _frRender() {
+  if (!_fr) return;
+  FR_STEPS.forEach(s => _frPaintStep(s.key));
+  _frPaint();
+}
+
+function _frPaint() {
+  if (!_fr) return;
+  let done = 0;
+  for (const s of FR_STEPS) {
+    const state = _fr.steps[s.key];
+    if (state === 'done' || state === 'warn' || state === 'skipped') {
+      done += s.weight;
+    } else if (state === 'active') {
+      done += s.weight * (_fr.pct[s.key] || 0);
+    }
+  }
+  const pct = Math.max(0, Math.min(100, Math.round(done)));
+  const fill = _frEl('fr-fill');
+  if (fill) fill.style.width = pct + '%';
+  const bar = document.querySelector('#first-run .fr-bar');
+  if (bar) bar.setAttribute('aria-valuenow', String(pct));
+}
+
+function _frSet(key, state, note) {
+  if (!_fr) return;
+  _fr.steps[key] = state;
+  if (note !== undefined) _fr.notes[key] = note;
+  _frPaintStep(key);
+  _frPaint();
+}
+
+function _frStatusText(text) {
+  const el = _frEl('fr-status');
+  if (el) el.textContent = text || '';
+}
+
+function _frHideError() {
+  const box = _frEl('fr-error');
+  if (box) { box.classList.add('hidden'); box.textContent = ''; }
+  if (_fr) _fr.errorNote = null;
+}
+
+function _frSetButtons(retry, skip) {
+  const r = _frEl('fr-retry');
+  const s = _frEl('fr-skip');
+  if (r) r.classList.toggle('hidden', !retry);
+  if (s) s.classList.toggle('hidden', !skip);
+}
+
+function _frFail(key, note) {
+  if (!_fr) return;
+  _fr.resume = key;
+  _fr.errorNote = (note && typeof note === 'object') ? note : { text: String(note || '') };
+  const box = _frEl('fr-error');
+  if (box) {
+    box.textContent = _frText(_fr.errorNote) || T('fr_step_failed');
+    box.classList.remove('hidden');
+  }
+  _frStatusText(T('fr_warn_continue'));
+  _frSetButtons(true, true);
+}
+
+async function _frCancel() {
+  if (!_fr) return;
+  _fr.cancelled = true;
+  const ctrl = _fr.controller;
+  if (ctrl) { try { ctrl.abort(); } catch (e) {              } }
+                                                               
+  fetch('/api/tune/cancel', { method: 'POST' }).catch(() => {});
+  fetch('/api/cores/cancel', { method: 'POST' }).catch(() => {});
+  fetch('/api/stop', { method: 'POST' }).catch(() => {});
+  _frClose();
+  fetchCores();
+  fetchStatus();
+}
+
+function _frSkip() {
+  if (!_fr) return;
+                                                                             
+                                                                       
+  _frClose();
+}
+
+async function _frRetry() {
+  if (!_fr) return;
+  const from = _fr.resume || 'cores';
+  _frHideError();
+  _frSetButtons(false, false);
+  try {
+    const resp = await fetch('/api/onboarding', { cache: 'no-store' });
+    const data = await resp.json();
+    if (data && data.ok && _fr) {
+      _fr.state = data;
+      const idx = Math.max(0, FR_STEPS.findIndex(s => s.key === from));
+      FR_STEPS.slice(idx).forEach(s => {
+        _fr.steps[s.key] = 'pending';
+        _fr.notes[s.key] = null;
+        _fr.pct[s.key] = 0;
+      });
+      _frRender();
+    }
+  } catch (e) {                                           }
+  _frRun(from);
+}
+
+async function _frRun(fromKey) {
+  if (!_fr) return;
+  const from = fromKey || 'cores';
+  let start = FR_STEPS.findIndex(s => s.key === from);
+  if (start < 0) start = 0;
+  _frHideError();
+  _frSetButtons(false, false);
+  for (let i = start; i < FR_STEPS.length; i++) {
+    if (!_fr || _fr.cancelled) return;
+    const key = FR_STEPS[i].key;
+    if (_fr.steps[key] === 'done' || _fr.steps[key] === 'warn') continue;
+    _frSet(key, 'active');
+    let result;
+    try {
+      result = await _frStep(key);
+    } catch (e) {
+      if (!_fr || _fr.cancelled) return;
+      result = { ok: false, note: { text: String((e && e.message) || e) } };
+    }
+    if (!_fr || _fr.cancelled) return;
+    if (result && result.cancelled) return;
+    if (!result || !result.ok) {
+      const note = (result && result.note) || { key: 'fr_step_failed' };
+      _frSet(key, 'error', note);
+      _frFail(key, note);
+      return;
+    }
+    _frSet(key, result.warn ? 'warn' : 'done', result.note);
+  }
+  if (_fr) await _frFinish();
+}
+
+async function _frStep(key) {
+  switch (key) {
+    case 'cores': return _frStepCores();
+    case 'selftest': return _frStepSelftest();
+    case 'network': return _frStepNetwork();
+    case 'tune': return _frStepTune();
+    case 'apply': return _frStepApply();
+    default: return { ok: true };
+  }
+}
+
+async function _frStepCores() {
+  if (!_fr) return { ok: false };
+  const missing = (_fr.state.cores && _fr.state.cores.missing) || [];
+  if (!missing.length) return { ok: true, note: { key: 'fr_cores_done' } };
+  _frStatusText(T('fr_status_cores'));
+  const resp = await fetch('/api/cores/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plans: missing.map(name => ({ name })) }),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok || data.error) {
+    return { ok: false, note: { key: 'fr_cores_failed', vars: { error: data.error || ('HTTP ' + resp.status) } } };
+  }
+  const waited = await _frWaitCores();
+  if (!waited.ok) return waited;
+                                                                            
+  try {
+    const st = await (await fetch('/api/cores', { cache: 'no-store' })).json();
+    coresState = st.cores || [];
+    coresJob = st.job || coresJob;
+    updateCoresUI();
+    const still = coresState.filter(c => c.enabled && c.status === 'missing').map(c => c.name);
+    if (still.length) {
+      return { ok: false, note: { key: 'fr_cores_missing_after', vars: { names: still.join(', ') } } };
+    }
+  } catch (e) {                                                     }
+  return { ok: true, note: { key: 'fr_cores_done' } };
+}
+
+async function _frWaitCores() {
+  const deadline = Date.now() + 20 * 60 * 1000;
+  let sawJob = false;
+  while (Date.now() < deadline) {
+    if (!_fr || _fr.cancelled) return { ok: false, cancelled: true };
+    let data;
+    try {
+      data = await (await fetch('/api/cores/status', { cache: 'no-store' })).json();
+    } catch (e) {
+      await _frSleep(600);
+      continue;
+    }
+    if (data.running) {
+      sawJob = true;
+      coresJob = Object.assign({}, coresJob, data);
+      _fr.pct.cores = (data.percent || 0) / 100;
+      _frPaint();
+      _frStatusText(Tf('fr_cores_downloading', {
+        name: data.label || '…', pct: data.percent || 0,
+      }));
+      await _frSleep(400);
+      continue;
+    }
+    if (data.phase === 'done') return { ok: true };
+    if (data.phase === 'cancelled') return { ok: false, cancelled: true };
+    if (data.phase === 'error') {
+      return { ok: false, note: { key: 'fr_cores_failed', vars: { error: data.error || T('fr_step_failed') } } };
+    }
+                                                                        
+                                                                             
+    if (!sawJob) { sawJob = true; await _frSleep(400); continue; }
+    return { ok: true };
+  }
+  return { ok: false, note: { key: 'fr_timeout' } };
+}
+
+async function _frStepSelftest() {
+  _frStatusText(T('fr_status_selftest'));
+  let resp;
+  try {
+    resp = await fetch('/api/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ selftest: true }),
+    });
+  } catch (e) {
+    return { ok: true, warn: true, note: { text: String((e && e.message) || e) } };
+  }
+  if (!resp.ok) {
+    const data = await resp.json().catch(() => ({}));
+    return { ok: true, warn: true, note: { text: _runStartFailure(data, resp.status)() } };
+  }
+  const deadline = Date.now() + 5 * 60 * 1000;
+  while (Date.now() < deadline) {
+    if (!_fr || _fr.cancelled) return { ok: false, cancelled: true };
+    await _frSleep(1000);
+    let s;
+    try {
+      s = await (await fetch('/api/status', { cache: 'no-store' })).json();
+    } catch (e) { continue; }
+    if (!s.running) {
+      if (s.last_exit === 0) return { ok: true, note: { key: 'fr_selftest_ok' } };
+      const code = (s.last_exit === null || s.last_exit === undefined) ? T('fr_step_failed') : ('code ' + s.last_exit);
+                                                                        
+      return { ok: true, warn: true, note: { key: 'fr_selftest_failed', vars: { error: code } } };
+    }
+  }
+  return { ok: true, warn: true, note: { key: 'fr_timeout' } };
+}
+
+async function _frStepNetwork() {
+  if (!_fr) return { ok: false };
+  const net = _fr.state.network || {};
+  _frStatusText(Tf('fr_status_network', { host: net.host || 'api.github.com' }));
+  if (net.fake_ip) {
+    return { ok: false, note: { key: 'fr_net_vpn', vars: { address: net.address || '198.18.0.0/15' } } };
+  }
+  if (net.ok === false) {
+    return {
+      ok: false,
+      note: { key: 'fr_net_dns_failed', vars: { host: net.host || 'api.github.com', error: net.error || '' } },
+    };
+  }
+  return { ok: true, note: { key: 'fr_net_ok', vars: { address: net.address || '' } } };
+}
+
+async function _frStepTune() {
+  if (!_fr) return { ok: false };
+  _frStatusText(T('fr_status_tune'));
+  const ctrl = new AbortController();
+  _fr.controller = ctrl;
+  let resp;
+  let data;
+  try {
+    resp = await fetch('/api/tune/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: ctrl.signal,
+    });
+    data = await resp.json().catch(() => ({}));
+  } catch (e) {
+    if (!_fr || _fr.cancelled) return { ok: false, cancelled: true };
+    return { ok: false, note: { key: 'fr_step_failed', vars: { error: String((e && e.message) || e) } } };
+  } finally {
+    if (_fr) _fr.controller = null;
+  }
+  if (!_fr || _fr.cancelled) return { ok: false, cancelled: true };
+  if (!resp.ok || data.ok === false) {
+    return { ok: false, note: { text: data.error || ('HTTP ' + resp.status) } };
+  }
+  if (data.cancelled) return { ok: false, cancelled: true };
+                                                                    
+                                                                        
+                                                                         
+                                                                      
+  _tuneLast = data;
+  _tuneRenderAll(data);
+  _fr.tuneCurrent = data.current || {};
+  _fr.proposals = Array.isArray(data.proposals) ? data.proposals.slice() : [];
+  _fr.pct.tune = 1;
+  _frPaint();
+  if (!_fr.proposals.length) return { ok: true, note: { key: 'fr_tune_clean' } };
+  return { ok: true, note: { key: 'fr_tune_proposals', vars: { n: _fr.proposals.length } } };
+}
+
+async function _frStepApply() {
+  if (!_fr) return { ok: false };
+  const proposals = _fr.proposals || [];
+  if (!proposals.length) return { ok: true, note: { key: 'fr_apply_none' } };
+  _frStatusText(T('fr_status_apply'));
+  try {
+    await _applyProposalsToConfig(proposals);
+  } catch (e) {
+    return { ok: false, note: { key: 'fr_apply_failed', vars: { error: String((e && e.message) || e) } } };
+  }
+  _fr.applied = proposals.slice();
+  _frRenderChanges(proposals);
+                                                                         
+                                                                          
+                                                                     
+                                  
+  _tuneProposals = [];
+  if (_tuneLast) {
+    const current = Object.assign({}, _tuneLast.current || {});
+    proposals.forEach(p => { current[p.path] = p.value; });
+    _tuneLast = Object.assign({}, _tuneLast, { proposals: [], current });
+    _tuneRenderAll(_tuneLast);
+  }
+  return { ok: true, note: { key: 'fr_apply_done', vars: { n: proposals.length } } };
+}
+
+function _frRenderChanges(proposals) {
+  if (!_fr) return;
+  const list = _frEl('fr-changes');
+  if (!list) return;
+  list.innerHTML = '';
+  proposals.forEach(p => {
+    const li = document.createElement('li');
+    const code = document.createElement('code');
+    code.textContent = p.path;
+    const before = _tuneFmtVal((_fr.tuneCurrent || {})[p.path]);
+    li.appendChild(code);
+    li.appendChild(document.createTextNode(': ' + before + ' → ' + _tuneFmtVal(p.value)));
+    list.appendChild(li);
+  });
+  list.classList.remove('hidden');
+}
+
+async function _frFinish() {
+  if (!_fr) return;
+  _frStatusText(T('fr_done'));
+  _frSetButtons(false, false);
+  let ok = false;
+  try {
+    const resp = await fetch('/api/onboarding/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    });
+    ok = resp.ok;
+  } catch (e) { ok = false; }
+  if (!_fr) return;
+  if (!ok) {
+    _frFail('apply', { key: 'fr_step_failed' });
+    return;
+  }
+  if (_fr.applied.length) {
+    try { await loadSettings(); } catch (e) {                                              }
+  }
+  setTimeout(() => { if (_fr) _frClose(); }, 1400);
+}
+
 async function fetchProgress() {
   try {
     const resp = await fetch('/api/progress');
@@ -6516,11 +7257,18 @@ async function _bootUI() {
       }
     })()
   ]);
-                                                                     
-  autoCheckCores();
+                                                                          
+                                                                              
+                                                                  
+  const frState = await maybeStartOnboarding();
+  if (!frState) {
+                                                                       
+    autoCheckCores();
+  }
                                             
   await new Promise(r => setTimeout(r, 50));
   document.body.classList.add('boot-ready');
+  if (frState) _frOpen(frState);
 }
 </script>
 </body>

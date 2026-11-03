@@ -56,10 +56,68 @@ the newest release as **Source code (zip)** and unpack it anywhere — there is 
 to install. Windows may warn about a file from the internet: the archive holds
 scripts and text only — the cores are a separate download inside the program.
 
-**2. Add your sources — one link is enough.** A source is a URL that returns a list
-of nodes. In the **Sources** tab press **Add source**, paste the link and **Save** —
-the list is used on the next run. The same thing by hand in `sources.txt`: one URL
-per line, `#` starts a comment.
+**2. Start it.** In the project folder:
+
+```batch
+run_curate.bat
+```
+
+Without arguments it opens the web UI at `http://127.0.0.1:8765` (the browser opens
+by itself). The console pipeline starts only with an explicit flag
+(`--report`, `--selftest`, …); `NO_UI=1` before launch forces the console path.
+
+**3. First launch: the setup screen does the rest.** A setup dialog opens over the
+page and walks through what a new installation needs: it downloads both cores
+(`xray` and `sing-box`, about 110 MB on the first download), runs a short self-test
+through both engines, checks that a VPN/TUN client is not hijacking DNS, measures the
+channel and applies **only safe settings** — speed-test sizes, timeouts and worker
+counts. Settings go through the same validated path as the Settings tab, so the
+previous file stays as `config.yaml.prev` and the screen lists every changed key. A
+progress bar and the current step's description show where it is; a finished setup
+writes `output/first_run.json` and is not offered again.
+
+> **Cancel / Skip / Exit.** **Cancel** stops the current work, closes the dialog and
+> leaves the normal UI running; no marker is written, so the next launch offers the
+> setup again. **Skip** does the same when a step failed. **Exit** stops the program —
+> the same action as the toolbar **Exit**. A failed core self-test is shown as a
+> warning and does not block the run; a fake-IP/DNS problem stops the measurement
+> step and offers **Retry**.
+
+**4. Turn the VPN off before the first measurement** — including TUN clients such as
+Hiddify or Tailscale. A run goes out through your real connection; a TUN client
+hijacks DNS and the results stop meaning anything. The check needs no extra software:
+
+```batch
+nslookup api.github.com
+```
+
+The `Address:` line must show a real address. If it shows `198.18.x.x`, a TUN client
+is still running — turn it off and check again. The setup screen performs the same
+check by itself and stops the measurement step if it sees a fake-IP answer; the
+manual check is for later runs.
+
+> **The program brings its own Python.** If `run_curate.bat` found no Python 3.12+ on
+> your system, it downloads one into the `py\` folder — and from the project folder
+> you can use it for anything, including this check:
+>
+> ```batch
+> py\python.exe -c "import socket; print(socket.gethostbyname('api.github.com'))"
+> py\python.exe curate.py --ping-only   :: the pipeline without the .bat wrapper
+> ```
+>
+> `py\` appears after the first launch. Nothing is installed into Windows: no
+> registry entries, no PATH changes, the folder can be deleted at any time. For
+> normal runs keep using `run_curate.bat` — it starts the UI, keeps the run log and,
+> in the console path, checks the cores and asks about the working-nodes mode.
+
+**5. Sources are already filled — change them if you like.** A source is a URL that
+returns a list of nodes. The release ships a short list of public multi-country feeds
+(mixed lists, an aggregator, Hysteria2 and TUIC bundles) so the first **Run** finds
+working nodes without editing anything. Which lists to trust is your call: in the
+**Sources** tab press **Add source**, paste a link and **Save**, switch sources on and
+off, or edit `sources.txt` by hand — one URL per line, `#` starts a comment. Sources
+are applied on the next run; a feed that fails to download is named in the log and
+counted in `summary.json` → `fetch_errors`, and the rest of the run continues.
 
 ```text
 # my subscriptions
@@ -96,53 +154,9 @@ What the link may point to, starting from the usual case:
    `all_configs_sub.txt`, only that file is taken, since it already unions the rest.
    For a single file a raw link from case 1 is still faster.
 
-The shipped `sources.txt` is empty on purpose: which public lists to trust is your
-call, and a feed that is dead today should not be baked into the program. Sources
-are applied on the next run; a source that fails to download is named in the log and
-counted in `summary.json` → `fetch_errors`, and the rest of the run continues.
+**6. Set your mandatory addresses, then press Run** — see the next section.
 
-**3. Start it.** In the project folder:
-
-```batch
-run_curate.bat
-```
-
-Without arguments it opens the web UI at `http://127.0.0.1:8765` (the browser opens
-by itself). The console pipeline starts only with an explicit flag
-(`--report`, `--selftest`, …); `NO_UI=1` before launch forces the console path.
-
-The cores are not installed yet: in the toolbar of the page there is one button per
-core (`xray`, `singbox`) with a red dot. Click both — the first download is about
-110 MB — and wait for the dots to turn green before the first run.
-
-**4. Turn the VPN off before the first measurement** — including TUN clients such as
-Hiddify or Tailscale. A run goes out through your real connection; a TUN client
-hijacks DNS and the results stop meaning anything. The check needs no extra software:
-
-```batch
-nslookup api.github.com
-```
-
-The `Address:` line must show a real address. If it shows `198.18.x.x`, a TUN client
-is still running — turn it off and check again.
-
-> **The program brings its own Python.** If `run_curate.bat` found no Python 3.12+ on
-> your system, it downloads one into the `py\` folder — and from the project folder
-> you can use it for anything, including this check:
->
-> ```batch
-> py\python.exe -c "import socket; print(socket.gethostbyname('api.github.com'))"
-> py\python.exe curate.py --ping-only   :: the pipeline without the .bat wrapper
-> ```
->
-> `py\` appears after the first launch. Nothing is installed into Windows: no
-> registry entries, no PATH changes, the folder can be deleted at any time. For
-> normal runs keep using `run_curate.bat` — it starts the UI, keeps the run log and,
-> in the console path, checks the cores and asks about the working-nodes mode.
-
-**5. Set your mandatory addresses, then press Run** — see the next section.
-
-**6. Take the result.** `output/working_nodes.txt` is the subscription; the same
+**7. Take the result.** `output/working_nodes.txt` is the subscription; the same
 list, with metrics and the **Test selected** button, is on the **Nodes** tab, and the
 **Share** tab turns it into a QR code, a LAN link or a gist.
 
@@ -275,7 +289,7 @@ proxy-curator\
 ├── sources.txt        ← your feed URLs, one per line
 ├── curate.py          ← the console entry point
 ├── core\  tools\  web\  ← the program itself
-├── bin\               ← cores: downloaded from the toolbar on the first launch
+├── bin\               ← cores: downloaded by the first-launch setup
 ├── py\                ← embeddable Python: only if no system 3.12+ exists
 ├── output\            ← working_nodes.txt / .json, summary.json
 ├── logs\              ← run logs
@@ -289,12 +303,13 @@ place your results live; `logs\` keeps the history of runs.
 ## Keeping the cores up to date
 
 The nodes are tested through two engines — Xray and sing-box — and each is a separate
-executable in `bin\`. The toolbar has one button per core, with a status dot:
+executable in `bin\`. The first-launch setup downloads both; the toolbar keeps one
+button per core, with a status dot, for a manual check or re-download:
 
 - **green** — the installed build is current, nothing to do;
 - **yellow** — a newer build is published, click the button to download it;
-- **red or grey** — the core is missing (this is where the very first launch starts)
-  or does not respond — click the button to download it.
+- **red or grey** — the core is missing (the first-launch setup fills this in) or does
+  not respond — click the button to download it.
 
 While a download runs the dot pulses and shows the percent; clicking the same button
 again cancels it. The version check runs by itself and answers from a local cache,
@@ -305,10 +320,12 @@ version read), and the previous build stays next to the new one as `bin\*.exe.ba
 
 The first download is about 33 MB for `xray.exe` and 76 MB for `sing-box.exe`.
 
-> **Download both cores before the first run.** There is nothing to test the nodes
-> through until they are in place, so **Run** refuses to start and names the missing
-> cores — the same for **Self test**. Click the core buttons, wait for the green dots
-> and press **Run** again.
+> **The setup downloads both cores for you.** On a fresh unpack there is nothing to
+> test the nodes through until they are in place, so the first-launch screen fetches
+> them before anything else. If an antivirus removed a core later, **Run** refuses to
+> start and names the missing cores, and the next launch shows the setup again.
+> Either way the toolbar core buttons remain: click the core with the red dot, wait
+> for the green dot and press **Run**.
 
 The console pipeline (`run_curate.bat --report`, `--selftest`, …) runs the same
 check before the scan and asks `[Y/n]` in the console window:

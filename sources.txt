@@ -1,2 +1,22 @@
-# Add your proxy source URLs here, one per line.
-# See README.md for the supported formats.
+# Proxy Curator - default public sources.
+# A feed that fails to download is named in the log, counted in summary.json,
+# and the rest of the run continues. Edit this list in the Sources tab.
+# === Mixed public lists ===
+# Mixed aggregate, refreshed daily (vless, ss, trojan, vmess).
+https://raw.githubusercontent.com/0xRadikal/Free-v2ray-Configs/main/verified/configs.txt
+# Base64 subscription with mixed protocols.
+https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt
+# Large base64 list (mostly vmess/vless).
+https://raw.githubusercontent.com/ALIILAPRO/v2rayNG-Config/main/sub.txt
+# Small base64 list, useful as a fallback.
+https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub
+# Mixed base64 list from the awesome-vpn collection.
+https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all
+# === Aggregators ===
+# Aggregated nodes (ss, vmess, trojan).
+https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/Eternity.txt
+# === Hysteria2 / TUIC ===
+# Hysteria2 bundle.
+https://raw.githubusercontent.com/morpheusadam/v2ray-config/main/subs/bundles/hysteria2.txt
+# TUIC bundle.
+https://raw.githubusercontent.com/morpheusadam/v2ray-config/main/subs/bundles/tuic.txt

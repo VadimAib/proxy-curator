@@ -16,8 +16,8 @@
       "category": "start",
       "title": { "en": "First run in 5 minutes", "ru": "Первый запуск за 5 минут" },
       "summary": {
-        "en": "From launching the program to nodes on your phone — five steps.",
-        "ru": "От запуска программы до нод на телефоне — пять шагов."
+        "en": "From launching the program to nodes on your phone — six steps.",
+        "ru": "От запуска программы до нод на телефоне — шесть шагов."
       },
       "blocks": [
         {
@@ -33,6 +33,10 @@
             {
               "en": "Double-click `run_curate.bat` in the program folder. A browser opens on `http://127.0.0.1:8765` — that is the web interface.",
               "ru": "Запустите `run_curate.bat` в папке программы. Откроется браузер на `http://127.0.0.1:8765` — это веб-интерфейс."
+            },
+            {
+              "en": "On the first launch a setup dialog prepares the program: it downloads both cores (about 110 MB), runs a short self-test, checks that a VPN/TUN client is not hijacking DNS, measures the channel and applies only safe settings. The previous `config.yaml` stays as `config.yaml.prev`; Cancel returns to the normal UI and offers the setup again next time.",
+              "ru": "При первом запуске открывается окно подготовки: оно скачивает оба ядра (около 110 МБ), прогоняет короткую самопроверку, проверяет, что VPN/TUN-клиент не перехватывает DNS, замеряет канал и применяет только безопасные настройки. Прежний `config.yaml` остаётся как `config.yaml.prev`; «Отмена» возвращает обычный интерфейс и предложит подготовку при следующем запуске."
             },
             {
               "en": "Leave the speed profile on **Auto**: the program measures your channel by itself and picks the size of the measurement.",
@@ -59,10 +63,10 @@
         },
         {
           "t": "note",
-          "kind": "warn",
+          "kind": "info",
           "text": {
-            "en": "On a fresh unpack the `bin\\` folder is empty: the cores are downloaded from the toolbar, one button per core, each with a status dot. Click both (about 110 MB the first time) and wait for the dots to turn green. If a core is missing, **Run** refuses to start and names it instead of finishing with an empty subscription.",
-            "ru": "На свежей распаковке папка `bin\\` пуста: ядра скачиваются из панели сверху — у каждого ядра своя кнопка с точкой состояния. Нажмите обе (в первый раз это около 110 МБ) и дождитесь зелёных точек. Если ядра нет, кнопка **Запустить** откажется стартовать и назовёт его — пустой подписки вместо ошибки не будет."
+            "en": "The shipped `sources.txt` already holds several public multi-country feeds, so the first **Run** can find working nodes without editing anything. Replace or add lists in the **Sources** tab; a feed that dies is named in the log and counted in `summary.json`, and the run continues.",
+            "ru": "В поставке `sources.txt` уже заполнен несколькими публичными списками из разных стран, поэтому первый прогон найдёт рабочие ноды без правок. Заменяйте или добавляйте списки на вкладке «Источники»; умерший фид называется в логе и учитывается в `summary.json`, а прогон продолжается."
           }
         },
         {
@@ -1162,8 +1166,8 @@
               "ru": "**Не исключён ли протокол?** Исключённые протоколы в [фильтрах](filters#protocol-blacklist) отсекают ноды до проверок."
             },
             {
-              "en": "**Do the cores work?** The **Self test** button in the toolbar checks both of them in a couple of seconds.",
-              "ru": "**Работают ли ядра?** Кнопка **Self test** в панели проверяет оба за пару секунд."
+              "en": "**Do the cores work?** The first launch checks both of them once. If a core file disappears later, **Run** refuses to start and names it — see [The antivirus removed the cores](av-blocked).",
+              "ru": "**Работают ли ядра?** Первый запуск проверяет оба один раз. Если файл ядра исчез позже, **Запустить** откажется стартовать и назовёт его — см. [Антивирус удалил ядра](av-blocked)."
             }
           ]
         },
@@ -1196,8 +1200,8 @@
         {
           "t": "p",
           "text": {
-            "en": "If **Self test** complains about a core and the file is missing from `bin/`, add the program folder to the exclusions of your antivirus and download the cores again. The detailed instruction is in `README.md` next to the program — see the section \"If your antivirus removes the cores\".",
-            "ru": "Если **Self test** ругается на ядро, а файла в `bin/` нет, добавьте папку программы в исключения антивируса и скачайте ядра заново. Подробная инструкция — в `README.md` рядом с программой, раздел «If your antivirus removes the cores»."
+            "en": "If **Run** refuses to start and names a core that is missing from `bin/`, add the program folder to the exclusions of your antivirus and download the cores again. The detailed instruction is in `README.md` next to the program — see the section \"If your antivirus removes the cores\".",
+            "ru": "Если **Запустить** отказывается стартовать и называет ядро, которого нет в `bin/`, добавьте папку программы в исключения антивируса и скачайте ядра заново. Подробная инструкция — в `README.md` рядом с программой, раздел «If your antivirus removes the cores»."
           }
         }
       ]
