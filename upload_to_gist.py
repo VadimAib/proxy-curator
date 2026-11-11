@@ -47,6 +47,7 @@ import yaml
 
 
 from core.config import Config
+from core.gist_names import DEFAULT_BASE, describe
 from core.log import LOG
 from core.paths import ROOT, rp
 from core.utils import first_line
@@ -61,8 +62,8 @@ def _configured_nodes_file() -> Path:
                                                                     
                                                                            
                                                       
-                                                                          
-                         
+                                                                      
+                                                        
        
     try:
         return Path(rp(Config.load(ROOT / "config.yaml").output.working_nodes))
@@ -75,15 +76,27 @@ NODES_FILE = _configured_nodes_file()
 URL_FILE = OUT_DIR / "subscription_url.txt"
 CLASH_URL_FILE = OUT_DIR / "subscription_url_clash.txt"
 STATUS_FILE = OUT_DIR / "gist_status.json"
-NODES_NAME = "working_nodes.txt"
 
 
-CLASH_NAME = "working_nodes.yaml"
+
+
+
+
+_GIST_NAME = describe(os.environ.get("GIST_NAME", ""))
+NODES_NAME = _GIST_NAME["uri"]
+
+
+CLASH_NAME = _GIST_NAME["clash"]
 
 
 
 
 STALE_NAMES = ("working_nodes_clash.yaml",)
+
+
+
+
+MAX_TRACKED_NAMES = 12
 API = "https://api.github.com"
 
 
@@ -104,6 +117,13 @@ def _write_status(ok: bool, **fields) -> None:
         "ok": ok,
         "time": datetime.now().astimezone().isoformat(timespec="seconds"),
     }
+
+
+
+    if "names" not in fields:
+        previous = _tracked_names()
+        if previous:
+            payload["names"] = previous
     payload.update(fields)
     try:
         OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -115,6 +135,33 @@ def _write_status(ok: bool, **fields) -> None:
         tmp.replace(STATUS_FILE)
     except OSError as e:
         LOG(f"[gist] WARNING: failed to write status file: {first_line(e)}")
+
+
+def _tracked_names() -> list[str]:
+                                                                         
+
+                                                                 
+                                                                        
+                                                                          
+                                                                 
+       
+    try:
+        data = json.loads(STATUS_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    names = data.get("names") if isinstance(data, dict) else None
+    if not isinstance(names, list):
+        return []
+    return [n for n in names if isinstance(n, str) and n]
+
+
+def _next_tracked(previous: list[str], current: list[str]) -> list[str]:
+                                                                                                                                    
+    out: list[str] = []
+    for name in list(current) + list(previous):
+        if name not in out:
+            out.append(name)
+    return out[:MAX_TRACKED_NAMES]
 
 
 def prune_stale(token: str, gist_id: str, present: dict,
@@ -218,10 +265,14 @@ def main() -> int:
 
     content = NODES_FILE.read_text(encoding="utf-8")
     if not content.strip():
-        msg = "working_nodes.txt is empty. Nothing to upload."
+        msg = f"{NODES_FILE.name} is empty. Nothing to upload."
         LOG(f"ERROR: {msg}")
         _write_status(False, error=msg)
         return 1
+
+    if _GIST_NAME["replaced"]:
+        LOG(f"[gist] WARNING: the requested file name is not supported; "
+            f"publishing as {DEFAULT_BASE}")
 
     nodes_count = sum(1 for line in content.splitlines() if line.strip())
     LOG(f"Preparing to upload {nodes_count} node(s)...")
@@ -232,6 +283,7 @@ def main() -> int:
 
         n_clash = len(yaml.safe_load(clash).get("proxies", []))
         LOG(f"Clash config ready: {n_clash} proxies")
+    LOG(f"Gist files: {NODES_NAME}" + (f", {CLASH_NAME}" if clash else ""))
     payload = build_payload(content, clash)
     gist_id = get_gist_id()
     res = None
@@ -351,11 +403,19 @@ def main() -> int:
         LOG(f"[gist] WARNING: failed to save subscription links: "
             f"{first_line(e)}")
 
+
+
+
+    previous_names = _tracked_names()
+    current_names = [NODES_NAME] + ([CLASH_NAME] if clash_published else [])
     stale_names: list[str] = list(STALE_NAMES)
+    stale_names += [n for n in previous_names if n not in current_names]
     if not clash_published:
 
 
         stale_names.append(CLASH_NAME)
+    stale_names = list(dict.fromkeys(
+        n for n in stale_names if n not in current_names))
     pruned = prune_stale(token, gist_id, files, tuple(stale_names))
     for name in pruned:
         LOG(f"Removed stale gist file: {name}")
@@ -377,6 +437,7 @@ def main() -> int:
     _write_status(True, nodes=nodes_count, gist_id=gist_id,
                   gist_url=html_url, subscription_url=subscription_url,
                   clash_url=clash_url, clash_published=clash_published,
+                  names=_next_tracked(previous_names, current_names),
                   pruned=pruned, links_saved=links_saved)
     return 0
 

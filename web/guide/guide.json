@@ -1068,6 +1068,13 @@
         {
           "t": "p",
           "text": {
+            "en": "The **File name in gist** field sets the name of the published file - the gist address itself does not change. Leave it empty for `working_nodes`: the default keeps the links that devices already use. A new name means a new link, and the old one stops working.",
+            "ru": "Поле **Имя файла в gist** задаёт имя опубликованного файла — сам адрес гиста не меняется. Пустое поле = `working_nodes`: это имя по умолчанию сохраняет ссылки, на которые устройства уже подписаны. Новое имя — это новая ссылка, старая перестаёт работать."
+          }
+        },
+        {
+          "t": "p",
+          "text": {
             "en": "The token needs the `gist` permission. You can enter it in a field in the browser (it lives in the memory of the tab and is never written to disk) or set the environment variable `GITHUB_TOKEN` before the start.",
             "ru": "Токену нужно право `gist`. Его можно ввести в поле в браузере (живёт в памяти вкладки и на диск не пишется) или задать переменной окружения `GITHUB_TOKEN` перед запуском."
           }
@@ -2064,7 +2071,7 @@
             [
               { "en": "`country_paranoid`", "ru": "`country_paranoid`" },
               { "en": "what to do with a node whose country is unknown: `false` — keep it (fail-open), `true` — drop it (fail-closed), `adaptive` — drop it only if the service answered confidently", "ru": "что делать с нодой, у которой страна неизвестна: `false` — оставить (fail-open), `true` — отбросить (fail-closed), `adaptive` — отбросить, только если сервис ответил уверенно" },
-              { "en": "the default is `adaptive` (drop unknown only when the country service answered confidently); `true` is “safety at the price of the whole list”, `false` keeps every node", "ru": "по умолчанию `adaptive` (отбрасывать неизвестную страну, только если сервис ответил уверенно); `true` — это «безопасность ценой всей подписки», `false` оставляет любую ноду" }
+              { "en": "the default is `false`: a node with an unknown country is kept, so working nodes are not lost to a country lookup; `adaptive` drops unknown only when the service answered confidently, `true` drops them always", "ru": "по умолчанию `false`: нода с неизвестной страной остаётся, чтобы рабочие ноды не терялись из-за определения страны; `adaptive` отбрасывает неизвестную, только если сервис ответил уверенно, `true` — всегда" }
             ],
             [
               { "en": "`country_adaptive_min_confidence`", "ru": "`country_adaptive_min_confidence`" },

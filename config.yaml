@@ -94,7 +94,7 @@ filters:
 
   country_blacklist: []
 
-  country_paranoid: adaptive
+  country_paranoid: false
 
   country_adaptive_min_confidence: 0.8
 
@@ -161,7 +161,7 @@ output:
   max_nodes_per_endpoint: 0
   summary_max_nodes: 0
 
-  min_speed_mbps: 5.0
+  min_speed_mbps: 1
   max_latency_ms: 3000
 
   quality_gate_min_keep: 10

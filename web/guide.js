@@ -194,10 +194,6 @@
   function guideRenderArticle(article) {
     const el = document.getElementById('guide-article');
     if (!el) return;
-                                                                          
-                                                      
-    const wide = (article.blocks || []).some(b => b.t === 'table');
-    el.className = 'guide-article' + (wide ? ' guide-article--wide' : '');
     let html = '<h2>' + guideInline(guideT(article.title)) + '</h2>';
     if (article.summary) html += '<p>' + guideInline(guideT(article.summary)) + '</p>';
     for (const block of article.blocks || []) {

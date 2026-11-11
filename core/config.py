@@ -360,7 +360,13 @@ class FiltersConfig:
 
 
 
-    country_paranoid: Union[bool, str] = "adaptive"
+
+
+
+
+    country_paranoid: Union[bool, str] = False
+
+
 
 
     country_adaptive_min_confidence: float = 0.8
@@ -407,7 +413,9 @@ class OutputConfig:
 
 
 
-    min_speed_mbps: float = 5.0
+
+
+    min_speed_mbps: float = 1.0
     max_latency_ms: int = 3000
 
 

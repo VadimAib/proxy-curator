@@ -679,7 +679,10 @@ class Handler(BaseHTTPRequestHandler):
         elif self.path == "/api/share/status":
             self._send_json(_share_info())
         elif self.path == "/api/gist/status":
-            self._send_json(_gist_info())
+
+
+
+            self._send_json(_gist_info(params.get("name", [None])[0]))
         elif self.path == "/api/cores":
 
             self._send_cores_state()
@@ -1559,7 +1562,12 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json(
                     {"ok": False, "error": "token is too long"}, 400)
                 return
-            self._send_json(_publish_gist(token))
+
+
+            name_raw = payload.get("name")
+            if name_raw is not None:
+                name_raw = str(name_raw)
+            self._send_json(_publish_gist(token, name_raw))
         elif self.path == "/api/share/start":
             try:
                 self._send_json(share_start())

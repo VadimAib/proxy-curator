@@ -1335,10 +1335,9 @@ details.adv summary::marker { color: var(--muted); }
   overflow-y: auto;
   padding: 22px 30px 48px;
 }
-.guide-article { max-width: 76ch; font-size: 13.5px; line-height: 1.62; }
-                                                          
-.guide-article--wide { max-width: 112ch; }
-.guide-article--wide table { font-size: 13px; }
+                                                                          
+                                                  
+.guide-article { font-size: 13.5px; line-height: 1.62; }
 .guide-article h2 { margin: 0 0 4px; font-size: 19px; font-weight: 650; letter-spacing: -.01em; }
 .guide-article h3 {
   margin: 24px 0 6px;
@@ -1724,6 +1723,15 @@ details.adv summary::marker { color: var(--muted); }
       <div class="set-section">
         <h3 data-i18n="sec_gist">Cloud subscription (GitHub gist)</h3>
         <div class="hint" data-i18n="gist_hint">Publish the current node list to a secret GitHub gist so any device can subscribe from anywhere. Publishing is manual: a run never uploads anything by itself.</div>
+        <div class="set-row">
+          <label for="gist-name" data-i18n="gist_lbl_name">File name in gist:</label>
+        </div>
+        <div class="set-row">
+          <input type="text" id="gist-name" autocomplete="off" spellcheck="false"
+                 maxlength="72" placeholder="working_nodes" oninput="onGistNameInput()">
+        </div>
+        <div class="hint" data-i18n="gist_name_hint">Only the file name changes - the gist address stays the same. Leave it empty for working_nodes.</div>
+        <div class="hint" id="gist-name-preview"></div>
         <div class="set-row">
           <label for="gist-token" data-i18n="gist_lbl_token">GitHub token (gist scope):</label>
         </div>
@@ -2301,7 +2309,7 @@ const I18N = {
     lbl_max_latency: "Maximum latency:",
     tt_max_latency: "Nodes slower to respond than this (ms) are left out of the subscription. Latency is the response time of the full check, not the TCP probe. 0 turns the limit off. If everything is filtered out, the fastest nodes are kept (output.quality_gate_min_keep) and the summary marks the run as relaxed.",
     lbl_require_country: "Require country by IP:",
-    tt_require_country: "Ask every node's own external IP for its country, through its tunnel. A node whose country cannot be determined is dropped only when the country service answered confidently, so a service outage never empties the subscription. This is filters.country_paranoid: adaptive.",
+    tt_require_country: "Ask every node's own external IP for its country, through its tunnel. Off by default since 2026-11-11: a node with an unknown country is kept, and with an empty filters.country_blacklist nothing is looked up at all. Turning it on writes filters.country_paranoid: adaptive - unknown is dropped only when the country service answered confidently, so a service outage never empties the subscription.",
     lbl_country_confidence: "Country confidence threshold:",
     tt_country_confidence: "Share of nodes (0–1) that must get an answer before unknown countries are dropped (filters.country_adaptive_min_confidence). Lower it if many good nodes have no country.",
     lbl_critical_mode: "Critical URLs check:",
@@ -2507,6 +2515,11 @@ const I18N = {
     share_copied: "Copied",
     sec_gist: "Cloud subscription (GitHub gist)",
     gist_hint: "Publish the current node list to a secret GitHub gist so any device can subscribe from anywhere. Publishing is manual: a run never uploads anything by itself.",
+    gist_lbl_name: "File name in gist:",
+    gist_name_hint: "Only the file name changes - the gist address stays the same. Leave it empty for working_nodes.",
+    gist_name_replaced: "Unsupported characters: the default name working_nodes will be used.",
+    gist_name_after_first: "The full link appears after the first publish.",
+    gist_confirm_rename: "The old link will stop working on devices already subscribed to it. Continue?",
     gist_lbl_token: "GitHub token (gist scope):",
     gist_token_hint: "The token stays in this browser tab and is passed to the local program only for this publish; it is never written to disk. You can also set GITHUB_TOKEN before launching the program.",
     btn_gist_publish: "Publish to gist",
@@ -2757,7 +2770,7 @@ const I18N = {
     lbl_max_latency: "Максимальная задержка:",
     tt_max_latency: "Узлы, которые отвечают медленнее этого значения (мс), в подписку не попадают. Задержка — время отклика полной проверки, а не TCP-пробы. 0 выключает порог. Если отсеяно всё, остаются самые быстрые узлы в количестве output.quality_gate_min_keep, а в сводке ставится пометка relaxed.",
     lbl_require_country: "Требовать страну по IP:",
-    tt_require_country: "Спрашивать у каждой ноды её собственный внешний IP — через её туннель. Нода без определённой страны убирается только тогда, когда сервис страны отвечал уверенно, поэтому сбой сервиса не опустошит подписку. Это filters.country_paranoid: adaptive.",
+    tt_require_country: "Спрашивать у каждой ноды её собственный внешний IP — через её туннель. По умолчанию выключена с 2026-11-11: нода с неизвестной страной остаётся, а при пустом filters.country_blacklist страна не спрашивается вовсе. Включение ставит filters.country_paranoid: adaptive — неизвестная отбрасывается, только если сервис страны отвечал уверенно, поэтому сбой сервиса не опустошит подписку.",
     lbl_country_confidence: "Порог уверенности по стране:",
     tt_country_confidence: "Какая доля нод (0–1) должна получить ответ, чтобы ноды без страны убирались (filters.country_adaptive_min_confidence). Понизьте, если много хороших нод осталось без страны.",
     lbl_critical_mode: "Проверка критических URL:",
@@ -2963,6 +2976,11 @@ const I18N = {
     share_copied: "Скопировано",
     sec_gist: "Облачная подписка (GitHub gist)",
     gist_hint: "Опубликуйте текущий список узлов в secret-гисте GitHub, чтобы любое устройство могло подписаться откуда угодно. Публикация только ручная: прогон сам ничего не загружает.",
+    gist_lbl_name: "Имя файла в gist:",
+    gist_name_hint: "Меняется только имя файла — адрес гиста остаётся прежним. Пустое поле = working_nodes.",
+    gist_name_replaced: "Недопустимые символы: будет использовано имя по умолчанию working_nodes.",
+    gist_name_after_first: "Полная ссылка появится после первой публикации.",
+    gist_confirm_rename: "Старая ссылка перестанет работать на устройствах, которые уже на неё подписаны. Продолжить?",
     gist_lbl_token: "Токен GitHub (право gist):",
     gist_token_hint: "Токен остаётся во вкладке браузера и передаётся локальной программе только на эту публикацию; на диск он не пишется. Можно также задать GITHUB_TOKEN перед запуском программы.",
     btn_gist_publish: "Опубликовать в gist",
@@ -6458,6 +6476,51 @@ function copyShare(id, statusId = 'share-status') {
 
                                                                         
 let gistBusy = false;
+let _gistPrevBase = '';                                                            
+let _gistLastOk = false;                                          
+let _gistNameTimer = null;                                    
+
+                                                                             
+                                                                              
+                                                         
+function _renderGistName(name, preview) {
+  const box = document.getElementById('gist-name-preview');
+  if (!box || !name) return;
+  box.textContent = '';
+  const names = document.createElement('div');
+  names.textContent = '\u2192 ' + name.uri + '  \u00b7  ' + name.clash;
+  box.appendChild(names);
+  const note = document.createElement('div');
+  if (preview && preview.sub) {
+    note.className = 'hint';
+    note.textContent = preview.sub;
+  } else {
+    note.className = 'hint';
+    note.textContent = T('gist_name_after_first');
+  }
+  box.appendChild(note);
+  if (name.replaced) {
+    const warn = document.createElement('div');
+    warn.className = 'hint';
+    warn.textContent = T('gist_name_replaced');
+    box.appendChild(warn);
+  }
+}
+
+function onGistNameInput() {
+  if (_gistNameTimer) clearTimeout(_gistNameTimer);
+  _gistNameTimer = setTimeout(_previewGistName, 300);
+}
+
+async function _previewGistName() {
+  const el = document.getElementById('gist-name');
+  if (!el) return;
+  try {
+    const resp = await api('/api/gist/status?name=' + encodeURIComponent(el.value));
+    const d = await resp.json();
+    _renderGistName(d.name, d.preview);
+  } catch (e) {                                                     }
+}
 
 async function refreshGist() {
   try {
@@ -6472,6 +6535,13 @@ async function refreshGist() {
     if (body) body.classList.toggle('hidden', !(links.sub || links.clash));
     const token = document.getElementById('gist-token');
     if (token) token.placeholder = d.env_token ? T('gist_env_set') : 'ghp_…';
+    _gistPrevBase = (d.name && d.name.base) || '';
+    _gistLastOk = Boolean(d.last && d.last.ok);
+    const nameEl = document.getElementById('gist-name');
+    if (nameEl && document.activeElement !== nameEl) {
+      nameEl.value = (d.name && d.name.raw) || '';
+      _renderGistName(d.name, d.preview);
+    }
     const status = document.getElementById('gist-status');
     if (status) {
       const last = d.last || {};
@@ -6489,9 +6559,17 @@ async function refreshGist() {
 async function publishGist() {
   if (gistBusy) return;
   const tokenEl = document.getElementById('gist-token');
+  const nameEl = document.getElementById('gist-name');
   const status = document.getElementById('gist-status');
   const btn = document.getElementById('btn-gist-publish');
   const token = tokenEl ? tokenEl.value.trim() : '';
+  const name = nameEl ? nameEl.value.trim() : '';
+                                                                           
+                                                                            
+  if (name && _gistLastOk && _gistPrevBase && name !== _gistPrevBase
+      && !confirm(T('gist_confirm_rename'))) {
+    return;
+  }
   gistBusy = true;
   let failed = false;
   if (btn) btn.disabled = true;
@@ -6500,7 +6578,7 @@ async function publishGist() {
     const resp = await api('/api/gist/publish', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ token, name }),
     });
     const d = await resp.json();
     if (!resp.ok || !d.ok) {
